@@ -1,5 +1,4 @@
 import { hasModule, PLAN_TIERS, type ModuleKey } from "@erp/core/plans";
-import { AppNav } from "./app-nav";
 
 /**
  * Wraps a plan-gated page: renders `children` if the tenant's plan
@@ -25,12 +24,11 @@ export async function ModuleGate({
 
   return (
     <main className="mx-auto max-w-3xl p-8">
-      <AppNav />
-      <div className="rounded-lg border border-amber-300 bg-amber-50 p-6 text-sm">
+      <div className="rounded-xl border border-amber-200 bg-amber-50 p-6 text-sm">
         <h1 className="mb-2 text-lg font-semibold text-amber-900">Not included in your plan</h1>
         <p className="text-amber-800">
           This module requires the {requiredTiers.join(" or ")} plan. Ask an Owner to upgrade at{" "}
-          <a href="/settings" className="underline">
+          <a href="/settings" className="font-medium underline">
             Settings
           </a>
           .

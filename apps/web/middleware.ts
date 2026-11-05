@@ -1,8 +1,13 @@
 import { auth } from "@/auth";
 import { NextResponse } from "next/server";
 
-// /admin has its own cookie-based auth (requireAdmin(), not NextAuth) — see lib/admin-session.ts.
-const PUBLIC_PATHS = ["/login", "/signup", "/api/auth", "/admin"];
+// /admin and /accountant each have their own cookie-based auth (not
+// NextAuth) — see lib/admin-session.ts and lib/accountant-session.ts; both
+// pages do their own redirect-to-login, so they must bypass this
+// NextAuth-only check entirely. /api/ecommerce is called by external
+// storefronts with no tenant session at all, authenticated by apiKey/HMAC
+// instead — see app/api/ecommerce/*.
+const PUBLIC_PATHS = ["/login", "/signup", "/api/auth", "/admin", "/accountant", "/api/ecommerce"];
 
 export default auth((req) => {
   const isPublic = PUBLIC_PATHS.some((path) => req.nextUrl.pathname.startsWith(path));
