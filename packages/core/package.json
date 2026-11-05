@@ -1,0 +1,41 @@
+{
+  "name": "@erp/core",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./rbac": "./src/rbac/index.ts",
+    "./doc-numbers": "./src/doc-numbers.ts",
+    "./catalog": "./src/catalog/index.ts",
+    "./parties": "./src/parties/index.ts",
+    "./accounting": "./src/accounting/index.ts",
+    "./import": "./src/import/index.ts",
+    "./inventory": "./src/inventory/index.ts",
+    "./purchasing": "./src/purchasing/index.ts",
+    "./sales": "./src/sales/index.ts",
+    "./reports": "./src/reports/index.ts",
+    "./plans": "./src/plans/index.ts",
+    "./tenants": "./src/tenants/index.ts",
+    "./platform-admin": "./src/platform-admin/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "seed": "tsx src/seed.ts"
+  },
+  "dependencies": {
+    "@erp/db": "*",
+    "bcryptjs": "^2.4.3",
+    "drizzle-orm": "^0.38.3",
+    "exceljs": "^4.4.0",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@erp/config": "*",
+    "@types/bcryptjs": "^2.4.6",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  }
+}

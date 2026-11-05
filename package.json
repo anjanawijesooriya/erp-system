@@ -1,0 +1,27 @@
+{
+  "name": "erp-system",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "typecheck": "turbo run typecheck",
+    "db:generate": "npm run generate -w @erp/db",
+    "db:migrate": "npm run migrate -w @erp/db",
+    "db:studio": "npm run studio -w @erp/db",
+    "db:seed": "npm run seed -w @erp/core"
+  },
+  "devDependencies": {
+    "turbo": "^2.3.3",
+    "typescript": "^5.7.2"
+  },
+  "packageManager": "npm@11.17.0",
+  "engines": {
+    "node": ">=20"
+  }
+}

@@ -1,0 +1,118 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1793845474260,
+      "tag": "0000_sloppy_tomorrow_man",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1793845543617,
+      "tag": "0001_enable_rls",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1793855306790,
+      "tag": "0002_sloppy_gauntlet",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1793855311331,
+      "tag": "0003_enable_rls_phase2",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1793857290612,
+      "tag": "0004_nice_maestro",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1793857295067,
+      "tag": "0005_enable_rls_phase3",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1793857595461,
+      "tag": "0006_living_karnak",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1793858731151,
+      "tag": "0007_nervous_sabra",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1793858735697,
+      "tag": "0008_enable_rls_phase4",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1793859716958,
+      "tag": "0009_lumpy_shotgun",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1793859724582,
+      "tag": "0010_enable_rls_phase5",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1793860684339,
+      "tag": "0011_happy_rictor",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1793860688853,
+      "tag": "0012_enable_rls_phase6",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1793861296263,
+      "tag": "0013_slow_lockheed",
+      "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1793863278454,
+      "tag": "0014_breezy_triathlon",
+      "breakpoints": true
+    },
+    {
+      "idx": 15,
+      "version": "7",
+      "when": 1793863674643,
+      "tag": "0015_serious_agent_brand",
+      "breakpoints": true
+    }
+  ]
+}

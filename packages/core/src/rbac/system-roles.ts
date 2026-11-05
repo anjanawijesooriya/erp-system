@@ -1,0 +1,66 @@
+import { PERMISSIONS, type PermissionKey } from "./permissions";
+
+/**
+ * Roles every tenant gets out of the box. Tenants may add their own roles
+ * later; these are seeded with `isSystem = true` and shouldn't be deleted.
+ */
+export const SYSTEM_ROLES: Record<string, { description: string; permissions: PermissionKey[] }> = {
+  Owner: {
+    description: "Full access to everything in the tenant.",
+    permissions: Object.values(PERMISSIONS),
+  },
+  Accountant: {
+    description: "Posts journals, closes periods, views financial reports.",
+    permissions: [
+      PERMISSIONS.PRODUCT_COST_PRICE_VIEW,
+      PERMISSIONS.SUPPLIER_INVOICE_CREATE,
+      PERMISSIONS.SUPPLIER_PAYMENT_CREATE,
+      PERMISSIONS.PAYABLES_VIEW,
+      PERMISSIONS.SALES_PAYMENT_CREATE,
+      PERMISSIONS.RECEIVABLES_VIEW,
+      PERMISSIONS.JOURNAL_POST,
+      PERMISSIONS.JOURNAL_VIEW,
+      PERMISSIONS.PERIOD_CLOSE,
+      PERMISSIONS.REPORTS_FINANCIAL_VIEW,
+      PERMISSIONS.CHEQUE_MANAGE,
+      PERMISSIONS.BANK_RECONCILIATION_MANAGE,
+      PERMISSIONS.REPORTS_VIEW,
+      PERMISSIONS.AUDIT_LOG_VIEW,
+    ],
+  },
+  BranchManager: {
+    description: "Runs day-to-day operations for one branch.",
+    permissions: [
+      PERMISSIONS.PRODUCT_MANAGE,
+      PERMISSIONS.PRODUCT_COST_PRICE_VIEW,
+      PERMISSIONS.CUSTOMER_MANAGE,
+      PERMISSIONS.SUPPLIER_MANAGE,
+      PERMISSIONS.WAREHOUSE_MANAGE,
+      PERMISSIONS.STOCK_VIEW,
+      PERMISSIONS.STOCK_ADJUST,
+      PERMISSIONS.STOCK_TRANSFER,
+      PERMISSIONS.STOCK_COUNT_MANAGE,
+      PERMISSIONS.PURCHASE_ORDER_CREATE,
+      PERMISSIONS.GRN_CREATE,
+      PERMISSIONS.SUPPLIER_INVOICE_CREATE,
+      PERMISSIONS.PURCHASE_RETURN_CREATE,
+      PERMISSIONS.PAYABLES_VIEW,
+      PERMISSIONS.QUOTATION_CREATE,
+      PERMISSIONS.SALES_ORDER_CREATE,
+      PERMISSIONS.SALES_INVOICE_CREATE,
+      PERMISSIONS.SALES_INVOICE_VOID,
+      PERMISSIONS.DELIVERY_CREATE,
+      PERMISSIONS.SALES_PAYMENT_CREATE,
+      PERMISSIONS.SALES_RETURN_CREATE,
+      PERMISSIONS.RECEIVABLES_VIEW,
+      PERMISSIONS.POS_SELL,
+      PERMISSIONS.JOURNAL_VIEW,
+      PERMISSIONS.CHEQUE_MANAGE,
+      PERMISSIONS.REPORTS_VIEW,
+    ],
+  },
+  Cashier: {
+    description: "Sells at the POS. Cannot see cost price or post journals.",
+    permissions: [PERMISSIONS.POS_SELL, PERMISSIONS.SALES_INVOICE_CREATE, PERMISSIONS.STOCK_VIEW],
+  },
+};
