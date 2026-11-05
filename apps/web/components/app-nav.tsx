@@ -71,6 +71,28 @@ const groups: { label: string; links: { href: string; label: string }[] }[] = [
       { href: "/pilot/issues", label: "Issues" },
     ],
   },
+  {
+    label: "HR",
+    links: [
+      { href: "/hr/employees", label: "Employees" },
+      { href: "/hr/payroll", label: "Payroll" },
+    ],
+  },
+  {
+    label: "Manufacturing",
+    links: [
+      { href: "/manufacturing/bom", label: "Bills of Materials" },
+      { href: "/manufacturing/production", label: "Production Orders" },
+    ],
+  },
+  {
+    label: "E-commerce",
+    links: [{ href: "/ecommerce/channels", label: "Sales Channels" }],
+  },
+  {
+    label: "Accountants",
+    links: [{ href: "/settings/accountants", label: "Linked Accountants" }],
+  },
 ];
 
 export function AppNav() {

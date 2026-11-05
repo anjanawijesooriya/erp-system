@@ -7,7 +7,10 @@ export type ModuleKey =
   | "inventory"
   | "purchasing"
   | "accounting"
-  | "payroll";
+  | "payroll"
+  | "manufacturing"
+  | "ecommerce"
+  | "accountant_portal";
 
 export interface PlanLimits {
   maxBranches: number;
@@ -39,7 +42,17 @@ export const PLAN_TIERS: Record<PlanTier, PlanDefinition> = {
   },
   erp: {
     name: "ERP",
-    modules: ["sales", "pos", "inventory", "purchasing", "accounting", "payroll"],
+    modules: [
+      "sales",
+      "pos",
+      "inventory",
+      "purchasing",
+      "accounting",
+      "payroll",
+      "manufacturing",
+      "ecommerce",
+      "accountant_portal",
+    ],
     limits: { maxBranches: Infinity, maxUsers: Infinity, maxProducts: Infinity },
   },
 };

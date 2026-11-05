@@ -43,6 +43,8 @@ export const stockMovementTypeEnum = pgEnum("stock_movement_type", [
   "adjustment_out",
   "stock_count",
   "opening_balance",
+  "production_consumption",
+  "production_output",
 ]);
 
 export const stockMovementDirectionEnum = pgEnum("stock_movement_direction", ["in", "out"]);

@@ -18,7 +18,11 @@
     "./plans": "./src/plans/index.ts",
     "./tenants": "./src/tenants/index.ts",
     "./platform-admin": "./src/platform-admin/index.ts",
-    "./pilot": "./src/pilot/index.ts"
+    "./pilot": "./src/pilot/index.ts",
+    "./hr": "./src/hr/index.ts",
+    "./manufacturing": "./src/manufacturing/index.ts",
+    "./ecommerce": "./src/ecommerce/index.ts",
+    "./accountant-portal": "./src/accountant-portal/index.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",

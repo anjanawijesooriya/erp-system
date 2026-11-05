@@ -14,3 +14,7 @@ export * from "./plans";
 export * from "./tenants";
 export * from "./platform-admin";
 export * from "./pilot";
+export * from "./hr";
+export * from "./manufacturing";
+export * from "./ecommerce";
+export * from "./accountant-portal";

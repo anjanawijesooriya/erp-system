@@ -60,6 +60,18 @@ export const PERMISSIONS = {
   RECONCILIATION_MANAGE: "pilot.reconciliation.manage",
   ISSUE_REPORT: "pilot.issue.report",
   ISSUE_MANAGE: "pilot.issue.manage",
+
+  // Phase 9 — HR & payroll
+  EMPLOYEE_MANAGE: "hr.employee.manage",
+  PAYROLL_PROCESS: "hr.payroll.process",
+  PAYROLL_VIEW: "hr.payroll.view",
+
+  // Phase 9 — Manufacturing / BOM
+  BOM_MANAGE: "manufacturing.bom.manage",
+  PRODUCTION_ORDER_MANAGE: "manufacturing.production_order.manage",
+
+  // Phase 9 — E-commerce sync
+  SALES_CHANNEL_MANAGE: "ecommerce.channel.manage",
 } as const;
 
 export type PermissionKey = (typeof PERMISSIONS)[keyof typeof PERMISSIONS];

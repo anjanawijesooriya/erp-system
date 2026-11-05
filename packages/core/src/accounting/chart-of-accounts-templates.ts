@@ -29,6 +29,11 @@ const BASE_ACCOUNTS: AccountTemplateEntry[] = [
   { code: "2000", name: "Accounts Payable", type: "liability", isSystemAccount: true },
   { code: "2100", name: "VAT Payable", type: "liability", isSystemAccount: true },
   { code: "2200", name: "Post-Dated Cheques Payable", type: "liability", isSystemAccount: true },
+  // Phase 9 payroll liabilities — see packages/core/src/hr/payroll.ts.
+  { code: "2300", name: "EPF Payable", type: "liability", isSystemAccount: true },
+  { code: "2310", name: "ETF Payable", type: "liability", isSystemAccount: true },
+  { code: "2320", name: "APIT Payable", type: "liability", isSystemAccount: true },
+  { code: "2330", name: "Net Salaries Payable", type: "liability", isSystemAccount: true },
   { code: "3000", name: "Owner's Equity", type: "equity", isSystemAccount: true },
   // The offsetting side of every opening-balance entry (stock, AR, AP) when
   // a pilot shop goes live with existing operations — see
@@ -43,6 +48,9 @@ const BASE_ACCOUNTS: AccountTemplateEntry[] = [
   { code: "6100", name: "Rent Expense", type: "expense", parentCode: "6000" },
   { code: "6200", name: "Utilities Expense", type: "expense", parentCode: "6000" },
   { code: "6300", name: "Salaries & Wages", type: "expense", parentCode: "6000" },
+  // Employer's own cost, on top of gross salary — see hr/payroll.ts.
+  { code: "6310", name: "EPF Employer Contribution", type: "expense", parentCode: "6000" },
+  { code: "6320", name: "ETF Contribution", type: "expense", parentCode: "6000" },
 ];
 
 const BUSINESS_TYPE_EXTRAS: Record<string, AccountTemplateEntry[]> = {

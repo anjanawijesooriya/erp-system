@@ -17,7 +17,12 @@ signup wizard, plan tiers with feature gating and limits, a super-admin
 panel, per-tenant data export), and Phase 8 pilot support (opening-balance
 go-live import, weekly reconciliation, an in-app issue tracker — see
 `PILOT.md` for the actual pilot-running checklist, which is process, not
-code) are done. See
+code), and Phase 9 expansion (HR & payroll with EPF/ETF/APIT, manufacturing/BOM
+with production orders, e-commerce channel sync, and an accountant portal for
+multi-company access) are done — see "Phase 9 notes" below. That's every
+phase in the build plan; the one open item left is the plan's own
+"ERP tier on Dukapola, or a fully separate product?" decision, resolved for
+now as a fully separate product. See
 `ERP Platform for Local Shops — Tech Stack & Build Plan.md` for the full plan.
 
 ## Structure
@@ -195,6 +200,101 @@ with a natural per-tenant "slug"/"code" uniquely identifying a record
 added in the *same* migration as the table itself — a few of these have
 now slipped through and only been caught by a usage count or a direct
 `.onConflictDoNothing()` bug symptom, not systematically checked for.
+
+## Phase 9 notes
+
+The build plan's last phase, "Expansion": HR/payroll, manufacturing/BOM,
+e-commerce sync, and an accountant portal — all four built in one pass
+since the pilot's own module list doesn't gate which of these exist, only
+whether a tenant's plan includes them (`payroll`/`manufacturing`/
+`ecommerce`/`accountant_portal` module keys, ERP tier only).
+
+- **HR & payroll** (`packages/core/src/hr/`, `/hr/employees`,
+  `/hr/payroll`): `employees` is deliberately separate from `users` —
+  most paid staff (helpers, riders) never log in, and a Cashier who does
+  log in isn't necessarily salaried. `runPayroll` computes EPF (8%
+  employee / 12% employer), ETF (3%), and APIT per
+  `packages/core/src/hr/apit.ts`'s bracket table — **that table is the
+  2024/2025 Inland Revenue monthly brackets and will go stale after the
+  next budget**; it's a plain exported array specifically so updating it
+  doesn't touch the posting logic, and a past payroll run keeps whatever
+  `apitAmount` it already computed. Posting splits gross salary expense,
+  employer EPF/ETF *expense* (6310/6320 — the employer's own cost, on top
+  of gross) from the EPF/ETF/APIT/net-pay *payable* liabilities; "posted"
+  (the journal entry) and "paid" (`markPayrollPaid`, the actual bank/cash
+  disbursement) are separate steps so a payroll run can be reviewed before
+  money moves. Caught one real bug while posting a run where every
+  employee fell under the APIT tax-free threshold: a zero-amount APIT line
+  was being sent to `postJournalEntry` as `debit: undefined, credit: 0`,
+  which trips "exactly one of debit/credit must be set" — fixed by
+  filtering zero-amount lines out before posting (`payroll.ts`).
+- **Manufacturing / BOM** (`packages/core/src/manufacturing/`,
+  `/manufacturing/bom`, `/manufacturing/production`): a BOM is a recipe
+  (output variant + quantity-per-batch component list); a production
+  order consumes components and produces output as pure stock-ledger
+  movements (`movementType: "production_consumption"` /
+  `"production_output"`, new enum values on the existing
+  `stock_movements` table) — **no GL entry**, since total inventory value
+  just moves from components to finished goods, nothing is gained or
+  lost. Output cost is the sum of actual component costs consumed
+  (weighted-average, same as everywhere else), divided by actual output
+  quantity — so a smaller-than-planned yield correctly costs the output
+  higher per unit, not silently absorbed. The web form takes BOM
+  components as one `"SKU,quantity"` line per textarea row rather than
+  dynamic client-side rows, a deliberate exception to this app's usual
+  single-line-per-form convention since a BOM genuinely needs several
+  components.
+- **E-commerce sync** (`packages/core/src/ecommerce/`,
+  `/ecommerce/channels`, `/api/ecommerce/feed/[apiKey]`,
+  `/api/ecommerce/webhook/[apiKey]`): deliberately generic/webhook-based
+  rather than a named platform's SDK (Shopify, WooCommerce, or a shop's
+  own site all integrate the same way) — a storefront polls the feed
+  route for price/stock (keyed by `apiKey`) and POSTs new orders to the
+  webhook route, signed with `X-Webhook-Signature` (HMAC-SHA256 of the
+  raw body using a per-channel secret, the same model Stripe uses).
+  Inbound orders post against one shared "Online Store Customers"
+  placeholder customer (same reasoning as Phase 8's opening-balance
+  placeholder product) rather than requiring every online buyer to exist
+  as a real, credit-tracked customer; the actual buyer's name stays on
+  the raw payload. A SKU that doesn't resolve to a linked product variant
+  fails the *whole* order (`channelOrders.status = "failed"` with the
+  reason), never a partial import. Initially wrote the import inside one
+  outer `db.transaction`, then caught that `createSalesOrder` runs its
+  own internal transaction — nesting them wouldn't actually be atomic
+  with the standard `postgres` driver — so the import is now sequential
+  steps instead, with `channelOrders.status` as the recoverable marker of
+  how far an import got if something fails partway.
+- **Accountant portal** (`packages/core/src/accountant-portal/`,
+  `/accountant/login`, `/accountant`, `/settings/accountants`): an
+  `accountants` principal, same reasoning as `platformAdmins` — spans
+  multiple tenants, so it can't be a row in any one tenant's `users`
+  table — authenticated by its own signed-cookie session
+  (`apps/web/lib/accountant-session.ts`, a copy of `admin-session.ts`
+  with its own cookie name). A tenant owner invites an accountant by
+  email from `/settings/accountants`; the accountant then signs in once
+  at `/accountant/login` and switches between every company that's
+  invited them. **Currently view-only** (trial balance + journal entries
+  list) despite `accountant_tenant_links.canPostJournals` already being
+  modeled: actually posting a journal entry needs
+  `journal_entries.created_by_user_id` to resolve to a row in that
+  tenant's `users` table, which an accountant deliberately isn't. Wiring
+  up real cross-tenant posting needs either a nullable
+  posted-by-accountant column or a synthetic per-tenant "accountant"
+  user — left for a follow-up rather than bolted on here; the flag is
+  already there so that follow-up doesn't need a data migration.
+- Backfilling existing tenants after adding Phase 9's new chart-of-accounts
+  codes and permissions followed the same idempotent pattern as every
+  earlier phase (`seedChartOfAccounts` / `seedGlobalPermissions` /
+  `seedSystemRolesForTenant`, all `onConflictDoNothing`) — re-run once via
+  a throwaway script against the demo tenant, not a new migration-time
+  data fixup.
+- All four pieces were exercised end-to-end against the real database — a
+  payroll run posting and paying out correctly (balanced trial balance:
+  6300/6310/6320 debits = 2300/2310/2330 credits), a production order
+  consuming raw material and producing output at the correctly-computed
+  cost, and a signed webhook order correctly resolving to a real sales
+  order — then the test fixtures were deleted afterward the same way
+  Phase 8's were (scoped `DELETE`s, not a blanket wipe).
 
 ## Phase 8 notes
 
