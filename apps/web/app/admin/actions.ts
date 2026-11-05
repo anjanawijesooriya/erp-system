@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { logAdminTenantAccess } from "@erp/core/platform-admin";
 import { setPlan } from "@erp/core/plans";
+import { updateIssueStatusAsAdmin } from "@erp/core/pilot";
 import { clearAdminSession } from "@/lib/admin-session";
 import { requireAdmin } from "@/lib/require-admin";
 
@@ -32,6 +33,15 @@ export async function changePlanAction(
 export async function viewTenantAction(tenantId: string) {
   const admin = await requireAdmin();
   await logAdminTenantAccess(admin.adminId, admin.email, tenantId);
+  revalidatePath("/admin");
+}
+
+export async function adminUpdateIssueStatusAction(
+  issueId: string,
+  status: "open" | "in_progress" | "resolved" | "closed",
+) {
+  await requireAdmin();
+  await updateIssueStatusAsAdmin(issueId, status);
   revalidatePath("/admin");
 }
 

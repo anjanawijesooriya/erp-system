@@ -53,6 +53,13 @@ export const PERMISSIONS = {
 
   // Reports and dashboards
   REPORTS_VIEW: "reports.operational.view",
+
+  // Phase 8 — pilot support: opening-balance go-live import, weekly
+  // reconciliation, in-app issue tracking
+  OPENING_BALANCE_IMPORT: "pilot.opening_balance.import",
+  RECONCILIATION_MANAGE: "pilot.reconciliation.manage",
+  ISSUE_REPORT: "pilot.issue.report",
+  ISSUE_MANAGE: "pilot.issue.manage",
 } as const;
 
 export type PermissionKey = (typeof PERMISSIONS)[keyof typeof PERMISSIONS];

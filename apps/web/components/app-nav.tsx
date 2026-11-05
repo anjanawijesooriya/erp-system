@@ -63,6 +63,14 @@ const groups: { label: string; links: { href: string; label: string }[] }[] = [
       { href: "/accounting/bank-reconciliation", label: "Bank Reconciliation" },
     ],
   },
+  {
+    label: "Pilot",
+    links: [
+      { href: "/pilot/opening-balances", label: "Opening Balances" },
+      { href: "/pilot/reconciliation", label: "Weekly Reconciliation" },
+      { href: "/pilot/issues", label: "Issues" },
+    ],
+  },
 ];
 
 export function AppNav() {

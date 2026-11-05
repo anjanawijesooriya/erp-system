@@ -26,6 +26,9 @@ export const SYSTEM_ROLES: Record<string, { description: string; permissions: Pe
       PERMISSIONS.BANK_RECONCILIATION_MANAGE,
       PERMISSIONS.REPORTS_VIEW,
       PERMISSIONS.AUDIT_LOG_VIEW,
+      PERMISSIONS.OPENING_BALANCE_IMPORT,
+      PERMISSIONS.ISSUE_REPORT,
+      PERMISSIONS.ISSUE_MANAGE,
     ],
   },
   BranchManager: {
@@ -57,10 +60,18 @@ export const SYSTEM_ROLES: Record<string, { description: string; permissions: Pe
       PERMISSIONS.JOURNAL_VIEW,
       PERMISSIONS.CHEQUE_MANAGE,
       PERMISSIONS.REPORTS_VIEW,
+      PERMISSIONS.RECONCILIATION_MANAGE,
+      PERMISSIONS.ISSUE_REPORT,
+      PERMISSIONS.ISSUE_MANAGE,
     ],
   },
   Cashier: {
     description: "Sells at the POS. Cannot see cost price or post journals.",
-    permissions: [PERMISSIONS.POS_SELL, PERMISSIONS.SALES_INVOICE_CREATE, PERMISSIONS.STOCK_VIEW],
+    permissions: [
+      PERMISSIONS.POS_SELL,
+      PERMISSIONS.SALES_INVOICE_CREATE,
+      PERMISSIONS.STOCK_VIEW,
+      PERMISSIONS.ISSUE_REPORT,
+    ],
   },
 };

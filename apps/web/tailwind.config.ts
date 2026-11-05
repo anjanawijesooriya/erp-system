@@ -1,6 +1,5 @@
 import type { Config } from "tailwindcss";
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const uiPreset = require("@erp/ui/tailwind.preset");
+import uiPreset from "@erp/ui/tailwind.preset";
 
 const config: Config = {
   presets: [uiPreset],

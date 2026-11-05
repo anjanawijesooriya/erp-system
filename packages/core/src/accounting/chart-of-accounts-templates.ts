@@ -30,6 +30,11 @@ const BASE_ACCOUNTS: AccountTemplateEntry[] = [
   { code: "2100", name: "VAT Payable", type: "liability", isSystemAccount: true },
   { code: "2200", name: "Post-Dated Cheques Payable", type: "liability", isSystemAccount: true },
   { code: "3000", name: "Owner's Equity", type: "equity", isSystemAccount: true },
+  // The offsetting side of every opening-balance entry (stock, AR, AP) when
+  // a pilot shop goes live with existing operations — see
+  // packages/core/src/pilot/opening-balances.ts. Never touched by ordinary
+  // day-to-day postings, only by the one-time go-live import.
+  { code: "3800", name: "Opening Balance Equity", type: "equity", isSystemAccount: true },
   { code: "3900", name: "Retained Earnings", type: "equity", isSystemAccount: true },
   { code: "4000", name: "Sales Revenue", type: "income", isSystemAccount: true },
   { code: "4100", name: "Sales Returns & Allowances", type: "income", isSystemAccount: true },

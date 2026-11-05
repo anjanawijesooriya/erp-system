@@ -13,3 +13,4 @@ export * from "./reports";
 export * from "./plans";
 export * from "./tenants";
 export * from "./platform-admin";
+export * from "./pilot";

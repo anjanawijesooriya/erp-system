@@ -14,7 +14,10 @@ margin, stock valuation, dead stock, top customers/products, daily owner
 SMS summary via Notify.lk), and the SaaS-platform items from the doc's
 "SaaS and multi-tenancy" / "Operational SaaS needs" sections (self-service
 signup wizard, plan tiers with feature gating and limits, a super-admin
-panel, per-tenant data export) are done. See
+panel, per-tenant data export), and Phase 8 pilot support (opening-balance
+go-live import, weekly reconciliation, an in-app issue tracker — see
+`PILOT.md` for the actual pilot-running checklist, which is process, not
+code) are done. See
 `ERP Platform for Local Shops — Tech Stack & Build Plan.md` for the full plan.
 
 ## Structure
@@ -102,6 +105,16 @@ to see the connection count) — that's more likely than the pool-caching
 fix regressing. `docker compose restart postgres` clears stuck connections
 without losing data.
 
+As of 2026-11-06, `next dev` crashed once (see Phase 8 notes below — a
+genuine `tailwind.config.ts` bug, now fixed) and the agent's session
+couldn't restart the crashed process cleanly (process-kill permission is
+request-by-request, not standing), so it started a second instance on port
+3002 to verify the fix instead of fighting the dead one on 3000. **Do a
+full clean restart** (close every `next dev` / `tsx watch` terminal, then
+one `npm run dev` from the repo root) to collapse back down to a single
+instance on port 3000 — there's nothing left to debug, this is pure
+process hygiene at this point.
+
 ## Platform admin & SaaS platform notes
 
 - **Platform admin is a separate login from tenant users** — not a row in
@@ -182,6 +195,70 @@ with a natural per-tenant "slug"/"code" uniquely identifying a record
 added in the *same* migration as the table itself — a few of these have
 now slipped through and only been caught by a usage count or a direct
 `.onConflictDoNothing()` bug symptom, not systematically checked for.
+
+## Phase 8 notes
+
+- `PILOT.md` has the actual pilot-running checklist (shop selection,
+  weekly reconciliation process, "ready to launch" criteria, in-person
+  onboarding script outline) — this section is just the code-side notes.
+- **Opening balances are real, audited documents, not a backdoor**: opening
+  stock posts through the normal `postMovement` ledger
+  (`movementType: "opening_balance"`); opening customer/supplier balances
+  create real, agable sales/supplier invoices (visible in
+  `/sales/receivables` and `/purchasing/payables`, not just a GL number).
+  All three post their GL offset to a new **Opening Balance Equity (3800)**
+  account, deliberately never Sales Revenue/COGS/the GRN-clearing account —
+  they're not routed through `createSalesInvoice`/`createSupplierInvoice`/
+  `createGrn` at all, which exist for real transactions and would post the
+  wrong journal entries for a go-live balance.
+- A per-tenant placeholder product (SKU `OPENING-BAL`) is created on first
+  use to carry the single line item on each opening invoice — it's not
+  meant to appear in product listings/reports used for day-to-day sales,
+  just to satisfy the invoice-line schema's `productVariantId` requirement.
+- Reconciliation (`/pilot/reconciliation`) only stores the **manual**
+  figure per (date, metric) — the system figure is always computed live
+  from the existing report queries at view time, so it can't go stale even
+  if more documents get posted after the fact. The `stock_value` metric is
+  a current-moment figure regardless of which date you attach it to (stock
+  balances aren't a historical snapshot table) — documented in the code,
+  only meaningful to compare against a count taken today.
+- The issue tracker (`/pilot/issues`) is tenant-scoped for reporting/triage
+  (every role including Cashier can report); the super-admin panel
+  (`/admin`) additionally shows a cross-tenant view with its own
+  tenant-unscoped status-update action (`updateIssueStatusAsAdmin`),
+  deliberately separate from the tenant-scoped `updateIssueStatus` so a
+  normal tenant user can never accidentally (or deliberately) touch another
+  tenant's issue.
+- **Two tenancy-safety gaps caught and fixed while writing this phase,
+  before they shipped**: the first draft of `updateIssueStatus` had no
+  `tenantId` filter in its WHERE clause at all (would have let any tenant
+  user close any other tenant's issue by id if they guessed/enumerated it);
+  caught immediately while wiring the web action and fixed before any live
+  testing. This is the same category of mistake as `deactivateUser`'s
+  first draft back in the SaaS-platform round — worth being deliberately
+  suspicious of any `update`/`delete` function that takes an id without
+  also taking (and filtering by) a tenant id.
+- **A real, unrelated crash found and fixed along the way**: `next dev`
+  crashed outright (`ReferenceError: require is not defined`) in
+  `apps/web/tailwind.config.ts`, which had used CommonJS `require()` inside
+  a `.ts` config file since Phase 1 — apparently fine until some Next.js/
+  Node module-loading path change finally tripped over it, mid this
+  session, unrelated to anything Phase 8 touched. Fixed by switching to a
+  static `import` and adding a `tailwind.preset.d.ts` declaration (plus a
+  `types` condition in `packages/ui/package.json`'s export map) so the
+  untyped `.js` preset file still typechecks. If you ever see this error
+  again, it's almost certainly this same category of issue (a config file
+  mixing CJS/ESM), not application code.
+- Verified against the live DB: posted a 15,000 opening customer balance,
+  an 8,000 opening supplier balance, and 200 units of opening stock at
+  cost 1,200 — confirmed AR/AP/Inventory/Opening Balance Equity all landed
+  at the exactly correct amounts on the trial balance, and confirmed both
+  opening invoices showed up correctly in the receivables/payables aging
+  reports as real, current, non-overdue items. Separately verified the
+  reconciliation comparison (manual vs. live-computed system figure) and
+  the full issue lifecycle (report → tenant-scoped update → cross-tenant
+  admin view → admin-scoped update), including that `reportedBy`/`tenant`
+  relational data resolves correctly.
 
 ## Phase 7 notes
 

@@ -14,3 +14,4 @@ export * from "./shared";
 export * from "./sales";
 export * from "./accounting";
 export * from "./platform-admin";
+export * from "./pilot";

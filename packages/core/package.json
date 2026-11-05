@@ -17,7 +17,8 @@
     "./reports": "./src/reports/index.ts",
     "./plans": "./src/plans/index.ts",
     "./tenants": "./src/tenants/index.ts",
-    "./platform-admin": "./src/platform-admin/index.ts"
+    "./platform-admin": "./src/platform-admin/index.ts",
+    "./pilot": "./src/pilot/index.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
