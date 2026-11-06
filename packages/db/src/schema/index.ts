@@ -19,3 +19,5 @@ export * from "./hr";
 export * from "./manufacturing";
 export * from "./ecommerce";
 export * from "./accountant-portal";
+export * from "./pos";
+export * from "./branding";

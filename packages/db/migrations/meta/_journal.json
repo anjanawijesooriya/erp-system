@@ -141,6 +141,34 @@
       "when": 1793899900000,
       "tag": "0019_enable_rls_phase9",
       "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1793948134982,
+      "tag": "0020_tiny_ricochet",
+      "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1793948140000,
+      "tag": "0021_enable_rls_cash_register",
+      "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "7",
+      "when": 1793949116144,
+      "tag": "0022_daffy_darkhawk",
+      "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "7",
+      "when": 1793949120000,
+      "tag": "0023_enable_rls_document_branding",
+      "breakpoints": true
     }
   ]
 }

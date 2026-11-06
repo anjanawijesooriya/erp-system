@@ -18,7 +18,7 @@ export default async function WarehousesPage() {
   return (
     <ModuleGate tenantId={tenantId} moduleKey="inventory">
     <main className="mx-auto max-w-4xl p-8">
-      <h1 className="mb-4 text-xl font-semibold">Warehouses</h1>
+      <h1 className="mb-4 text-2xl font-semibold tracking-tight text-slate-900">Warehouses</h1>
 
       {canManage && (
         <div className="mb-6">
@@ -26,26 +26,26 @@ export default async function WarehousesPage() {
         </div>
       )}
 
-      <div className="overflow-hidden rounded-lg border border-slate-200 bg-white">
+      <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
         <table className="w-full text-left text-sm">
           <thead className="bg-slate-50 text-xs uppercase text-slate-500">
             <tr>
-              <th className="px-4 py-2">Code</th>
-              <th className="px-4 py-2">Name</th>
-              <th className="px-4 py-2">Branch</th>
+              <th className="px-4 py-2.5">Code</th>
+              <th className="px-4 py-2.5">Name</th>
+              <th className="px-4 py-2.5">Branch</th>
             </tr>
           </thead>
           <tbody>
             {warehouses.map((w) => (
               <tr key={w.id} className="border-t border-slate-100">
-                <td className="px-4 py-2">{w.code}</td>
-                <td className="px-4 py-2">{w.name}</td>
-                <td className="px-4 py-2">{w.branch?.name ?? "—"}</td>
+                <td className="px-4 py-2.5">{w.code}</td>
+                <td className="px-4 py-2.5">{w.name}</td>
+                <td className="px-4 py-2.5">{w.branch?.name ?? "—"}</td>
               </tr>
             ))}
             {warehouses.length === 0 && (
               <tr>
-                <td colSpan={3} className="px-4 py-6 text-center text-slate-400">
+                <td colSpan={3} className="px-4 py-8 text-center text-slate-400">
                   No warehouses yet.
                 </td>
               </tr>

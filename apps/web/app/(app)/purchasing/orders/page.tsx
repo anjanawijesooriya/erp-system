@@ -22,7 +22,7 @@ export default async function PurchaseOrdersPage() {
   return (
     <ModuleGate tenantId={tenantId} moduleKey="purchasing">
     <main className="mx-auto max-w-5xl p-8">
-      <h1 className="mb-4 text-xl font-semibold">Purchase orders</h1>
+      <h1 className="mb-4 text-2xl font-semibold tracking-tight text-slate-900">Purchase orders</h1>
 
       {canCreate && ready && (
         <div className="mb-6">
@@ -35,30 +35,30 @@ export default async function PurchaseOrdersPage() {
         </p>
       )}
 
-      <div className="overflow-hidden rounded-lg border border-slate-200 bg-white">
+      <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
         <table className="w-full text-left text-sm">
           <thead className="bg-slate-50 text-xs uppercase text-slate-500">
             <tr>
-              <th className="px-4 py-2">Doc #</th>
-              <th className="px-4 py-2">Supplier</th>
-              <th className="px-4 py-2">Order date</th>
-              <th className="px-4 py-2">Status</th>
-              <th className="px-4 py-2 text-right">Lines</th>
+              <th className="px-4 py-2.5">Doc #</th>
+              <th className="px-4 py-2.5">Supplier</th>
+              <th className="px-4 py-2.5">Order date</th>
+              <th className="px-4 py-2.5">Status</th>
+              <th className="px-4 py-2.5 text-right">Lines</th>
             </tr>
           </thead>
           <tbody>
             {orders.map((o) => (
               <tr key={o.id} className="border-t border-slate-100">
-                <td className="px-4 py-2">{o.docNumber}</td>
-                <td className="px-4 py-2">{o.supplier?.name}</td>
-                <td className="px-4 py-2">{o.orderDate}</td>
-                <td className="px-4 py-2 capitalize">{o.status}</td>
-                <td className="px-4 py-2 text-right">{o.lines.length}</td>
+                <td className="px-4 py-2.5">{o.docNumber}</td>
+                <td className="px-4 py-2.5">{o.supplier?.name}</td>
+                <td className="px-4 py-2.5">{o.orderDate}</td>
+                <td className="px-4 py-2.5 capitalize">{o.status}</td>
+                <td className="px-4 py-2.5 text-right">{o.lines.length}</td>
               </tr>
             ))}
             {orders.length === 0 && (
               <tr>
-                <td colSpan={5} className="px-4 py-6 text-center text-slate-400">
+                <td colSpan={5} className="px-4 py-8 text-center text-slate-400">
                   No purchase orders yet.
                 </td>
               </tr>

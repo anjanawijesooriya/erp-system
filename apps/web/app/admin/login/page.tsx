@@ -1,13 +1,24 @@
+import { AuthShell } from "@/components/auth-shell";
 import { AdminLoginForm } from "./login-form";
 
 export default function AdminLoginPage() {
   return (
-    <main className="flex min-h-screen items-center justify-center bg-slate-900">
-      <div className="w-full max-w-sm rounded-lg border border-slate-700 bg-slate-800 p-8 shadow-sm">
-        <h1 className="mb-1 text-xl font-semibold text-white">Platform admin</h1>
-        <p className="mb-6 text-sm text-slate-400">Internal staff only.</p>
-        <AdminLoginForm />
-      </div>
-    </main>
+    <AuthShell
+      title="Platform admin"
+      subtitle="Internal staff only — tenant accounts sign in at /login instead."
+      panel={{
+        tone: "slate",
+        badge: "Internal tools",
+        heading: "The control center behind every shop on Nexora.",
+        body: "Tenant oversight, plan management, and cross-tenant support — all audit-logged.",
+        features: [
+          { title: "Usage & plan oversight", body: "See every tenant's branches, users, and products at a glance." },
+          { title: "Plan changes", body: "Move a tenant between POS, Business, and ERP tiers." },
+          { title: "Cross-tenant pilot issues", body: "Triage support issues reported from any shop, in one place." },
+        ],
+      }}
+    >
+      <AdminLoginForm />
+    </AuthShell>
   );
 }

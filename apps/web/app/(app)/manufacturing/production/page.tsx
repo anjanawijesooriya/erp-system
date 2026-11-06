@@ -22,7 +22,7 @@ export default async function ProductionPage() {
   return (
     <ModuleGate tenantId={tenantId} moduleKey="manufacturing">
       <main className="mx-auto max-w-4xl p-8">
-        <h1 className="mb-4 text-xl font-semibold">Production orders</h1>
+        <h1 className="mb-4 text-2xl font-semibold tracking-tight text-slate-900">Production orders</h1>
 
         {canManage && (
           <div className="mb-6">
@@ -30,32 +30,32 @@ export default async function ProductionPage() {
           </div>
         )}
 
-        <div className="overflow-hidden rounded-lg border border-slate-200 bg-white">
+        <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
           <table className="w-full text-left text-sm">
             <thead className="bg-slate-50 text-xs uppercase text-slate-500">
               <tr>
-                <th className="px-4 py-2">BOM</th>
-                <th className="px-4 py-2">Branch / warehouse</th>
-                <th className="px-4 py-2">Planned batches</th>
-                <th className="px-4 py-2">Actual output</th>
-                <th className="px-4 py-2">Status</th>
-                {canManage && <th className="px-4 py-2" />}
+                <th className="px-4 py-2.5">BOM</th>
+                <th className="px-4 py-2.5">Branch / warehouse</th>
+                <th className="px-4 py-2.5">Planned batches</th>
+                <th className="px-4 py-2.5">Actual output</th>
+                <th className="px-4 py-2.5">Status</th>
+                {canManage && <th className="px-4 py-2.5" />}
               </tr>
             </thead>
             <tbody>
               {orders.map((o) => (
                 <tr key={o.id} className="border-t border-slate-100">
-                  <td className="px-4 py-2">
+                  <td className="px-4 py-2.5">
                     {o.bom.name} → {o.bom.outputVariant.sku}
                   </td>
-                  <td className="px-4 py-2">
+                  <td className="px-4 py-2.5">
                     {o.branch?.name} / {o.warehouse?.name}
                   </td>
-                  <td className="px-4 py-2">{o.plannedBatches}</td>
-                  <td className="px-4 py-2">{o.actualOutputQuantity ?? "—"}</td>
-                  <td className="px-4 py-2 capitalize">{o.status}</td>
+                  <td className="px-4 py-2.5">{o.plannedBatches}</td>
+                  <td className="px-4 py-2.5">{o.actualOutputQuantity ?? "—"}</td>
+                  <td className="px-4 py-2.5 capitalize">{o.status}</td>
                   {canManage && (
-                    <td className="px-4 py-2">
+                    <td className="px-4 py-2.5">
                       {o.status === "draft" && (
                         <OrderActions productionOrderId={o.id} plannedBatches={Number(o.plannedBatches)} />
                       )}
@@ -65,7 +65,7 @@ export default async function ProductionPage() {
               ))}
               {orders.length === 0 && (
                 <tr>
-                  <td colSpan={canManage ? 6 : 5} className="px-4 py-6 text-center text-slate-400">
+                  <td colSpan={canManage ? 6 : 5} className="px-4 py-8 text-center text-slate-400">
                     No production orders yet.
                   </td>
                 </tr>

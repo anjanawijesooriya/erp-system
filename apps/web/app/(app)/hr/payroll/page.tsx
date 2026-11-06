@@ -21,7 +21,7 @@ export default async function PayrollPage() {
   return (
     <ModuleGate tenantId={tenantId} moduleKey="payroll">
       <main className="mx-auto max-w-5xl p-8">
-        <h1 className="mb-4 text-xl font-semibold">Payroll</h1>
+        <h1 className="mb-4 text-2xl font-semibold tracking-tight text-slate-900">Payroll</h1>
 
         {canProcess && (
           <div className="mb-6">
@@ -34,7 +34,7 @@ export default async function PayrollPage() {
             const totalGross = run.lines.reduce((s, l) => s + Number(l.grossSalary), 0);
             const totalNet = run.lines.reduce((s, l) => s + Number(l.netSalary), 0);
             return (
-              <div key={run.id} className="overflow-hidden rounded-lg border border-slate-200 bg-white">
+              <div key={run.id} className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
                 <div className="flex items-center justify-between bg-slate-50 px-4 py-2">
                   <div className="text-sm font-medium">
                     {MONTH_NAMES[run.periodMonth - 1]} {run.periodYear} — {run.branch?.name}
@@ -47,29 +47,29 @@ export default async function PayrollPage() {
                 <table className="w-full text-left text-sm">
                   <thead className="text-xs uppercase text-slate-500">
                     <tr>
-                      <th className="px-4 py-2">Employee</th>
-                      <th className="px-4 py-2">Gross</th>
-                      <th className="px-4 py-2">EPF (emp)</th>
-                      <th className="px-4 py-2">APIT</th>
-                      <th className="px-4 py-2">Net</th>
+                      <th className="px-4 py-2.5">Employee</th>
+                      <th className="px-4 py-2.5">Gross</th>
+                      <th className="px-4 py-2.5">EPF (emp)</th>
+                      <th className="px-4 py-2.5">APIT</th>
+                      <th className="px-4 py-2.5">Net</th>
                     </tr>
                   </thead>
                   <tbody>
                     {run.lines.map((l) => (
                       <tr key={l.id} className="border-t border-slate-100">
-                        <td className="px-4 py-2">{l.employee?.name}</td>
-                        <td className="px-4 py-2">{Number(l.grossSalary).toLocaleString()}</td>
-                        <td className="px-4 py-2">{Number(l.epfEmployeeAmount).toLocaleString()}</td>
-                        <td className="px-4 py-2">{Number(l.apitAmount).toLocaleString()}</td>
+                        <td className="px-4 py-2.5">{l.employee?.name}</td>
+                        <td className="px-4 py-2.5">{Number(l.grossSalary).toLocaleString()}</td>
+                        <td className="px-4 py-2.5">{Number(l.epfEmployeeAmount).toLocaleString()}</td>
+                        <td className="px-4 py-2.5">{Number(l.apitAmount).toLocaleString()}</td>
                         <td className="px-4 py-2 font-medium">{Number(l.netSalary).toLocaleString()}</td>
                       </tr>
                     ))}
                     <tr className="border-t border-slate-200 font-medium">
-                      <td className="px-4 py-2">Total</td>
-                      <td className="px-4 py-2">{totalGross.toLocaleString()}</td>
-                      <td className="px-4 py-2" />
-                      <td className="px-4 py-2" />
-                      <td className="px-4 py-2">{totalNet.toLocaleString()}</td>
+                      <td className="px-4 py-2.5">Total</td>
+                      <td className="px-4 py-2.5">{totalGross.toLocaleString()}</td>
+                      <td className="px-4 py-2.5" />
+                      <td className="px-4 py-2.5" />
+                      <td className="px-4 py-2.5">{totalNet.toLocaleString()}</td>
                     </tr>
                   </tbody>
                 </table>

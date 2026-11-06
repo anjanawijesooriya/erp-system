@@ -39,19 +39,19 @@ export default async function ReportsPage({
 
   return (
     <main className="mx-auto max-w-5xl p-8">
-      <h1 className="mb-4 text-xl font-semibold">Reports</h1>
+      <h1 className="mb-4 text-2xl font-semibold tracking-tight text-slate-900">Reports</h1>
 
-      <form className="mb-6 flex flex-wrap items-end gap-3 rounded-lg border border-slate-200 bg-white p-4 text-sm">
+      <form className="mb-6 flex flex-wrap items-end gap-3 rounded-xl border border-slate-200 bg-white shadow-sm p-4 text-sm">
         <div>
-          <label className="mb-1 block text-xs font-medium text-slate-600">From</label>
+          <label className="mb-1.5 block text-sm font-medium text-slate-700">From</label>
           <input name="from" type="date" defaultValue={from} className="rounded-md border border-slate-300 px-3 py-2" />
         </div>
         <div>
-          <label className="mb-1 block text-xs font-medium text-slate-600">To</label>
+          <label className="mb-1.5 block text-sm font-medium text-slate-700">To</label>
           <input name="to" type="date" defaultValue={to} className="rounded-md border border-slate-300 px-3 py-2" />
         </div>
         <div>
-          <label className="mb-1 block text-xs font-medium text-slate-600">Dead stock: days since last sale</label>
+          <label className="mb-1.5 block text-sm font-medium text-slate-700">Dead stock: days since last sale</label>
           <input
             name="deadStockDays"
             type="number"
@@ -69,26 +69,26 @@ export default async function ReportsPage({
         <h2 className="mb-2 text-sm font-semibold uppercase text-slate-500">
           Sales by day ({from} – {to}) · Total: {totalSales.toFixed(2)}
         </h2>
-        <div className="overflow-hidden rounded-lg border border-slate-200 bg-white">
+        <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
           <table className="w-full text-left text-sm">
             <thead className="bg-slate-50 text-xs uppercase text-slate-500">
               <tr>
-                <th className="px-4 py-2">Date</th>
-                <th className="px-4 py-2 text-right">Invoices</th>
-                <th className="px-4 py-2 text-right">Sales</th>
+                <th className="px-4 py-2.5">Date</th>
+                <th className="px-4 py-2.5 text-right">Invoices</th>
+                <th className="px-4 py-2.5 text-right">Sales</th>
               </tr>
             </thead>
             <tbody>
               {salesByDay.map((r) => (
                 <tr key={r.day} className="border-t border-slate-100">
-                  <td className="px-4 py-2">{r.day}</td>
-                  <td className="px-4 py-2 text-right">{r.invoiceCount}</td>
-                  <td className="px-4 py-2 text-right">{r.totalSales}</td>
+                  <td className="px-4 py-2.5">{r.day}</td>
+                  <td className="px-4 py-2.5 text-right">{r.invoiceCount}</td>
+                  <td className="px-4 py-2.5 text-right">{r.totalSales}</td>
                 </tr>
               ))}
               {salesByDay.length === 0 && (
                 <tr>
-                  <td colSpan={3} className="px-4 py-6 text-center text-slate-400">
+                  <td colSpan={3} className="px-4 py-8 text-center text-slate-400">
                     No sales in this range.
                   </td>
                 </tr>
@@ -101,7 +101,7 @@ export default async function ReportsPage({
       <div className="mb-8 grid grid-cols-2 gap-6">
         <section>
           <h2 className="mb-2 text-sm font-semibold uppercase text-slate-500">Top products</h2>
-          <div className="overflow-hidden rounded-lg border border-slate-200 bg-white">
+          <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
             <table className="w-full text-left text-sm">
               <thead className="bg-slate-50 text-xs uppercase text-slate-500">
                 <tr>
@@ -132,7 +132,7 @@ export default async function ReportsPage({
 
         <section>
           <h2 className="mb-2 text-sm font-semibold uppercase text-slate-500">Top customers</h2>
-          <div className="overflow-hidden rounded-lg border border-slate-200 bg-white">
+          <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
             <table className="w-full text-left text-sm">
               <thead className="bg-slate-50 text-xs uppercase text-slate-500">
                 <tr>
@@ -164,30 +164,30 @@ export default async function ReportsPage({
 
       <section className="mb-8">
         <h2 className="mb-2 text-sm font-semibold uppercase text-slate-500">Margin by product</h2>
-        <div className="overflow-hidden rounded-lg border border-slate-200 bg-white">
+        <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
           <table className="w-full text-left text-sm">
             <thead className="bg-slate-50 text-xs uppercase text-slate-500">
               <tr>
-                <th className="px-4 py-2">Product</th>
-                <th className="px-4 py-2 text-right">Revenue</th>
-                <th className="px-4 py-2 text-right">COGS</th>
-                <th className="px-4 py-2 text-right">Margin</th>
-                <th className="px-4 py-2 text-right">Margin %</th>
+                <th className="px-4 py-2.5">Product</th>
+                <th className="px-4 py-2.5 text-right">Revenue</th>
+                <th className="px-4 py-2.5 text-right">COGS</th>
+                <th className="px-4 py-2.5 text-right">Margin</th>
+                <th className="px-4 py-2.5 text-right">Margin %</th>
               </tr>
             </thead>
             <tbody>
               {margin.map((r) => (
                 <tr key={r.productVariantId} className="border-t border-slate-100">
-                  <td className="px-4 py-2">{r.productName}</td>
-                  <td className="px-4 py-2 text-right">{r.revenue}</td>
-                  <td className="px-4 py-2 text-right">{r.cogs}</td>
-                  <td className="px-4 py-2 text-right">{r.margin}</td>
-                  <td className="px-4 py-2 text-right">{r.marginPct}%</td>
+                  <td className="px-4 py-2.5">{r.productName}</td>
+                  <td className="px-4 py-2.5 text-right">{r.revenue}</td>
+                  <td className="px-4 py-2.5 text-right">{r.cogs}</td>
+                  <td className="px-4 py-2.5 text-right">{r.margin}</td>
+                  <td className="px-4 py-2.5 text-right">{r.marginPct}%</td>
                 </tr>
               ))}
               {margin.length === 0 && (
                 <tr>
-                  <td colSpan={5} className="px-4 py-6 text-center text-slate-400">
+                  <td colSpan={5} className="px-4 py-8 text-center text-slate-400">
                     No data.
                   </td>
                 </tr>
@@ -201,28 +201,28 @@ export default async function ReportsPage({
         <h2 className="mb-2 text-sm font-semibold uppercase text-slate-500">
           Stock valuation · Total: {valuation.totalValue}
         </h2>
-        <div className="overflow-hidden rounded-lg border border-slate-200 bg-white">
+        <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
           <table className="w-full text-left text-sm">
             <thead className="bg-slate-50 text-xs uppercase text-slate-500">
               <tr>
-                <th className="px-4 py-2">Warehouse</th>
-                <th className="px-4 py-2">Product</th>
-                <th className="px-4 py-2 text-right">Qty</th>
-                <th className="px-4 py-2 text-right">Value</th>
+                <th className="px-4 py-2.5">Warehouse</th>
+                <th className="px-4 py-2.5">Product</th>
+                <th className="px-4 py-2.5 text-right">Qty</th>
+                <th className="px-4 py-2.5 text-right">Value</th>
               </tr>
             </thead>
             <tbody>
               {valuation.rows.map((r) => (
                 <tr key={`${r.warehouseId}-${r.productVariantId}`} className="border-t border-slate-100">
-                  <td className="px-4 py-2">{r.warehouseName}</td>
-                  <td className="px-4 py-2">{r.productName}</td>
-                  <td className="px-4 py-2 text-right">{r.quantity}</td>
-                  <td className="px-4 py-2 text-right">{Number(r.value).toFixed(2)}</td>
+                  <td className="px-4 py-2.5">{r.warehouseName}</td>
+                  <td className="px-4 py-2.5">{r.productName}</td>
+                  <td className="px-4 py-2.5 text-right">{r.quantity}</td>
+                  <td className="px-4 py-2.5 text-right">{Number(r.value).toFixed(2)}</td>
                 </tr>
               ))}
               {valuation.rows.length === 0 && (
                 <tr>
-                  <td colSpan={4} className="px-4 py-6 text-center text-slate-400">
+                  <td colSpan={4} className="px-4 py-8 text-center text-slate-400">
                     No stock on hand.
                   </td>
                 </tr>
@@ -236,28 +236,28 @@ export default async function ReportsPage({
         <h2 className="mb-2 text-sm font-semibold uppercase text-slate-500">
           Dead stock (no sale in {deadStockDays} days)
         </h2>
-        <div className="overflow-hidden rounded-lg border border-slate-200 bg-white">
+        <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
           <table className="w-full text-left text-sm">
             <thead className="bg-slate-50 text-xs uppercase text-slate-500">
               <tr>
-                <th className="px-4 py-2">Warehouse</th>
-                <th className="px-4 py-2">Product</th>
-                <th className="px-4 py-2 text-right">Qty</th>
-                <th className="px-4 py-2 text-right">Value</th>
+                <th className="px-4 py-2.5">Warehouse</th>
+                <th className="px-4 py-2.5">Product</th>
+                <th className="px-4 py-2.5 text-right">Qty</th>
+                <th className="px-4 py-2.5 text-right">Value</th>
               </tr>
             </thead>
             <tbody>
               {deadStock.map((r) => (
                 <tr key={`${r.warehouseId}-${r.productVariantId}`} className="border-t border-slate-100">
-                  <td className="px-4 py-2">{r.warehouseName}</td>
-                  <td className="px-4 py-2">{r.productName}</td>
-                  <td className="px-4 py-2 text-right">{r.quantity}</td>
-                  <td className="px-4 py-2 text-right">{Number(r.value).toFixed(2)}</td>
+                  <td className="px-4 py-2.5">{r.warehouseName}</td>
+                  <td className="px-4 py-2.5">{r.productName}</td>
+                  <td className="px-4 py-2.5 text-right">{r.quantity}</td>
+                  <td className="px-4 py-2.5 text-right">{Number(r.value).toFixed(2)}</td>
                 </tr>
               ))}
               {deadStock.length === 0 && (
                 <tr>
-                  <td colSpan={4} className="px-4 py-6 text-center text-slate-400">
+                  <td colSpan={4} className="px-4 py-8 text-center text-slate-400">
                     No dead stock.
                   </td>
                 </tr>

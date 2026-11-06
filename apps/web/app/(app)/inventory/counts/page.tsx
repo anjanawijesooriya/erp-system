@@ -17,7 +17,7 @@ export default async function StockCountsPage() {
   return (
     <ModuleGate tenantId={tenantId} moduleKey="inventory">
     <main className="mx-auto max-w-4xl p-8">
-      <h1 className="mb-4 text-xl font-semibold">Stock counts</h1>
+      <h1 className="mb-4 text-2xl font-semibold tracking-tight text-slate-900">Stock counts</h1>
 
       {canManage && warehouses.length > 0 && variants.length > 0 && (
         <div className="mb-6">
@@ -32,7 +32,7 @@ export default async function StockCountsPage() {
 
       <div className="space-y-4">
         {counts.map((c) => (
-          <div key={c.id} className="rounded-lg border border-slate-200 bg-white p-4 text-sm">
+          <div key={c.id} className="rounded-xl border border-slate-200 bg-white shadow-sm p-4 text-sm">
             <div className="mb-2 flex items-center justify-between">
               <span>
                 {c.warehouse?.name} · {new Date(c.createdAt).toLocaleString()}

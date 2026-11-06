@@ -136,3 +136,58 @@ export async function getBalanceSheet(tenantId: string, asOf: string): Promise<B
     unclosedNetIncome: (income - expense).toFixed(2),
   };
 }
+
+export interface MonthlyFinancialRow {
+  month: string; // "YYYY-MM"
+  revenue: number;
+  expenses: number;
+}
+
+/**
+ * Revenue vs. expenses per calendar month, most recent `months` months
+ * (default 6) up to and including the current month — the dashboard's
+ * trend chart. One aggregation query grouped by month and account type,
+ * not `months` separate `getProfitAndLoss` calls.
+ */
+export async function getMonthlyRevenueExpense(tenantId: string, months = 6): Promise<MonthlyFinancialRow[]> {
+  const now = new Date();
+  const start = new Date(now.getFullYear(), now.getMonth() - (months - 1), 1);
+  const from = start.toISOString().slice(0, 10);
+
+  const rows = await db
+    .select({
+      month: sql<string>`to_char(${journalEntries.entryDate}, 'YYYY-MM')`,
+      type: ledgerAccounts.type,
+      totalDebit: sql<string>`coalesce(sum(${journalEntryLines.debit}), 0)`,
+      totalCredit: sql<string>`coalesce(sum(${journalEntryLines.credit}), 0)`,
+    })
+    .from(journalEntryLines)
+    .innerJoin(journalEntries, eq(journalEntries.id, journalEntryLines.journalEntryId))
+    .innerJoin(ledgerAccounts, eq(ledgerAccounts.id, journalEntryLines.accountId))
+    .where(
+      and(
+        eq(ledgerAccounts.tenantId, tenantId),
+        gte(journalEntries.entryDate, from),
+        sql`${ledgerAccounts.type} in ('income', 'expense')`,
+      ),
+    )
+    .groupBy(sql`to_char(${journalEntries.entryDate}, 'YYYY-MM')`, ledgerAccounts.type);
+
+  const byMonth = new Map<string, MonthlyFinancialRow>();
+  for (let i = 0; i < months; i++) {
+    const d = new Date(now.getFullYear(), now.getMonth() - (months - 1 - i), 1);
+    const key = d.toISOString().slice(0, 7);
+    byMonth.set(key, { month: key, revenue: 0, expenses: 0 });
+  }
+
+  for (const r of rows) {
+    const entry = byMonth.get(r.month);
+    if (!entry) continue; // outside the requested window (shouldn't happen given the `from` filter, but keep it safe)
+    const debit = Number(r.totalDebit);
+    const credit = Number(r.totalCredit);
+    if (r.type === "income") entry.revenue += credit - debit;
+    else entry.expenses += debit - credit;
+  }
+
+  return Array.from(byMonth.values());
+}

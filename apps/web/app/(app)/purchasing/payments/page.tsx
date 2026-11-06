@@ -20,7 +20,7 @@ export default async function SupplierPaymentsPage() {
   return (
     <ModuleGate tenantId={tenantId} moduleKey="purchasing">
     <main className="mx-auto max-w-5xl p-8">
-      <h1 className="mb-4 text-xl font-semibold">Supplier payments</h1>
+      <h1 className="mb-4 text-2xl font-semibold tracking-tight text-slate-900">Supplier payments</h1>
 
       {canCreate && ready && (
         <div className="mb-6">
@@ -31,32 +31,32 @@ export default async function SupplierPaymentsPage() {
         <p className="mb-6 text-sm text-slate-500">Add a supplier before recording a payment.</p>
       )}
 
-      <div className="overflow-hidden rounded-lg border border-slate-200 bg-white">
+      <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
         <table className="w-full text-left text-sm">
           <thead className="bg-slate-50 text-xs uppercase text-slate-500">
             <tr>
-              <th className="px-4 py-2">Doc #</th>
-              <th className="px-4 py-2">Supplier</th>
-              <th className="px-4 py-2">Method</th>
-              <th className="px-4 py-2 text-right">Amount</th>
-              <th className="px-4 py-2">Applied to</th>
+              <th className="px-4 py-2.5">Doc #</th>
+              <th className="px-4 py-2.5">Supplier</th>
+              <th className="px-4 py-2.5">Method</th>
+              <th className="px-4 py-2.5 text-right">Amount</th>
+              <th className="px-4 py-2.5">Applied to</th>
             </tr>
           </thead>
           <tbody>
             {payments.map((p) => (
               <tr key={p.id} className="border-t border-slate-100">
-                <td className="px-4 py-2">{p.docNumber}</td>
-                <td className="px-4 py-2">{p.supplier?.name}</td>
-                <td className="px-4 py-2 capitalize">{p.method}</td>
-                <td className="px-4 py-2 text-right">{p.amount}</td>
-                <td className="px-4 py-2">
+                <td className="px-4 py-2.5">{p.docNumber}</td>
+                <td className="px-4 py-2.5">{p.supplier?.name}</td>
+                <td className="px-4 py-2.5 capitalize">{p.method}</td>
+                <td className="px-4 py-2.5 text-right">{p.amount}</td>
+                <td className="px-4 py-2.5">
                   {p.allocations.map((a) => a.invoice?.docNumber).join(", ") || "—"}
                 </td>
               </tr>
             ))}
             {payments.length === 0 && (
               <tr>
-                <td colSpan={5} className="px-4 py-6 text-center text-slate-400">
+                <td colSpan={5} className="px-4 py-8 text-center text-slate-400">
                   No payments yet.
                 </td>
               </tr>

@@ -5,6 +5,7 @@ import { getOrCreateWalkInCustomer } from "../parties/customers";
 import { insertSalesInvoice } from "./sales-invoices";
 import { insertDelivery } from "./deliveries";
 import { insertSalesPayment } from "./sales-payments";
+import { getOpenRegisterSession, NoOpenRegisterError } from "../pos/cash-register";
 import type { PosSaleInput } from "./schemas";
 
 /**
@@ -15,6 +16,9 @@ import type { PosSaleInput } from "./schemas";
  * walk-in customer record (see getOrCreateWalkInCustomer).
  */
 export async function createPosSale(tenantId: string, userId: string, input: PosSaleInput) {
+  const openSession = await getOpenRegisterSession(tenantId, input.branchId);
+  if (!openSession) throw new NoOpenRegisterError();
+
   const customerId = input.customerId ?? (await getOrCreateWalkInCustomer(tenantId)).id;
   const totalAmount = input.lines.reduce((sum, l) => sum + l.quantity * l.unitPrice, 0);
   const today = new Date().toISOString().slice(0, 10);

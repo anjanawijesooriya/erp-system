@@ -26,19 +26,19 @@ export default async function ReportsPage({
   return (
     <ModuleGate tenantId={tenantId} moduleKey="accounting">
     <main className="mx-auto max-w-5xl p-8">
-      <h1 className="mb-4 text-xl font-semibold">Financial reports</h1>
+      <h1 className="mb-4 text-2xl font-semibold tracking-tight text-slate-900">Financial reports</h1>
 
-      <form className="mb-6 flex flex-wrap items-end gap-3 rounded-lg border border-slate-200 bg-white p-4 text-sm">
+      <form className="mb-6 flex flex-wrap items-end gap-3 rounded-xl border border-slate-200 bg-white shadow-sm p-4 text-sm">
         <div>
-          <label className="mb-1 block text-xs font-medium text-slate-600">P&L / Trial balance from</label>
+          <label className="mb-1.5 block text-sm font-medium text-slate-700">P&L / Trial balance from</label>
           <input name="from" type="date" defaultValue={from} className="rounded-md border border-slate-300 px-3 py-2" />
         </div>
         <div>
-          <label className="mb-1 block text-xs font-medium text-slate-600">to</label>
+          <label className="mb-1.5 block text-sm font-medium text-slate-700">to</label>
           <input name="to" type="date" defaultValue={to} className="rounded-md border border-slate-300 px-3 py-2" />
         </div>
         <div>
-          <label className="mb-1 block text-xs font-medium text-slate-600">Balance sheet as of</label>
+          <label className="mb-1.5 block text-sm font-medium text-slate-700">Balance sheet as of</label>
           <input name="asOf" type="date" defaultValue={asOf} className="rounded-md border border-slate-300 px-3 py-2" />
         </div>
         <button type="submit" className="rounded-md border border-slate-300 px-3 py-2">
@@ -48,30 +48,30 @@ export default async function ReportsPage({
 
       <section className="mb-8">
         <h2 className="mb-2 text-sm font-semibold uppercase text-slate-500">Trial balance ({from} – {to})</h2>
-        <div className="overflow-hidden rounded-lg border border-slate-200 bg-white">
+        <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
           <table className="w-full text-left text-sm">
             <thead className="bg-slate-50 text-xs uppercase text-slate-500">
               <tr>
-                <th className="px-4 py-2">Code</th>
-                <th className="px-4 py-2">Account</th>
-                <th className="px-4 py-2 text-right">Debit</th>
-                <th className="px-4 py-2 text-right">Credit</th>
-                <th className="px-4 py-2 text-right">Balance</th>
+                <th className="px-4 py-2.5">Code</th>
+                <th className="px-4 py-2.5">Account</th>
+                <th className="px-4 py-2.5 text-right">Debit</th>
+                <th className="px-4 py-2.5 text-right">Credit</th>
+                <th className="px-4 py-2.5 text-right">Balance</th>
               </tr>
             </thead>
             <tbody>
               {trialBalance.map((r) => (
                 <tr key={r.accountCode} className="border-t border-slate-100">
-                  <td className="px-4 py-2">{r.accountCode}</td>
-                  <td className="px-4 py-2">{r.accountName}</td>
-                  <td className="px-4 py-2 text-right">{r.totalDebit}</td>
-                  <td className="px-4 py-2 text-right">{r.totalCredit}</td>
+                  <td className="px-4 py-2.5">{r.accountCode}</td>
+                  <td className="px-4 py-2.5">{r.accountName}</td>
+                  <td className="px-4 py-2.5 text-right">{r.totalDebit}</td>
+                  <td className="px-4 py-2.5 text-right">{r.totalCredit}</td>
                   <td className="px-4 py-2 text-right font-medium">{r.balance}</td>
                 </tr>
               ))}
               {trialBalance.length === 0 && (
                 <tr>
-                  <td colSpan={5} className="px-4 py-6 text-center text-slate-400">
+                  <td colSpan={5} className="px-4 py-8 text-center text-slate-400">
                     No activity in this range.
                   </td>
                 </tr>
@@ -83,7 +83,7 @@ export default async function ReportsPage({
 
       <section className="mb-8">
         <h2 className="mb-2 text-sm font-semibold uppercase text-slate-500">Profit &amp; loss ({from} – {to})</h2>
-        <div className="rounded-lg border border-slate-200 bg-white p-4 text-sm">
+        <div className="rounded-xl border border-slate-200 bg-white shadow-sm p-4 text-sm">
           <div className="mb-2 font-medium">Income</div>
           {pl.income.map((r) => (
             <div key={r.accountCode} className="flex justify-between py-0.5">
@@ -115,7 +115,7 @@ export default async function ReportsPage({
 
       <section>
         <h2 className="mb-2 text-sm font-semibold uppercase text-slate-500">Balance sheet (as of {asOf})</h2>
-        <div className="rounded-lg border border-slate-200 bg-white p-4 text-sm">
+        <div className="rounded-xl border border-slate-200 bg-white shadow-sm p-4 text-sm">
           <div className="mb-2 font-medium">Assets</div>
           {bs.assets.map((r) => (
             <div key={r.accountCode} className="flex justify-between py-0.5">

@@ -4,7 +4,8 @@ import { useMemo, useState, useTransition } from "react";
 import { Button } from "@erp/ui/button";
 import { postManualJournalAction } from "./actions";
 
-const inputClass = "w-full rounded-md border border-slate-300 px-3 py-2 text-sm";
+const inputClass =
+  "w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm shadow-sm transition-colors placeholder:text-slate-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30";
 
 interface Line {
   accountCode: string;
@@ -83,10 +84,10 @@ export function JournalForm({
   }
 
   return (
-    <div className="rounded-lg border border-slate-200 bg-white p-4">
+    <div className="rounded-xl border border-slate-200 bg-white shadow-sm p-4">
       <div className="mb-3 grid grid-cols-3 gap-3">
         <div>
-          <label className="mb-1 block text-xs font-medium text-slate-600">Branch</label>
+          <label className="mb-1.5 block text-sm font-medium text-slate-700">Branch</label>
           <select value={branchId} className={inputClass} disabled>
             {branches.map((b) => (
               <option key={b.id} value={b.id}>
@@ -96,7 +97,7 @@ export function JournalForm({
           </select>
         </div>
         <div>
-          <label className="mb-1 block text-xs font-medium text-slate-600">Entry date</label>
+          <label className="mb-1.5 block text-sm font-medium text-slate-700">Entry date</label>
           <input
             type="date"
             value={entryDate}
@@ -105,7 +106,7 @@ export function JournalForm({
           />
         </div>
         <div>
-          <label className="mb-1 block text-xs font-medium text-slate-600">Memo</label>
+          <label className="mb-1.5 block text-sm font-medium text-slate-700">Memo</label>
           <input value={memo} onChange={(e) => setMemo(e.target.value)} className={inputClass} />
         </div>
       </div>
@@ -182,8 +183,8 @@ export function JournalForm({
         </span>
       </div>
 
-      {error && <p className="mb-2 text-sm text-red-600">{error}</p>}
-      {success && <p className="mb-2 text-sm text-green-700">{success}</p>}
+      {error && <p className="mb-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>}
+      {success && <p className="mb-2 rounded-lg border border-accent-200 bg-accent-50 px-3 py-2 text-sm text-accent-700">{success}</p>}
 
       <Button type="button" onClick={submit} disabled={pending || !balanced || !entryDate}>
         {pending ? "Posting..." : "Post entry"}

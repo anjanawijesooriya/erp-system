@@ -10,7 +10,7 @@ type Party = {
 
 export function PartyTable({ parties, emptyLabel }: { parties: Party[]; emptyLabel: string }) {
   return (
-    <div className="overflow-hidden rounded-lg border border-slate-200 bg-white">
+    <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
       <table className="w-full text-left text-sm">
         <thead className="bg-slate-50 text-xs uppercase text-slate-500">
           <tr>

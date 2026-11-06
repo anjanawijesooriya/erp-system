@@ -21,7 +21,7 @@ export default async function ChannelsPage() {
   return (
     <ModuleGate tenantId={tenantId} moduleKey="ecommerce">
       <main className="mx-auto max-w-4xl p-8">
-        <h1 className="mb-4 text-xl font-semibold">Sales channels</h1>
+        <h1 className="mb-4 text-2xl font-semibold tracking-tight text-slate-900">Sales channels</h1>
 
         {canManage && (
           <div className="mb-6">
@@ -31,7 +31,7 @@ export default async function ChannelsPage() {
 
         <div className="space-y-4">
           {channels.map((c) => (
-            <div key={c.id} className="overflow-hidden rounded-lg border border-slate-200 bg-white">
+            <div key={c.id} className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
               <div className="flex items-center justify-between bg-slate-50 px-4 py-2">
                 <div className="text-sm font-medium">
                   {c.name} <span className="font-normal text-slate-400">({c.isActive ? "active" : "inactive"})</span>
@@ -67,31 +67,31 @@ export default async function ChannelsPage() {
         </div>
 
         <h2 className="mb-2 mt-8 text-lg font-semibold">Recent channel orders</h2>
-        <div className="overflow-hidden rounded-lg border border-slate-200 bg-white">
+        <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
           <table className="w-full text-left text-sm">
             <thead className="bg-slate-50 text-xs uppercase text-slate-500">
               <tr>
-                <th className="px-4 py-2">Channel</th>
-                <th className="px-4 py-2">External order #</th>
-                <th className="px-4 py-2">Status</th>
-                <th className="px-4 py-2">Date</th>
+                <th className="px-4 py-2.5">Channel</th>
+                <th className="px-4 py-2.5">External order #</th>
+                <th className="px-4 py-2.5">Status</th>
+                <th className="px-4 py-2.5">Date</th>
               </tr>
             </thead>
             <tbody>
               {orders.map((o) => (
                 <tr key={o.id} className="border-t border-slate-100">
-                  <td className="px-4 py-2">{o.channel.name}</td>
-                  <td className="px-4 py-2">{o.externalOrderId}</td>
-                  <td className="px-4 py-2">
+                  <td className="px-4 py-2.5">{o.channel.name}</td>
+                  <td className="px-4 py-2.5">{o.externalOrderId}</td>
+                  <td className="px-4 py-2.5">
                     <span className="capitalize">{o.status}</span>
                     {o.failureReason && <div className="text-xs text-red-600">{o.failureReason}</div>}
                   </td>
-                  <td className="px-4 py-2">{new Date(o.createdAt).toLocaleString()}</td>
+                  <td className="px-4 py-2.5">{new Date(o.createdAt).toLocaleString()}</td>
                 </tr>
               ))}
               {orders.length === 0 && (
                 <tr>
-                  <td colSpan={4} className="px-4 py-6 text-center text-slate-400">
+                  <td colSpan={4} className="px-4 py-8 text-center text-slate-400">
                     No channel orders yet.
                   </td>
                 </tr>

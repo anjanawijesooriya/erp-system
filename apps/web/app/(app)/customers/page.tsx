@@ -15,7 +15,7 @@ export default async function CustomersPage() {
 
   return (
     <main className="mx-auto max-w-5xl p-8">
-      <h1 className="mb-4 text-xl font-semibold">Customers</h1>
+      <h1 className="mb-4 text-2xl font-semibold tracking-tight text-slate-900">Customers</h1>
 
       {canManage && (
         <div className="mb-6 space-y-4">

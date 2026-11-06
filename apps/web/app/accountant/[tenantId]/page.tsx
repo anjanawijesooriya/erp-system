@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import { assertAccountantHasTenantAccess, getTenantName } from "@erp/core/accountant-portal";
 import { getTrialBalance, listJournalEntries } from "@erp/core/accounting";
 import { requireAccountantSession } from "@/lib/accountant-session";
+import { InternalShell, InternalTopbar } from "@/components/internal-topbar";
+import { accountantLogoutAction } from "../actions";
 
 /**
  * Read-only for now: `canPostJournals` is recorded on the link (see
@@ -35,73 +37,78 @@ export default async function AccountantTenantPage({ params }: { params: Promise
   const totalCredit = trialBalance.reduce((s, r) => s + Number(r.totalCredit), 0);
 
   return (
-    <main className="mx-auto max-w-4xl p-8">
-      <div className="mb-6 flex items-center justify-between">
-        <div>
-          <Link href="/accountant" className="text-xs text-slate-400 hover:underline">
-            ← Your companies
-          </Link>
-          <h1 className="text-xl font-semibold">{tenant.name}</h1>
-        </div>
-      </div>
+    <InternalShell>
+      <InternalTopbar
+        label="Accountant portal"
+        title="Nexora ERP"
+        subtitle={`Signed in as ${session.email}`}
+        logoutAction={accountantLogoutAction}
+      />
 
-      <h2 className="mb-2 text-lg font-semibold">Trial balance</h2>
-      <div className="mb-8 overflow-hidden rounded-lg border border-slate-200 bg-white">
-        <table className="w-full text-left text-sm">
-          <thead className="bg-slate-50 text-xs uppercase text-slate-500">
-            <tr>
-              <th className="px-4 py-2">Account</th>
-              <th className="px-4 py-2">Debit</th>
-              <th className="px-4 py-2">Credit</th>
-            </tr>
-          </thead>
-          <tbody>
-            {trialBalance.map((r) => (
-              <tr key={r.accountCode} className="border-t border-slate-100">
-                <td className="px-4 py-2">
-                  {r.accountCode} — {r.accountName}
-                </td>
-                <td className="px-4 py-2">{Number(r.totalDebit).toLocaleString()}</td>
-                <td className="px-4 py-2">{Number(r.totalCredit).toLocaleString()}</td>
-              </tr>
-            ))}
-            <tr className="border-t border-slate-200 font-medium">
-              <td className="px-4 py-2">Total</td>
-              <td className="px-4 py-2">{totalDebit.toLocaleString()}</td>
-              <td className="px-4 py-2">{totalCredit.toLocaleString()}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      <main className="mx-auto max-w-4xl p-8">
+        <Link href="/accountant" className="text-xs font-medium text-brand-600 hover:text-brand-700">
+          ← Your companies
+        </Link>
+        <h1 className="mt-1 text-2xl font-semibold tracking-tight text-slate-900">{tenant.name}</h1>
 
-      <h2 className="mb-2 text-lg font-semibold">Recent journal entries</h2>
-      <div className="overflow-hidden rounded-lg border border-slate-200 bg-white">
-        <table className="w-full text-left text-sm">
-          <thead className="bg-slate-50 text-xs uppercase text-slate-500">
-            <tr>
-              <th className="px-4 py-2">Doc #</th>
-              <th className="px-4 py-2">Date</th>
-              <th className="px-4 py-2">Memo</th>
-            </tr>
-          </thead>
-          <tbody>
-            {journalEntries.slice(0, 25).map((e) => (
-              <tr key={e.id} className="border-t border-slate-100">
-                <td className="px-4 py-2">{e.docNumber}</td>
-                <td className="px-4 py-2">{e.entryDate}</td>
-                <td className="px-4 py-2">{e.memo}</td>
-              </tr>
-            ))}
-            {journalEntries.length === 0 && (
+        <h2 className="mb-2 mt-8 text-sm font-semibold uppercase tracking-wide text-slate-500">Trial balance</h2>
+        <div className="mb-8 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+          <table className="w-full text-left text-sm">
+            <thead className="bg-slate-50 text-xs uppercase text-slate-500">
               <tr>
-                <td colSpan={3} className="px-4 py-6 text-center text-slate-400">
-                  No journal entries yet.
-                </td>
+                <th className="px-4 py-2.5">Account</th>
+                <th className="px-4 py-2.5">Debit</th>
+                <th className="px-4 py-2.5">Credit</th>
               </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-    </main>
+            </thead>
+            <tbody>
+              {trialBalance.map((r) => (
+                <tr key={r.accountCode} className="border-t border-slate-100">
+                  <td className="px-4 py-2.5">
+                    {r.accountCode} — {r.accountName}
+                  </td>
+                  <td className="px-4 py-2.5">{Number(r.totalDebit).toLocaleString()}</td>
+                  <td className="px-4 py-2.5">{Number(r.totalCredit).toLocaleString()}</td>
+                </tr>
+              ))}
+              <tr className="border-t border-slate-200 font-medium">
+                <td className="px-4 py-2.5">Total</td>
+                <td className="px-4 py-2.5">{totalDebit.toLocaleString()}</td>
+                <td className="px-4 py-2.5">{totalCredit.toLocaleString()}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-slate-500">Recent journal entries</h2>
+        <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+          <table className="w-full text-left text-sm">
+            <thead className="bg-slate-50 text-xs uppercase text-slate-500">
+              <tr>
+                <th className="px-4 py-2.5">Doc #</th>
+                <th className="px-4 py-2.5">Date</th>
+                <th className="px-4 py-2.5">Memo</th>
+              </tr>
+            </thead>
+            <tbody>
+              {journalEntries.slice(0, 25).map((e) => (
+                <tr key={e.id} className="border-t border-slate-100">
+                  <td className="px-4 py-2.5">{e.docNumber}</td>
+                  <td className="px-4 py-2.5">{e.entryDate}</td>
+                  <td className="px-4 py-2.5">{e.memo}</td>
+                </tr>
+              ))}
+              {journalEntries.length === 0 && (
+                <tr>
+                  <td colSpan={3} className="px-4 py-8 text-center text-slate-400">
+                    No journal entries yet.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </main>
+    </InternalShell>
   );
 }

@@ -22,7 +22,7 @@ export default async function DeliveriesPage() {
 
   return (
     <main className="mx-auto max-w-5xl p-8">
-      <h1 className="mb-4 text-xl font-semibold">Deliveries</h1>
+      <h1 className="mb-4 text-2xl font-semibold tracking-tight text-slate-900">Deliveries</h1>
 
       {canCreate && ready && (
         <div className="mb-6">
@@ -35,30 +35,30 @@ export default async function DeliveriesPage() {
         </p>
       )}
 
-      <div className="overflow-hidden rounded-lg border border-slate-200 bg-white">
+      <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
         <table className="w-full text-left text-sm">
           <thead className="bg-slate-50 text-xs uppercase text-slate-500">
             <tr>
-              <th className="px-4 py-2">Doc #</th>
-              <th className="px-4 py-2">Customer</th>
-              <th className="px-4 py-2">Warehouse</th>
-              <th className="px-4 py-2">Date</th>
-              <th className="px-4 py-2 text-right">Lines</th>
+              <th className="px-4 py-2.5">Doc #</th>
+              <th className="px-4 py-2.5">Customer</th>
+              <th className="px-4 py-2.5">Warehouse</th>
+              <th className="px-4 py-2.5">Date</th>
+              <th className="px-4 py-2.5 text-right">Lines</th>
             </tr>
           </thead>
           <tbody>
             {deliveries.map((d) => (
               <tr key={d.id} className="border-t border-slate-100">
-                <td className="px-4 py-2">{d.docNumber}</td>
-                <td className="px-4 py-2">{d.customer?.name}</td>
-                <td className="px-4 py-2">{d.warehouse?.name}</td>
-                <td className="px-4 py-2">{d.deliveryDate}</td>
-                <td className="px-4 py-2 text-right">{d.lines.length}</td>
+                <td className="px-4 py-2.5">{d.docNumber}</td>
+                <td className="px-4 py-2.5">{d.customer?.name}</td>
+                <td className="px-4 py-2.5">{d.warehouse?.name}</td>
+                <td className="px-4 py-2.5">{d.deliveryDate}</td>
+                <td className="px-4 py-2.5 text-right">{d.lines.length}</td>
               </tr>
             ))}
             {deliveries.length === 0 && (
               <tr>
-                <td colSpan={5} className="px-4 py-6 text-center text-slate-400">
+                <td colSpan={5} className="px-4 py-8 text-center text-slate-400">
                   No deliveries yet.
                 </td>
               </tr>

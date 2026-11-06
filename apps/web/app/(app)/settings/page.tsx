@@ -16,10 +16,10 @@ export default async function SettingsPage() {
 
   return (
     <main className="mx-auto max-w-3xl p-8">
-      <h1 className="mb-4 text-xl font-semibold">Settings</h1>
+      <h1 className="mb-4 text-2xl font-semibold tracking-tight text-slate-900">Settings</h1>
       {canManage ? (
         <div className="space-y-6">
-          <div className="max-w-sm rounded-lg border border-slate-200 bg-white p-4 text-sm">
+          <div className="max-w-sm rounded-xl border border-slate-200 bg-white shadow-sm p-4 text-sm">
             <div className="mb-1 font-medium">Plan</div>
             <p className="text-slate-600">
               {subscription?.plan ? subscription.plan.toUpperCase() : "POS"} ·{" "}
@@ -27,7 +27,7 @@ export default async function SettingsPage() {
             </p>
           </div>
           <SettingsForm currentPhone={tenant?.ownerPhone ?? null} />
-          <div className="max-w-sm rounded-lg border border-slate-200 bg-white p-4 text-sm">
+          <div className="max-w-sm rounded-xl border border-slate-200 bg-white shadow-sm p-4 text-sm">
             <div className="mb-1 font-medium">Export your data</div>
             <p className="mb-3 text-slate-600">
               Download a JSON snapshot of your tenant&apos;s master data and transaction headlines.

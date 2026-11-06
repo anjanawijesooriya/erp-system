@@ -73,3 +73,15 @@ export async function listSalesInvoices(tenantId: string) {
     with: { lines: true, customer: true, allocations: true },
   });
 }
+
+/** Full detail for the printable invoice view — line items with their product names, customer, and branch. */
+export async function getSalesInvoice(tenantId: string, invoiceId: string) {
+  return db.query.salesInvoices.findFirst({
+    where: (i, { and: andOp, eq: eqOp }) => andOp(eqOp(i.id, invoiceId), eqOp(i.tenantId, tenantId)),
+    with: {
+      lines: { with: { productVariant: true } },
+      customer: true,
+      branch: true,
+    },
+  });
+}

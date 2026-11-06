@@ -24,7 +24,7 @@ export default async function GrnPage() {
   return (
     <ModuleGate tenantId={tenantId} moduleKey="purchasing">
     <main className="mx-auto max-w-5xl p-8">
-      <h1 className="mb-4 text-xl font-semibold">Goods received notes</h1>
+      <h1 className="mb-4 text-2xl font-semibold tracking-tight text-slate-900">Goods received notes</h1>
 
       {canCreate && ready && (
         <div className="mb-6">
@@ -37,30 +37,30 @@ export default async function GrnPage() {
         </p>
       )}
 
-      <div className="overflow-hidden rounded-lg border border-slate-200 bg-white">
+      <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
         <table className="w-full text-left text-sm">
           <thead className="bg-slate-50 text-xs uppercase text-slate-500">
             <tr>
-              <th className="px-4 py-2">Doc #</th>
-              <th className="px-4 py-2">Supplier</th>
-              <th className="px-4 py-2">Warehouse</th>
-              <th className="px-4 py-2">Received</th>
-              <th className="px-4 py-2 text-right">Lines</th>
+              <th className="px-4 py-2.5">Doc #</th>
+              <th className="px-4 py-2.5">Supplier</th>
+              <th className="px-4 py-2.5">Warehouse</th>
+              <th className="px-4 py-2.5">Received</th>
+              <th className="px-4 py-2.5 text-right">Lines</th>
             </tr>
           </thead>
           <tbody>
             {grns.map((g) => (
               <tr key={g.id} className="border-t border-slate-100">
-                <td className="px-4 py-2">{g.docNumber}</td>
-                <td className="px-4 py-2">{g.supplier?.name}</td>
-                <td className="px-4 py-2">{g.warehouse?.name}</td>
-                <td className="px-4 py-2">{g.receivedDate}</td>
-                <td className="px-4 py-2 text-right">{g.lines.length}</td>
+                <td className="px-4 py-2.5">{g.docNumber}</td>
+                <td className="px-4 py-2.5">{g.supplier?.name}</td>
+                <td className="px-4 py-2.5">{g.warehouse?.name}</td>
+                <td className="px-4 py-2.5">{g.receivedDate}</td>
+                <td className="px-4 py-2.5 text-right">{g.lines.length}</td>
               </tr>
             ))}
             {grns.length === 0 && (
               <tr>
-                <td colSpan={5} className="px-4 py-6 text-center text-slate-400">
+                <td colSpan={5} className="px-4 py-8 text-center text-slate-400">
                   No GRNs yet.
                 </td>
               </tr>

@@ -20,7 +20,7 @@ export default async function JournalPage() {
   return (
     <ModuleGate tenantId={tenantId} moduleKey="accounting">
     <main className="mx-auto max-w-5xl p-8">
-      <h1 className="mb-4 text-xl font-semibold">Journal entries</h1>
+      <h1 className="mb-4 text-2xl font-semibold tracking-tight text-slate-900">Journal entries</h1>
 
       {canPost && branches.length > 0 && accounts.length > 0 && (
         <div className="mb-6">
@@ -30,7 +30,7 @@ export default async function JournalPage() {
 
       <div className="space-y-3">
         {entries.map((e) => (
-          <div key={e.id} className="rounded-lg border border-slate-200 bg-white p-4 text-sm">
+          <div key={e.id} className="rounded-xl border border-slate-200 bg-white shadow-sm p-4 text-sm">
             <div className="mb-2 flex items-center justify-between">
               <span>
                 {e.docNumber} · {e.entryDate} · <span className="capitalize">{e.referenceType.replace(/_/g, " ")}</span>

@@ -112,5 +112,6 @@ export const NAV_GROUPS: NavGroup[] = [
 export const FOOTER_LINKS: NavLink[] = [
   { href: "/users", label: "Users" },
   { href: "/settings", label: "Settings" },
+  { href: "/settings/invoice-branding", label: "Invoice Branding" },
   { href: "/settings/accountants", label: "Linked Accountants" },
 ];

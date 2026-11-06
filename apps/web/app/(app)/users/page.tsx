@@ -16,7 +16,7 @@ export default async function UsersPage() {
 
   return (
     <main className="mx-auto max-w-4xl p-8">
-      <h1 className="mb-4 text-xl font-semibold">Users</h1>
+      <h1 className="mb-4 text-2xl font-semibold tracking-tight text-slate-900">Users</h1>
 
       {canManage && roles.length > 0 && (
         <div className="mb-6">
@@ -24,36 +24,36 @@ export default async function UsersPage() {
         </div>
       )}
 
-      <div className="overflow-hidden rounded-lg border border-slate-200 bg-white">
+      <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
         <table className="w-full text-left text-sm">
           <thead className="bg-slate-50 text-xs uppercase text-slate-500">
             <tr>
-              <th className="px-4 py-2">Name</th>
-              <th className="px-4 py-2">Email</th>
-              <th className="px-4 py-2">Roles</th>
-              <th className="px-4 py-2">Status</th>
-              <th className="px-4 py-2">Actions</th>
+              <th className="px-4 py-2.5">Name</th>
+              <th className="px-4 py-2.5">Email</th>
+              <th className="px-4 py-2.5">Roles</th>
+              <th className="px-4 py-2.5">Status</th>
+              <th className="px-4 py-2.5">Actions</th>
             </tr>
           </thead>
           <tbody>
             {users.map((u) => (
               <tr key={u.id} className="border-t border-slate-100">
-                <td className="px-4 py-2">{u.name}</td>
-                <td className="px-4 py-2">{u.email}</td>
-                <td className="px-4 py-2">
+                <td className="px-4 py-2.5">{u.name}</td>
+                <td className="px-4 py-2.5">{u.email}</td>
+                <td className="px-4 py-2.5">
                   {u.roles
                     .map((r) => `${r.role?.name ?? "?"}${r.branch ? ` (${r.branch.name})` : ""}`)
                     .join(", ") || "—"}
                 </td>
-                <td className="px-4 py-2">{u.isActive ? "Active" : "Inactive"}</td>
-                <td className="px-4 py-2">
+                <td className="px-4 py-2.5">{u.isActive ? "Active" : "Inactive"}</td>
+                <td className="px-4 py-2.5">
                   {canManage && u.isActive && <DeactivateButton userId={u.id} />}
                 </td>
               </tr>
             ))}
             {users.length === 0 && (
               <tr>
-                <td colSpan={5} className="px-4 py-6 text-center text-slate-400">
+                <td colSpan={5} className="px-4 py-8 text-center text-slate-400">
                   No users yet.
                 </td>
               </tr>

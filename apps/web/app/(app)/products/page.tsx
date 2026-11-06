@@ -15,7 +15,7 @@ export default async function ProductsPage() {
 
   return (
     <main className="mx-auto max-w-5xl p-8">
-      <h1 className="mb-4 text-xl font-semibold">Products</h1>
+      <h1 className="mb-4 text-2xl font-semibold tracking-tight text-slate-900">Products</h1>
 
       {canManage && (
         <div className="mb-6 space-y-4">
@@ -27,15 +27,15 @@ export default async function ProductsPage() {
         </div>
       )}
 
-      <div className="overflow-hidden rounded-lg border border-slate-200 bg-white">
+      <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
         <table className="w-full text-left text-sm">
           <thead className="bg-slate-50 text-xs uppercase text-slate-500">
             <tr>
-              <th className="px-4 py-2">SKU</th>
-              <th className="px-4 py-2">Name</th>
-              <th className="px-4 py-2">Barcode</th>
-              {canSeeCost && <th className="px-4 py-2 text-right">Cost</th>}
-              <th className="px-4 py-2 text-right">Price</th>
+              <th className="px-4 py-2.5">SKU</th>
+              <th className="px-4 py-2.5">Name</th>
+              <th className="px-4 py-2.5">Barcode</th>
+              {canSeeCost && <th className="px-4 py-2.5 text-right">Cost</th>}
+              <th className="px-4 py-2.5 text-right">Price</th>
             </tr>
           </thead>
           <tbody>
@@ -43,17 +43,17 @@ export default async function ProductsPage() {
               const variant = p.variants[0];
               return (
                 <tr key={p.id} className="border-t border-slate-100">
-                  <td className="px-4 py-2">{p.sku}</td>
-                  <td className="px-4 py-2">{p.name}</td>
-                  <td className="px-4 py-2">{variant?.barcode ?? "—"}</td>
-                  {canSeeCost && <td className="px-4 py-2 text-right">{variant?.costPrice ?? "0"}</td>}
-                  <td className="px-4 py-2 text-right">{variant?.sellingPrice ?? "0"}</td>
+                  <td className="px-4 py-2.5">{p.sku}</td>
+                  <td className="px-4 py-2.5">{p.name}</td>
+                  <td className="px-4 py-2.5">{variant?.barcode ?? "—"}</td>
+                  {canSeeCost && <td className="px-4 py-2.5 text-right">{variant?.costPrice ?? "0"}</td>}
+                  <td className="px-4 py-2.5 text-right">{variant?.sellingPrice ?? "0"}</td>
                 </tr>
               );
             })}
             {products.length === 0 && (
               <tr>
-                <td colSpan={canSeeCost ? 5 : 4} className="px-4 py-6 text-center text-slate-400">
+                <td colSpan={canSeeCost ? 5 : 4} className="px-4 py-8 text-center text-slate-400">
                   No products yet.
                 </td>
               </tr>

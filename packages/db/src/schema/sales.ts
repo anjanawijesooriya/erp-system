@@ -290,6 +290,7 @@ export const salesInvoicesRelations = relations(salesInvoices, ({ many, one }) =
   lines: many(salesInvoiceLines),
   allocations: many(salesPaymentAllocations),
   customer: one(customers, { fields: [salesInvoices.customerId], references: [customers.id] }),
+  branch: one(branches, { fields: [salesInvoices.branchId], references: [branches.id] }),
 }));
 
 export const salesInvoiceLinesRelations = relations(salesInvoiceLines, ({ one }) => ({

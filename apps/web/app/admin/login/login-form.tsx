@@ -2,6 +2,7 @@
 
 import { useActionState } from "react";
 import { Button } from "@erp/ui/button";
+import { Input, Label } from "@erp/ui/input";
 import { adminLoginAction } from "./actions";
 
 export function AdminLoginForm() {
@@ -10,31 +11,17 @@ export function AdminLoginForm() {
   return (
     <form action={formAction} className="space-y-4">
       <div>
-        <label htmlFor="email" className="mb-1 block text-sm font-medium">
-          Email
-        </label>
-        <input
-          id="email"
-          name="email"
-          type="email"
-          required
-          className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
-        />
+        <Label htmlFor="email">Email</Label>
+        <Input id="email" name="email" type="email" required autoComplete="email" />
       </div>
       <div>
-        <label htmlFor="password" className="mb-1 block text-sm font-medium">
-          Password
-        </label>
-        <input
-          id="password"
-          name="password"
-          type="password"
-          required
-          className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
-        />
+        <Label htmlFor="password">Password</Label>
+        <Input id="password" name="password" type="password" required autoComplete="current-password" />
       </div>
-      {state?.error && <p className="text-sm text-red-600">{state.error}</p>}
-      <Button type="submit" disabled={pending} className="w-full">
+      {state?.error && (
+        <p className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">{state.error}</p>
+      )}
+      <Button type="submit" disabled={pending} size="lg" className="w-full">
         {pending ? "Signing in..." : "Sign in"}
       </Button>
     </form>

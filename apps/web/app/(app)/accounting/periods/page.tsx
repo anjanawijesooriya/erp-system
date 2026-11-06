@@ -11,7 +11,7 @@ export default async function PeriodsPage() {
   return (
     <ModuleGate tenantId={tenantId} moduleKey="accounting">
     <main className="mx-auto max-w-3xl p-8">
-      <h1 className="mb-4 text-xl font-semibold">Accounting periods</h1>
+      <h1 className="mb-4 text-2xl font-semibold tracking-tight text-slate-900">Accounting periods</h1>
 
       {canClose && (
         <div className="mb-6">
@@ -19,28 +19,28 @@ export default async function PeriodsPage() {
         </div>
       )}
 
-      <div className="overflow-hidden rounded-lg border border-slate-200 bg-white">
+      <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
         <table className="w-full text-left text-sm">
           <thead className="bg-slate-50 text-xs uppercase text-slate-500">
             <tr>
-              <th className="px-4 py-2">Start</th>
-              <th className="px-4 py-2">End</th>
-              <th className="px-4 py-2">Status</th>
-              <th className="px-4 py-2">Closed at</th>
+              <th className="px-4 py-2.5">Start</th>
+              <th className="px-4 py-2.5">End</th>
+              <th className="px-4 py-2.5">Status</th>
+              <th className="px-4 py-2.5">Closed at</th>
             </tr>
           </thead>
           <tbody>
             {periods.map((p) => (
               <tr key={p.id} className="border-t border-slate-100">
-                <td className="px-4 py-2">{p.periodStart}</td>
-                <td className="px-4 py-2">{p.periodEnd}</td>
-                <td className="px-4 py-2">{p.isClosed ? "Closed" : "Open"}</td>
-                <td className="px-4 py-2">{p.closedAt ? new Date(p.closedAt).toLocaleString() : "—"}</td>
+                <td className="px-4 py-2.5">{p.periodStart}</td>
+                <td className="px-4 py-2.5">{p.periodEnd}</td>
+                <td className="px-4 py-2.5">{p.isClosed ? "Closed" : "Open"}</td>
+                <td className="px-4 py-2.5">{p.closedAt ? new Date(p.closedAt).toLocaleString() : "—"}</td>
               </tr>
             ))}
             {periods.length === 0 && (
               <tr>
-                <td colSpan={4} className="px-4 py-6 text-center text-slate-400">
+                <td colSpan={4} className="px-4 py-8 text-center text-slate-400">
                   No periods closed yet — everything is open.
                 </td>
               </tr>

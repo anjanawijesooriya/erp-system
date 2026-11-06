@@ -17,11 +17,11 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   const tenant = await db.query.tenants.findFirst({ where: eq(tenants.id, tenantId) });
 
   return (
-    <div className="flex h-screen overflow-hidden bg-slate-50">
+    <div className="flex h-screen overflow-hidden bg-slate-50 print:block print:h-auto print:overflow-visible print:bg-white">
       <Sidebar />
-      <div className="flex min-w-0 flex-1 flex-col">
+      <div className="flex min-w-0 flex-1 flex-col print:block">
         <Topbar tenantName={tenant?.name ?? "Unknown shop"} email={email} />
-        <div className="flex-1 overflow-y-auto">{children}</div>
+        <div className="flex-1 overflow-y-auto print:overflow-visible">{children}</div>
       </div>
     </div>
   );

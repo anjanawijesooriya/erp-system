@@ -2,16 +2,34 @@
 
 import { useMemo, useState, useTransition } from "react";
 import { Button } from "@erp/ui/button";
+import { Select } from "@erp/ui/input";
 import { checkoutPosSaleAction } from "./actions";
+import { OpenRegisterForm } from "./open-register-form";
+import { RegisterStatusBar } from "./register-status-bar";
 import type { PosVariantOption } from "@/lib/pos-options";
-
-const inputClass = "w-full rounded-md border border-slate-300 px-3 py-2 text-sm";
 
 interface CartLine {
   productVariantId: string;
-  label: string;
+  name: string;
+  sku: string;
   quantity: number;
   unitPrice: number;
+}
+
+const CARD_COLORS = [
+  "bg-brand-50 text-brand-700",
+  "bg-accent-50 text-accent-700",
+  "bg-amber-50 text-amber-700",
+  "bg-rose-50 text-rose-700",
+  "bg-violet-50 text-violet-700",
+  "bg-cyan-50 text-cyan-700",
+  "bg-orange-50 text-orange-700",
+];
+
+function colorFor(id: string) {
+  let hash = 0;
+  for (let i = 0; i < id.length; i++) hash = (hash * 31 + id.charCodeAt(i)) >>> 0;
+  return CARD_COLORS[hash % CARD_COLORS.length];
 }
 
 export function PosTerminal({
@@ -19,49 +37,53 @@ export function PosTerminal({
   warehouses,
   customers,
   variants,
+  openSession,
 }: {
   branches: { id: string; name: string }[];
   warehouses: { id: string; name: string }[];
   customers: { id: string; label: string }[];
   variants: PosVariantOption[];
+  openSession: { id: string; openingBalance: string; openedAt: string; openedByName: string } | null;
 }) {
   const [branchId] = useState(branches[0]?.id ?? "");
   const [warehouseId, setWarehouseId] = useState(warehouses[0]?.id ?? "");
   const [customerId, setCustomerId] = useState("");
   const [method, setMethod] = useState<"cash" | "bank" | "cheque">("cash");
-  const [selectedVariantId, setSelectedVariantId] = useState(variants[0]?.id ?? "");
-  const [qty, setQty] = useState("1");
+  const [search, setSearch] = useState("");
   const [cart, setCart] = useState<CartLine[]>([]);
   const [receipt, setReceipt] = useState<{ docNumber: string; total: string } | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
 
+  const filteredVariants = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    if (!q) return variants;
+    return variants.filter((v) => v.name.toLowerCase().includes(q) || v.sku.toLowerCase().includes(q));
+  }, [search, variants]);
+
   const total = useMemo(() => cart.reduce((sum, l) => sum + l.quantity * l.unitPrice, 0), [cart]);
+  const itemCount = useMemo(() => cart.reduce((sum, l) => sum + l.quantity, 0), [cart]);
 
-  function addToCart() {
-    const variant = variants.find((v) => v.id === selectedVariantId);
-    if (!variant) return;
-    const quantity = Number(qty);
-    if (!Number.isFinite(quantity) || quantity <= 0) return;
-
+  function addToCart(variant: PosVariantOption) {
+    setReceipt(null);
     setCart((prev) => {
       const existing = prev.find((l) => l.productVariantId === variant.id);
       if (existing) {
-        return prev.map((l) =>
-          l.productVariantId === variant.id ? { ...l, quantity: l.quantity + quantity } : l,
-        );
+        return prev.map((l) => (l.productVariantId === variant.id ? { ...l, quantity: l.quantity + 1 } : l));
       }
       return [
         ...prev,
-        {
-          productVariantId: variant.id,
-          label: variant.label,
-          quantity,
-          unitPrice: Number(variant.sellingPrice),
-        },
+        { productVariantId: variant.id, name: variant.name, sku: variant.sku, quantity: 1, unitPrice: Number(variant.sellingPrice) },
       ];
     });
-    setQty("1");
+  }
+
+  function setQuantity(productVariantId: string, quantity: number) {
+    if (quantity <= 0) {
+      removeLine(productVariantId);
+      return;
+    }
+    setCart((prev) => prev.map((l) => (l.productVariantId === productVariantId ? { ...l, quantity } : l)));
   }
 
   function removeLine(productVariantId: string) {
@@ -94,130 +116,148 @@ export function PosTerminal({
     });
   }
 
+  if (!openSession) {
+    return <OpenRegisterForm branchId={branchId} />;
+  }
+
   return (
-    <div className="grid grid-cols-3 gap-6">
-      <div className="col-span-2 space-y-4">
-        <div className="grid grid-cols-2 gap-3 rounded-lg border border-slate-200 bg-white p-4">
-          <div>
-            <label className="mb-1 block text-xs font-medium text-slate-600">Warehouse</label>
-            <select value={warehouseId} onChange={(e) => setWarehouseId(e.target.value)} className={inputClass}>
-              {warehouses.map((w) => (
-                <option key={w.id} value={w.id}>
-                  {w.name}
-                </option>
-              ))}
-            </select>
+    <div>
+      <RegisterStatusBar
+        branchId={branchId}
+        openingBalance={openSession.openingBalance}
+        openedAt={openSession.openedAt}
+        openedByName={openSession.openedByName}
+      />
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-5">
+      {/* Product grid */}
+      <div className="lg:col-span-3">
+        <div className="flex flex-wrap items-center gap-3 rounded-xl border border-slate-200 bg-white p-3 shadow-sm">
+          <div className="relative flex-1 min-w-[180px]">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth={1.75} className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400">
+              <circle cx="9" cy="9" r="6" />
+              <path d="m17 17-4-4" strokeLinecap="round" />
+            </svg>
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search by name or SKU..."
+              className="w-full rounded-lg border border-slate-300 py-2 pl-9 pr-3 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30"
+            />
           </div>
-          <div>
-            <label className="mb-1 block text-xs font-medium text-slate-600">Customer (optional — walk-in)</label>
-            <select value={customerId} onChange={(e) => setCustomerId(e.target.value)} className={inputClass}>
-              <option value="">Walk-in</option>
+          <Select value={warehouseId} onChange={(e) => setWarehouseId(e.target.value)} className="w-auto">
+            {warehouses.map((w) => (
+              <option key={w.id} value={w.id}>
+                {w.name}
+              </option>
+            ))}
+          </Select>
+        </div>
+
+        <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-4">
+          {filteredVariants.map((v) => (
+            <button
+              key={v.id}
+              type="button"
+              onClick={() => addToCart(v)}
+              className="group flex flex-col items-start rounded-xl border border-slate-200 bg-white p-3 text-left shadow-sm transition-all hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-md"
+            >
+              <div className={`flex h-10 w-10 items-center justify-center rounded-lg text-sm font-bold ${colorFor(v.id)}`}>
+                {v.name.charAt(0).toUpperCase()}
+              </div>
+              <p className="mt-2 line-clamp-2 text-sm font-medium text-slate-900">{v.name}</p>
+              <p className="text-xs text-slate-400">{v.sku}</p>
+              <p className="mt-1 text-sm font-semibold text-brand-700">{Number(v.sellingPrice).toLocaleString()}</p>
+            </button>
+          ))}
+          {filteredVariants.length === 0 && (
+            <p className="col-span-full py-12 text-center text-sm text-slate-400">No products match &quot;{search}&quot;.</p>
+          )}
+        </div>
+      </div>
+
+      {/* Cart */}
+      <div className="lg:col-span-2">
+        <div className="sticky top-20 rounded-xl border border-slate-200 bg-white shadow-sm">
+          <div className="space-y-3 border-b border-slate-100 p-4">
+            <Select value={customerId} onChange={(e) => setCustomerId(e.target.value)}>
+              <option value="">Walk-in customer</option>
               {customers.map((c) => (
                 <option key={c.id} value={c.id}>
                   {c.label}
                 </option>
               ))}
-            </select>
+            </Select>
           </div>
-          <div className="col-span-2">
-            <label className="mb-1 block text-xs font-medium text-slate-600">Product</label>
-            <select
-              value={selectedVariantId}
-              onChange={(e) => setSelectedVariantId(e.target.value)}
-              className={inputClass}
-            >
-              {variants.map((v) => (
-                <option key={v.id} value={v.id}>
-                  {v.label} ({v.sellingPrice})
-                </option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label className="mb-1 block text-xs font-medium text-slate-600">Quantity</label>
-            <input
-              type="number"
-              step="0.01"
-              min="0.0001"
-              value={qty}
-              onChange={(e) => setQty(e.target.value)}
-              className={inputClass}
-            />
-          </div>
-          <div className="flex items-end">
-            <Button type="button" variant="outline" onClick={addToCart} className="w-full">
-              Add to cart
-            </Button>
-          </div>
-        </div>
 
-        <div className="overflow-hidden rounded-lg border border-slate-200 bg-white">
-          <table className="w-full text-left text-sm">
-            <thead className="bg-slate-50 text-xs uppercase text-slate-500">
-              <tr>
-                <th className="px-4 py-2">Item</th>
-                <th className="px-4 py-2 text-right">Qty</th>
-                <th className="px-4 py-2 text-right">Price</th>
-                <th className="px-4 py-2 text-right">Line total</th>
-                <th className="px-4 py-2" />
-              </tr>
-            </thead>
-            <tbody>
-              {cart.map((l) => (
-                <tr key={l.productVariantId} className="border-t border-slate-100">
-                  <td className="px-4 py-2">{l.label}</td>
-                  <td className="px-4 py-2 text-right">{l.quantity}</td>
-                  <td className="px-4 py-2 text-right">{l.unitPrice.toFixed(2)}</td>
-                  <td className="px-4 py-2 text-right">{(l.quantity * l.unitPrice).toFixed(2)}</td>
-                  <td className="px-4 py-2 text-right">
-                    <button
-                      type="button"
-                      onClick={() => removeLine(l.productVariantId)}
-                      className="text-xs text-red-600"
-                    >
-                      Remove
-                    </button>
-                  </td>
-                </tr>
-              ))}
-              {cart.length === 0 && (
-                <tr>
-                  <td colSpan={5} className="px-4 py-6 text-center text-slate-400">
-                    Cart is empty.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+          <div className="max-h-[360px] overflow-y-auto p-4">
+            {cart.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-12 text-center">
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-slate-100 text-slate-400">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="h-6 w-6">
+                    <circle cx="9" cy="20" r="1.4" />
+                    <circle cx="17" cy="20" r="1.4" />
+                    <path d="M2.5 3h2l2.4 12.2a2 2 0 0 0 2 1.6h7.2a2 2 0 0 0 2-1.6L19.5 7h-15" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </div>
+                <p className="mt-3 text-sm font-medium text-slate-500">Cart is empty</p>
+                <p className="text-xs text-slate-400">Click a product to add it</p>
+              </div>
+            ) : (
+              <ul className="space-y-3">
+                {cart.map((l) => (
+                  <li key={l.productVariantId} className="flex items-center gap-3">
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-sm font-medium text-slate-900">{l.name}</p>
+                      <p className="text-xs text-slate-400">{l.unitPrice.toLocaleString()} each</p>
+                    </div>
+                    <div className="flex items-center gap-1.5 rounded-lg border border-slate-200">
+                      <button
+                        type="button"
+                        onClick={() => setQuantity(l.productVariantId, l.quantity - 1)}
+                        className="flex h-7 w-7 items-center justify-center text-slate-500 hover:text-slate-900"
+                      >
+                        −
+                      </button>
+                      <span className="w-6 text-center text-sm font-medium">{l.quantity}</span>
+                      <button
+                        type="button"
+                        onClick={() => setQuantity(l.productVariantId, l.quantity + 1)}
+                        className="flex h-7 w-7 items-center justify-center text-slate-500 hover:text-slate-900"
+                      >
+                        +
+                      </button>
+                    </div>
+                    <p className="w-20 shrink-0 text-right text-sm font-semibold text-slate-900">
+                      {(l.quantity * l.unitPrice).toLocaleString()}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+
+          <div className="space-y-3 border-t border-slate-100 p-4">
+            <div className="flex items-baseline justify-between">
+              <span className="text-sm text-slate-500">{itemCount} item{itemCount === 1 ? "" : "s"}</span>
+              <span className="text-2xl font-semibold text-slate-900">{total.toLocaleString()}</span>
+            </div>
+            <Select value={method} onChange={(e) => setMethod(e.target.value as typeof method)}>
+              <option value="cash">Cash</option>
+              <option value="bank">Bank</option>
+              <option value="cheque">Cheque</option>
+            </Select>
+            <Button type="button" onClick={checkout} disabled={pending || cart.length === 0} size="lg" className="w-full">
+              {pending ? "Processing..." : "Complete sale"}
+            </Button>
+            {error && <p className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>}
+            {receipt && (
+              <p className="rounded-lg border border-accent-200 bg-accent-50 px-3 py-2 text-sm text-accent-700">
+                Sale {receipt.docNumber} completed — {receipt.total}
+              </p>
+            )}
+          </div>
         </div>
       </div>
-
-      <div className="space-y-4">
-        <div className="rounded-lg border border-slate-200 bg-white p-4">
-          <div className="mb-3 flex items-baseline justify-between">
-            <span className="text-sm text-slate-500">Total</span>
-            <span className="text-2xl font-semibold">{total.toFixed(2)}</span>
-          </div>
-          <label className="mb-1 block text-xs font-medium text-slate-600">Payment method</label>
-          <select
-            value={method}
-            onChange={(e) => setMethod(e.target.value as typeof method)}
-            className={`${inputClass} mb-3`}
-          >
-            <option value="cash">Cash</option>
-            <option value="bank">Bank</option>
-            <option value="cheque">Cheque</option>
-          </select>
-          <Button type="button" onClick={checkout} disabled={pending || cart.length === 0} className="w-full">
-            {pending ? "Processing..." : "Checkout"}
-          </Button>
-          {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
-          {receipt && (
-            <p className="mt-2 text-sm text-green-700">
-              Sale {receipt.docNumber} completed — {receipt.total}
-            </p>
-          )}
-        </div>
       </div>
     </div>
   );

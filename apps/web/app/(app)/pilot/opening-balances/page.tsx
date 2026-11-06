@@ -25,7 +25,7 @@ export default async function OpeningBalancesPage() {
 
   return (
     <main className="mx-auto max-w-4xl p-8">
-      <h1 className="mb-1 text-xl font-semibold">Opening balances (go-live import)</h1>
+      <h1 className="mb-1 text-2xl font-semibold tracking-tight text-slate-900">Opening balances (go-live import)</h1>
       <p className="mb-6 text-sm text-slate-500">
         For bringing a pilot shop&apos;s existing stock, receivables and payables into the system
         when it goes live. Each import posts real, agable invoices and stock movements — a correct,
