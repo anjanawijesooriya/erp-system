@@ -50,6 +50,10 @@ export const PERMISSIONS = {
   REPORTS_FINANCIAL_VIEW: "accounting.reports.view",
   CHEQUE_MANAGE: "accounting.cheque.manage",
   BANK_RECONCILIATION_MANAGE: "accounting.bank_reconciliation.manage",
+  // Simple owner-facing expense entry — distinct from JOURNAL_POST (raw
+  // debit/credit) since this is meant for day-to-day shop expenses, not
+  // full manual journal access.
+  EXPENSE_RECORD: "accounting.expense.record",
 
   // Reports and dashboards
   REPORTS_VIEW: "reports.operational.view",

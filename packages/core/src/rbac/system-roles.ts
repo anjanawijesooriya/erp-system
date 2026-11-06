@@ -31,6 +31,7 @@ export const SYSTEM_ROLES: Record<string, { description: string; permissions: Pe
       PERMISSIONS.ISSUE_MANAGE,
       PERMISSIONS.PAYROLL_PROCESS,
       PERMISSIONS.PAYROLL_VIEW,
+      PERMISSIONS.EXPENSE_RECORD,
     ],
   },
   BranchManager: {
@@ -70,6 +71,7 @@ export const SYSTEM_ROLES: Record<string, { description: string; permissions: Pe
       PERMISSIONS.BOM_MANAGE,
       PERMISSIONS.PRODUCTION_ORDER_MANAGE,
       PERMISSIONS.SALES_CHANNEL_MANAGE,
+      PERMISSIONS.EXPENSE_RECORD,
     ],
   },
   Cashier: {

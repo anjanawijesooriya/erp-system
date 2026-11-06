@@ -68,6 +68,7 @@ export const NAV_GROUPS: NavGroup[] = [
     label: "Accounting",
     color: "violet",
     links: [
+      { href: "/accounting/expenses", label: "Expenses" },
       { href: "/accounting/journal", label: "Journal" },
       { href: "/accounting/reports", label: "Reports" },
       { href: "/accounting/periods", label: "Periods" },
