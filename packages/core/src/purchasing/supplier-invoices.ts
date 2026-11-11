@@ -1,6 +1,6 @@
-import { eq } from "drizzle-orm";
+import { and, eq, isNotNull } from "drizzle-orm";
 import { db } from "@erp/db";
-import { suppliers, supplierInvoices, supplierInvoiceLines } from "@erp/db/schema";
+import { suppliers, supplierInvoices, supplierInvoiceLines, goodsReceiptNotes } from "@erp/db/schema";
 import { nextDocNumber } from "../doc-numbers";
 import { postSupplierInvoiceJournal } from "../accounting/auto-posting";
 import type { SupplierInvoiceInput } from "./schemas";
@@ -60,10 +60,43 @@ export async function createSupplierInvoice(tenantId: string, userId: string, in
   });
 }
 
+/**
+ * GRNs for this tenant that no supplier invoice has been billed against
+ * yet — what a supplier invoice's "bill from GRN" picker offers. A GRN is
+ * billed in full by a single invoice (one `grnId` per invoice), so once
+ * any invoice references it, it drops off this list.
+ */
+export async function listUninvoicedGrns(tenantId: string) {
+  const billed = await db
+    .select({ grnId: supplierInvoices.grnId })
+    .from(supplierInvoices)
+    .where(and(eq(supplierInvoices.tenantId, tenantId), isNotNull(supplierInvoices.grnId)));
+  const billedIds = new Set(billed.map((r) => r.grnId).filter((id): id is string => !!id));
+
+  const grns = await db.query.goodsReceiptNotes.findMany({
+    where: eq(goodsReceiptNotes.tenantId, tenantId),
+    with: { lines: true },
+    orderBy: (g, { desc }) => [desc(g.createdAt)],
+  });
+
+  return grns
+    .filter((g) => !billedIds.has(g.id))
+    .map((g) => ({
+      id: g.id,
+      docNumber: g.docNumber,
+      supplierId: g.supplierId,
+      lines: g.lines.map((l) => ({
+        productVariantId: l.productVariantId,
+        quantity: Number(l.receivedQty),
+        unitCost: Number(l.unitCost),
+      })),
+    }));
+}
+
 export async function listSupplierInvoices(tenantId: string) {
   return db.query.supplierInvoices.findMany({
     where: eq(supplierInvoices.tenantId, tenantId),
     orderBy: (i, { desc }) => [desc(i.createdAt)],
-    with: { lines: true, supplier: true, allocations: true },
+    with: { lines: true, supplier: true, allocations: true, grn: true },
   });
 }

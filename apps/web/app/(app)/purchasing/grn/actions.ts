@@ -12,21 +12,22 @@ export async function createGrnAction(
   const { tenantId, userId } = await requireSession();
   await assertCan(userId, PERMISSIONS.GRN_CREATE);
 
+  const linesRaw = formData.get("lines");
+  let lines: unknown;
+  try {
+    lines = JSON.parse(typeof linesRaw === "string" ? linesRaw : "[]");
+  } catch {
+    return { error: "Invalid line items." };
+  }
+
   const parsed = grnInput.safeParse({
     branchId: formData.get("branchId"),
     warehouseId: formData.get("warehouseId"),
     supplierId: formData.get("supplierId"),
+    purchaseOrderId: formData.get("purchaseOrderId") || undefined,
     receivedDate: formData.get("receivedDate"),
     note: formData.get("note") || undefined,
-    lines: [
-      {
-        productVariantId: formData.get("productVariantId"),
-        quantity: formData.get("quantity"),
-        unitCost: formData.get("unitCost"),
-        batchNumber: formData.get("batchNumber") || undefined,
-        expiryDate: formData.get("expiryDate") || undefined,
-      },
-    ],
+    lines,
   });
 
   if (!parsed.success) {

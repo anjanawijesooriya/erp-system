@@ -10,11 +10,15 @@ import { postSupplierPaymentJournal } from "../accounting/auto-posting";
 import type { SupplierPaymentInput } from "./schemas";
 
 /**
- * Allocates the payment FIFO (oldest due date first) across the supplier's
- * outstanding invoices, updating each invoice's status as it's paid off.
- * Any amount left over after every outstanding invoice is fully covered is
- * left unallocated — there's no supplier credit-balance concept yet, so an
- * overpayment just doesn't get applied anywhere (documented limitation).
+ * Allocates the payment across the supplier's outstanding invoices,
+ * updating each invoice's status as it's paid off. If `invoiceId` is given
+ * (the payment form's "pay this invoice" picker), that invoice is settled
+ * first regardless of due date; any amount left over after it — or the
+ * whole payment, if no invoice was targeted — falls through FIFO (oldest
+ * due date first) across the rest. Any amount left over after every
+ * outstanding invoice is fully covered is left unallocated — there's no
+ * supplier credit-balance concept yet, so an overpayment just doesn't get
+ * applied anywhere (documented limitation).
  */
 export async function createSupplierPayment(tenantId: string, userId: string, input: SupplierPaymentInput) {
   return db.transaction(async (tx) => {
@@ -59,9 +63,16 @@ export async function createSupplierPayment(tenantId: string, userId: string, in
       .groupBy(supplierInvoices.id, supplierInvoices.totalAmount, supplierInvoices.dueDate)
       .orderBy(supplierInvoices.dueDate);
 
+    const orderedInvoices = input.invoiceId
+      ? [
+          ...outstandingInvoices.filter((inv) => inv.id === input.invoiceId),
+          ...outstandingInvoices.filter((inv) => inv.id !== input.invoiceId),
+        ]
+      : outstandingInvoices;
+
     let remaining = input.amount;
 
-    for (const inv of outstandingInvoices) {
+    for (const inv of orderedInvoices) {
       if (remaining <= 0.0001) break;
       const due = Number(inv.totalAmount) - Number(inv.applied);
       if (due <= 0.0001) continue;

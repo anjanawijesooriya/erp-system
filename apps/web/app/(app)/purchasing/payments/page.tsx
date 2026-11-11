@@ -1,4 +1,4 @@
-import { listSupplierPayments } from "@erp/core/purchasing";
+import { listSupplierPayments, listPayablesAging } from "@erp/core/purchasing";
 import { can, PERMISSIONS } from "@erp/core/rbac";
 import { requireSession } from "@/lib/session";
 import { ModuleGate } from "@/components/module-gate";
@@ -8,10 +8,11 @@ import { SupplierPaymentForm } from "./payment-form";
 
 export default async function SupplierPaymentsPage() {
   const { tenantId, userId } = await requireSession();
-  const [payments, branches, suppliers, canCreate] = await Promise.all([
+  const [payments, branches, suppliers, outstanding, canCreate] = await Promise.all([
     listSupplierPayments(tenantId),
     getBranchOptions(tenantId),
     getSupplierOptions(tenantId),
+    listPayablesAging(tenantId),
     can(userId, PERMISSIONS.SUPPLIER_PAYMENT_CREATE),
   ]);
 
@@ -24,7 +25,7 @@ export default async function SupplierPaymentsPage() {
 
       {canCreate && ready && (
         <div className="mb-6">
-          <SupplierPaymentForm branches={branches} suppliers={suppliers} />
+          <SupplierPaymentForm branches={branches} suppliers={suppliers} outstanding={outstanding} />
         </div>
       )}
       {canCreate && !ready && (

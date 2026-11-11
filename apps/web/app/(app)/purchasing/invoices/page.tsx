@@ -1,4 +1,4 @@
-import { listSupplierInvoices } from "@erp/core/purchasing";
+import { listSupplierInvoices, listUninvoicedGrns } from "@erp/core/purchasing";
 import { can, PERMISSIONS } from "@erp/core/rbac";
 import { requireSession } from "@/lib/session";
 import { ModuleGate } from "@/components/module-gate";
@@ -9,11 +9,12 @@ import { SupplierInvoiceForm } from "./invoice-form";
 
 export default async function SupplierInvoicesPage() {
   const { tenantId, userId } = await requireSession();
-  const [invoices, branches, suppliers, variants, canCreate] = await Promise.all([
+  const [invoices, branches, suppliers, variants, grns, canCreate] = await Promise.all([
     listSupplierInvoices(tenantId),
     getBranchOptions(tenantId),
     getSupplierOptions(tenantId),
     getVariantOptions(tenantId),
+    listUninvoicedGrns(tenantId),
     can(userId, PERMISSIONS.SUPPLIER_INVOICE_CREATE),
   ]);
 
@@ -26,7 +27,7 @@ export default async function SupplierInvoicesPage() {
 
       {canCreate && ready && (
         <div className="mb-6">
-          <SupplierInvoiceForm branches={branches} suppliers={suppliers} variants={variants} />
+          <SupplierInvoiceForm branches={branches} suppliers={suppliers} variants={variants} grns={grns} />
         </div>
       )}
       {canCreate && !ready && (
@@ -41,6 +42,7 @@ export default async function SupplierInvoicesPage() {
             <tr>
               <th className="px-4 py-2.5">Doc #</th>
               <th className="px-4 py-2.5">Supplier</th>
+              <th className="px-4 py-2.5">Linked GRN</th>
               <th className="px-4 py-2.5">Due date</th>
               <th className="px-4 py-2.5 text-right">Total</th>
               <th className="px-4 py-2.5">Status</th>
@@ -51,6 +53,7 @@ export default async function SupplierInvoicesPage() {
               <tr key={i.id} className="border-t border-slate-100">
                 <td className="px-4 py-2.5">{i.docNumber}</td>
                 <td className="px-4 py-2.5">{i.supplier?.name}</td>
+                <td className="px-4 py-2.5 text-slate-500">{i.grn?.docNumber ?? "—"}</td>
                 <td className="px-4 py-2.5">{i.dueDate}</td>
                 <td className="px-4 py-2.5 text-right">{i.totalAmount}</td>
                 <td className="px-4 py-2.5 capitalize">{i.status.replace("_", " ")}</td>
@@ -58,7 +61,7 @@ export default async function SupplierInvoicesPage() {
             ))}
             {invoices.length === 0 && (
               <tr>
-                <td colSpan={5} className="px-4 py-8 text-center text-slate-400">
+                <td colSpan={6} className="px-4 py-8 text-center text-slate-400">
                   No supplier invoices yet.
                 </td>
               </tr>

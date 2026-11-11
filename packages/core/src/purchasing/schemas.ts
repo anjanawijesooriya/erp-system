@@ -49,6 +49,7 @@ export type SupplierInvoiceInput = z.infer<typeof supplierInvoiceInput>;
 export const supplierPaymentInput = z.object({
   branchId: z.string().uuid(),
   supplierId: z.string().uuid(),
+  invoiceId: z.string().uuid().optional(),
   paymentDate: z.string().min(1),
   method: z.enum(["cash", "bank", "cheque"]),
   amount: z.coerce.number().positive(),

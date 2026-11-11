@@ -12,19 +12,21 @@ export async function createPurchaseOrderAction(
   const { tenantId, userId } = await requireSession();
   await assertCan(userId, PERMISSIONS.PURCHASE_ORDER_CREATE);
 
+  const linesRaw = formData.get("lines");
+  let lines: unknown;
+  try {
+    lines = JSON.parse(typeof linesRaw === "string" ? linesRaw : "[]");
+  } catch {
+    return { error: "Invalid line items." };
+  }
+
   const parsed = purchaseOrderInput.safeParse({
     branchId: formData.get("branchId"),
     supplierId: formData.get("supplierId"),
     orderDate: formData.get("orderDate"),
     expectedDate: formData.get("expectedDate") || undefined,
     note: formData.get("note") || undefined,
-    lines: [
-      {
-        productVariantId: formData.get("productVariantId"),
-        quantity: formData.get("quantity"),
-        unitCost: formData.get("unitCost"),
-      },
-    ],
+    lines,
   });
 
   if (!parsed.success) {

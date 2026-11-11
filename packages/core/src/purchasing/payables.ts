@@ -6,6 +6,7 @@ import { agingBucketFor, type AgingBucket } from "../aging";
 export interface PayablesAgingRow {
   invoiceId: string;
   docNumber: string;
+  supplierId: string;
   supplierName: string;
   dueDate: string;
   totalAmount: string;
@@ -20,6 +21,7 @@ export async function listPayablesAging(tenantId: string): Promise<PayablesAging
     .select({
       invoiceId: supplierInvoices.id,
       docNumber: supplierInvoices.docNumber,
+      supplierId: supplierInvoices.supplierId,
       supplierName: suppliers.name,
       dueDate: supplierInvoices.dueDate,
       totalAmount: supplierInvoices.totalAmount,
@@ -34,7 +36,7 @@ export async function listPayablesAging(tenantId: string): Promise<PayablesAging
         sql`${supplierInvoices.status} not in ('paid', 'cancelled')`,
       ),
     )
-    .groupBy(supplierInvoices.id, suppliers.name);
+    .groupBy(supplierInvoices.id, suppliers.name, supplierInvoices.supplierId);
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -47,6 +49,7 @@ export async function listPayablesAging(tenantId: string): Promise<PayablesAging
       return {
         invoiceId: r.invoiceId,
         docNumber: r.docNumber,
+        supplierId: r.supplierId,
         supplierName: r.supplierName,
         dueDate: r.dueDate,
         totalAmount: r.totalAmount,

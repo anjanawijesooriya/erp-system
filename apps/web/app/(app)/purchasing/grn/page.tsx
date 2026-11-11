@@ -1,4 +1,4 @@
-import { listGrns } from "@erp/core/purchasing";
+import { listGrns, listOutstandingPurchaseOrders } from "@erp/core/purchasing";
 import { listWarehouses } from "@erp/core/inventory";
 import { can, PERMISSIONS } from "@erp/core/rbac";
 import { requireSession } from "@/lib/session";
@@ -10,12 +10,13 @@ import { GrnForm } from "./grn-form";
 
 export default async function GrnPage() {
   const { tenantId, userId } = await requireSession();
-  const [grns, branches, warehouses, suppliers, variants, canCreate] = await Promise.all([
+  const [grns, branches, warehouses, suppliers, variants, purchaseOrders, canCreate] = await Promise.all([
     listGrns(tenantId),
     getBranchOptions(tenantId),
     listWarehouses(tenantId),
     getSupplierOptions(tenantId),
     getVariantOptions(tenantId),
+    listOutstandingPurchaseOrders(tenantId),
     can(userId, PERMISSIONS.GRN_CREATE),
   ]);
 
@@ -28,7 +29,13 @@ export default async function GrnPage() {
 
       {canCreate && ready && (
         <div className="mb-6">
-          <GrnForm branches={branches} warehouses={warehouses} suppliers={suppliers} variants={variants} />
+          <GrnForm
+            branches={branches}
+            warehouses={warehouses}
+            suppliers={suppliers}
+            variants={variants}
+            purchaseOrders={purchaseOrders}
+          />
         </div>
       )}
       {canCreate && !ready && (
@@ -44,6 +51,7 @@ export default async function GrnPage() {
               <th className="px-4 py-2.5">Doc #</th>
               <th className="px-4 py-2.5">Supplier</th>
               <th className="px-4 py-2.5">Warehouse</th>
+              <th className="px-4 py-2.5">Linked PO</th>
               <th className="px-4 py-2.5">Received</th>
               <th className="px-4 py-2.5 text-right">Lines</th>
             </tr>
@@ -54,13 +62,14 @@ export default async function GrnPage() {
                 <td className="px-4 py-2.5">{g.docNumber}</td>
                 <td className="px-4 py-2.5">{g.supplier?.name}</td>
                 <td className="px-4 py-2.5">{g.warehouse?.name}</td>
+                <td className="px-4 py-2.5 text-slate-500">{g.purchaseOrder?.docNumber ?? "—"}</td>
                 <td className="px-4 py-2.5">{g.receivedDate}</td>
                 <td className="px-4 py-2.5 text-right">{g.lines.length}</td>
               </tr>
             ))}
             {grns.length === 0 && (
               <tr>
-                <td colSpan={5} className="px-4 py-8 text-center text-slate-400">
+                <td colSpan={6} className="px-4 py-8 text-center text-slate-400">
                   No GRNs yet.
                 </td>
               </tr>

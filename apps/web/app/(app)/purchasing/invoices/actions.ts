@@ -12,19 +12,22 @@ export async function createSupplierInvoiceAction(
   const { tenantId, userId } = await requireSession();
   await assertCan(userId, PERMISSIONS.SUPPLIER_INVOICE_CREATE);
 
+  const linesRaw = formData.get("lines");
+  let lines: unknown;
+  try {
+    lines = JSON.parse(typeof linesRaw === "string" ? linesRaw : "[]");
+  } catch {
+    return { error: "Invalid line items." };
+  }
+
   const parsed = supplierInvoiceInput.safeParse({
     branchId: formData.get("branchId"),
     supplierId: formData.get("supplierId"),
+    grnId: formData.get("grnId") || undefined,
     supplierRefNumber: formData.get("supplierRefNumber") || undefined,
     invoiceDate: formData.get("invoiceDate"),
     note: formData.get("note") || undefined,
-    lines: [
-      {
-        productVariantId: formData.get("productVariantId"),
-        quantity: formData.get("quantity"),
-        unitCost: formData.get("unitCost"),
-      },
-    ],
+    lines,
   });
 
   if (!parsed.success) {

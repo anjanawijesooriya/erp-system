@@ -15,6 +15,7 @@ export async function createSupplierPaymentAction(
   const parsed = supplierPaymentInput.safeParse({
     branchId: formData.get("branchId"),
     supplierId: formData.get("supplierId"),
+    invoiceId: formData.get("invoiceId") || undefined,
     paymentDate: formData.get("paymentDate"),
     method: formData.get("method"),
     amount: formData.get("amount"),

@@ -1,7 +1,8 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { Button } from "@erp/ui/button";
+import { LineItemEditor, type EditableLine } from "@/components/line-item-editor";
 import { createPurchaseOrderAction } from "./actions";
 
 const inputClass =
@@ -17,9 +18,13 @@ export function PurchaseOrderForm({
   variants: { id: string; label: string }[];
 }) {
   const [state, formAction, pending] = useActionState(createPurchaseOrderAction, undefined);
+  const [lines, setLines] = useState<EditableLine[]>([
+    { productVariantId: variants[0]?.id ?? "", quantity: 1, unitCost: 0 },
+  ]);
 
   return (
     <form action={formAction} className="grid grid-cols-3 gap-3 rounded-xl border border-slate-200 bg-white shadow-sm p-4">
+      <input type="hidden" name="lines" value={JSON.stringify(lines)} />
       <div>
         <label className="mb-1.5 block text-sm font-medium text-slate-700">Branch</label>
         <select name="branchId" required className={inputClass}>
@@ -44,29 +49,14 @@ export function PurchaseOrderForm({
         <label className="mb-1.5 block text-sm font-medium text-slate-700">Order date</label>
         <input name="orderDate" type="date" required className={inputClass} />
       </div>
-      <div className="col-span-3">
-        <label className="mb-1.5 block text-sm font-medium text-slate-700">Product</label>
-        <select name="productVariantId" required className={inputClass}>
-          {variants.map((v) => (
-            <option key={v.id} value={v.id}>
-              {v.label}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div>
-        <label className="mb-1.5 block text-sm font-medium text-slate-700">Quantity</label>
-        <input name="quantity" type="number" step="0.01" min="0.01" required className={inputClass} />
-      </div>
-      <div>
-        <label className="mb-1.5 block text-sm font-medium text-slate-700">Unit cost</label>
-        <input name="unitCost" type="number" step="0.01" min="0" required className={inputClass} />
-      </div>
+
+      <LineItemEditor variants={variants} lines={lines} onChange={setLines} costLabel="Unit cost" />
+
       <div>
         <label className="mb-1.5 block text-sm font-medium text-slate-700">Expected date (optional)</label>
         <input name="expectedDate" type="date" className={inputClass} />
       </div>
-      <div className="col-span-3">
+      <div className="col-span-2">
         <label className="mb-1.5 block text-sm font-medium text-slate-700">Note (optional)</label>
         <input name="note" className={inputClass} />
       </div>
