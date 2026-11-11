@@ -50,7 +50,7 @@ export function TransferForm({
       </div>
       <div>
         <label className="mb-1.5 block text-sm font-medium text-slate-700">Quantity</label>
-        <input name="quantity" type="number" step="0.01" min="0.0001" required className={inputClass} />
+        <input name="quantity" type="number" step="0.01" min="0.01" required className={inputClass} />
       </div>
       <div>
         <label className="mb-1.5 block text-sm font-medium text-slate-700">Note (optional)</label>
