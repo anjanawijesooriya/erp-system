@@ -69,9 +69,9 @@ export async function openRegisterAction(
 }
 
 export async function closeRegisterAction(
-  _prevState: { error?: string } | undefined,
+  _prevState: { error?: string; expected?: string; counted?: string; variance?: string } | undefined,
   formData: FormData,
-): Promise<{ error?: string }> {
+): Promise<{ error?: string; expected?: string; counted?: string; variance?: string }> {
   const { tenantId, userId } = await requireSession();
   await assertCan(userId, PERMISSIONS.POS_SELL);
 
@@ -83,11 +83,16 @@ export async function closeRegisterAction(
     return { error: "A valid counted balance is required." };
   }
 
+  let closed;
   try {
-    await closeRegister(tenantId, branchId, userId, countedBalance, note);
+    closed = await closeRegister(tenantId, branchId, userId, countedBalance, note);
   } catch (err) {
     return { error: err instanceof Error ? err.message : "Failed to close register" };
   }
   revalidatePath("/pos");
-  return {};
+  return {
+    expected: closed.expectedClosingBalance ?? undefined,
+    counted: closed.closingCountedBalance ?? undefined,
+    variance: closed.variance ?? undefined,
+  };
 }

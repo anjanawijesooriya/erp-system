@@ -3,7 +3,7 @@
 import { useMemo, useState, useTransition } from "react";
 import { Button } from "@erp/ui/button";
 import { Select } from "@erp/ui/input";
-import { checkoutPosSaleAction } from "./actions";
+import { checkoutPosSaleAction, closeRegisterAction } from "./actions";
 import { OpenRegisterForm } from "./open-register-form";
 import { RegisterStatusBar } from "./register-status-bar";
 import type { PosVariantOption } from "@/lib/pos-options";
@@ -54,6 +54,23 @@ export function PosTerminal({
   const [receipt, setReceipt] = useState<{ docNumber: string; total: string } | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
+  const [closeSummary, setCloseSummary] = useState<{ expected: string; counted: string; variance: string } | null>(null);
+  const [closeError, setCloseError] = useState<string | null>(null);
+  const [closePending, startCloseTransition] = useTransition();
+
+  function closeRegister(formData: FormData) {
+    setCloseError(null);
+    startCloseTransition(async () => {
+      const result = await closeRegisterAction(undefined, formData);
+      if (result.error) {
+        setCloseError(result.error);
+        return;
+      }
+      if (result.expected !== undefined && result.counted !== undefined && result.variance !== undefined) {
+        setCloseSummary({ expected: result.expected, counted: result.counted, variance: result.variance });
+      }
+    });
+  }
 
   const filteredVariants = useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -116,17 +133,48 @@ export function PosTerminal({
     });
   }
 
+  const varianceBanner = closeSummary && (
+    <div
+      className={`mb-4 rounded-xl border p-3 text-sm ${
+        Number(closeSummary.variance) === 0
+          ? "border-accent-200 bg-accent-50 text-accent-800"
+          : Number(closeSummary.variance) > 0
+            ? "border-sky-200 bg-sky-50 text-sky-800"
+            : "border-rose-200 bg-rose-50 text-rose-800"
+      }`}
+    >
+      <p className="font-medium">Register closed.</p>
+      <p className="mt-0.5">
+        Expected {Number(closeSummary.expected).toLocaleString()} · Counted {Number(closeSummary.counted).toLocaleString()} ·{" "}
+        {Number(closeSummary.variance) === 0
+          ? "Exact match, no variance."
+          : Number(closeSummary.variance) > 0
+            ? `Over by ${Number(closeSummary.variance).toLocaleString()}.`
+            : `Short by ${Math.abs(Number(closeSummary.variance)).toLocaleString()}.`}
+      </p>
+    </div>
+  );
+
   if (!openSession) {
-    return <OpenRegisterForm branchId={branchId} />;
+    return (
+      <div>
+        {varianceBanner}
+        <OpenRegisterForm branchId={branchId} />
+      </div>
+    );
   }
 
   return (
     <div>
+      {varianceBanner}
       <RegisterStatusBar
         branchId={branchId}
         openingBalance={openSession.openingBalance}
         openedAt={openSession.openedAt}
         openedByName={openSession.openedByName}
+        pending={closePending}
+        error={closeError}
+        onClose={closeRegister}
       />
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-5">
       {/* Product grid */}

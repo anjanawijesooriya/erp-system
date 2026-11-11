@@ -1,23 +1,27 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useState } from "react";
 import { Button } from "@erp/ui/button";
 import { Input, Label } from "@erp/ui/input";
-import { closeRegisterAction } from "./actions";
 
 export function RegisterStatusBar({
   branchId,
   openingBalance,
   openedAt,
   openedByName,
+  pending,
+  error,
+  onClose,
 }: {
   branchId: string;
   openingBalance: string;
   openedAt: string;
   openedByName: string;
+  pending: boolean;
+  error: string | null;
+  onClose: (formData: FormData) => void;
 }) {
   const [showClose, setShowClose] = useState(false);
-  const [state, formAction, pending] = useActionState(closeRegisterAction, undefined);
 
   const openedTime = new Date(openedAt).toLocaleString(undefined, { hour: "2-digit", minute: "2-digit", month: "short", day: "numeric" });
 
@@ -41,7 +45,10 @@ export function RegisterStatusBar({
       </div>
 
       {showClose && (
-        <form action={formAction} className="mt-3 grid grid-cols-1 gap-3 border-t border-accent-200 pt-3 sm:grid-cols-3">
+        <form
+          action={(formData) => onClose(formData)}
+          className="mt-3 grid grid-cols-1 gap-3 border-t border-accent-200 pt-3 sm:grid-cols-3"
+        >
           <input type="hidden" name="branchId" value={branchId} />
           <div>
             <Label htmlFor="countedBalance">Cash counted (LKR)</Label>
@@ -56,9 +63,9 @@ export function RegisterStatusBar({
               {pending ? "Closing..." : "Confirm close"}
             </Button>
           </div>
-          {state?.error && (
+          {error && (
             <p className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 sm:col-span-3">
-              {state.error}
+              {error}
             </p>
           )}
         </form>
