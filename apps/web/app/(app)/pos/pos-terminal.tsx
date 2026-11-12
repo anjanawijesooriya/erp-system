@@ -3,10 +3,17 @@
 import { useMemo, useState, useTransition } from "react";
 import { Button } from "@erp/ui/button";
 import { Select } from "@erp/ui/input";
+import { Badge } from "@erp/ui/badge";
 import { checkoutPosSaleAction, closeRegisterAction } from "./actions";
 import { OpenRegisterForm } from "./open-register-form";
 import { RegisterStatusBar } from "./register-status-bar";
 import type { PosVariantOption } from "@/lib/pos-options";
+
+interface StockRow {
+  warehouseId: string;
+  productVariantId: string;
+  quantity: string;
+}
 
 interface CartLine {
   productVariantId: string;
@@ -37,12 +44,14 @@ export function PosTerminal({
   warehouses,
   customers,
   variants,
+  stock,
   openSession,
 }: {
   branches: { id: string; name: string }[];
   warehouses: { id: string; name: string }[];
   customers: { id: string; label: string }[];
   variants: PosVariantOption[];
+  stock: StockRow[];
   openSession: { id: string; openingBalance: string; openedAt: string; openedByName: string } | null;
 }) {
   const [branchId] = useState(branches[0]?.id ?? "");
@@ -77,6 +86,14 @@ export function PosTerminal({
     if (!q) return variants;
     return variants.filter((v) => v.name.toLowerCase().includes(q) || v.sku.toLowerCase().includes(q));
   }, [search, variants]);
+
+  const stockMap = useMemo(() => {
+    const map = new Map<string, number>();
+    for (const row of stock) {
+      if (row.warehouseId === warehouseId) map.set(row.productVariantId, Number(row.quantity));
+    }
+    return map;
+  }, [stock, warehouseId]);
 
   const total = useMemo(() => cart.reduce((sum, l) => sum + l.quantity * l.unitPrice, 0), [cart]);
   const itemCount = useMemo(() => cart.reduce((sum, l) => sum + l.quantity, 0), [cart]);
@@ -202,21 +219,29 @@ export function PosTerminal({
         </div>
 
         <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-4">
-          {filteredVariants.map((v) => (
+          {filteredVariants.map((v) => {
+            const qty = stockMap.get(v.id) ?? 0;
+            return (
             <button
               key={v.id}
               type="button"
               onClick={() => addToCart(v)}
               className="group flex flex-col items-start rounded-xl border border-slate-200 bg-white p-3 text-left shadow-sm transition-all hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-md"
             >
-              <div className={`flex h-10 w-10 items-center justify-center rounded-lg text-sm font-bold ${colorFor(v.id)}`}>
-                {v.name.charAt(0).toUpperCase()}
+              <div className="flex w-full items-start justify-between">
+                <div className={`flex h-10 w-10 items-center justify-center rounded-lg text-sm font-bold ${colorFor(v.id)}`}>
+                  {v.name.charAt(0).toUpperCase()}
+                </div>
+                <Badge tone={qty > 0 ? "accent" : "slate"} className="px-2 py-0.5 text-[10px]">
+                  {qty > 0 ? `Stock ${qty % 1 === 0 ? qty : qty.toFixed(1)}` : "Out of stock"}
+                </Badge>
               </div>
               <p className="mt-2 line-clamp-2 text-sm font-medium text-slate-900">{v.name}</p>
               <p className="text-xs text-slate-400">{v.sku}</p>
               <p className="mt-1 text-sm font-semibold text-brand-700">{Number(v.sellingPrice).toLocaleString()}</p>
             </button>
-          ))}
+            );
+          })}
           {filteredVariants.length === 0 && (
             <p className="col-span-full py-12 text-center text-sm text-slate-400">No products match &quot;{search}&quot;.</p>
           )}

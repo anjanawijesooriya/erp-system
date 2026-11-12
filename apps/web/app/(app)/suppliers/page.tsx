@@ -1,17 +1,17 @@
-import { listSuppliers } from "@erp/core/parties";
+import { listSuppliersWithStats } from "@erp/core/parties";
 import { can, PERMISSIONS } from "@erp/core/rbac";
 import { PageHeader } from "@erp/ui/card";
 import { requireSession } from "@/lib/session";
 import { ImportForm } from "@/components/import-form";
 import { PartyForm } from "@/components/party-form";
-import { PartyTable } from "@/components/party-table";
+import { PartyStatsList } from "@/components/party-stats-list";
 import { TruckIcon } from "@/components/icons";
 import { createSupplierAction, importSuppliersAction } from "./actions";
 
 export default async function SuppliersPage() {
   const { tenantId, userId } = await requireSession();
   const [suppliers, canManage] = await Promise.all([
-    listSuppliers(tenantId),
+    listSuppliersWithStats(tenantId),
     can(userId, PERMISSIONS.SUPPLIER_MANAGE),
   ]);
 
@@ -38,7 +38,12 @@ export default async function SuppliersPage() {
         </div>
       )}
 
-      <PartyTable parties={suppliers} emptyLabel="No suppliers yet." />
+      <PartyStatsList
+        parties={suppliers.map((s) => ({ ...s, totalValue: s.totalPurchases }))}
+        totalLabel="suppliers"
+        totalValueLabel="Total purchases"
+        emptyLabel="No suppliers match these filters."
+      />
     </main>
   );
 }

@@ -33,6 +33,8 @@ export const salesInvoiceInput = z.object({
   invoiceDate: z.string().min(1),
   note: z.string().max(500).optional(),
   lines: z.array(lineInput).min(1),
+  /** Flat percentage off the line-item subtotal, applied once at invoice creation — not stored as its own field, just baked into totalAmount (and the journal amount) like a settlement discount. */
+  discountPercent: z.coerce.number().min(0).max(100).optional(),
 });
 export type SalesInvoiceInput = z.infer<typeof salesInvoiceInput>;
 

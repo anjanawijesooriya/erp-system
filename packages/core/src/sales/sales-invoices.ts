@@ -25,7 +25,9 @@ export async function insertSalesInvoice(
   const dueDate = new Date(invoiceDate);
   dueDate.setDate(dueDate.getDate() + customer.creditTermDays);
 
-  const totalAmount = input.lines.reduce((sum, l) => sum + l.quantity * l.unitPrice, 0);
+  const subtotal = input.lines.reduce((sum, l) => sum + l.quantity * l.unitPrice, 0);
+  const discountFactor = 1 - (input.discountPercent ?? 0) / 100;
+  const totalAmount = subtotal * discountFactor;
 
   const [invoice] = await tx
     .insert(salesInvoices)
@@ -49,7 +51,7 @@ export async function insertSalesInvoice(
       productVariantId: line.productVariantId,
       qty: line.quantity.toString(),
       unitPrice: line.unitPrice.toString(),
-      lineTotal: (line.quantity * line.unitPrice).toString(),
+      lineTotal: (line.quantity * line.unitPrice * discountFactor).toString(),
     });
   }
 

@@ -16,6 +16,7 @@ export async function listStockOnHand(tenantId: string, warehouseId?: string) {
         case when sum(${stockBalances.quantity}) = 0 then 0
         else sum(${stockBalances.quantity} * ${stockBalances.averageCost}) / sum(${stockBalances.quantity})
         end`,
+      sellingPrice: productVariants.sellingPrice,
     })
     .from(stockBalances)
     .innerJoin(warehouses, eq(warehouses.id, stockBalances.warehouseId))
@@ -33,6 +34,7 @@ export async function listStockOnHand(tenantId: string, warehouseId?: string) {
       stockBalances.productVariantId,
       productVariants.sku,
       products.name,
+      productVariants.sellingPrice,
     )
     .orderBy(products.name);
 }

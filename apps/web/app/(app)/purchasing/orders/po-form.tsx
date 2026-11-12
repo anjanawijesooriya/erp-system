@@ -26,6 +26,7 @@ export function PurchaseOrderForm({
   const [lines, setLines] = useState<EditableLine[]>([
     { productVariantId: variants[0]?.id ?? "", quantity: 1, unitCost: 0 },
   ]);
+  const subtotal = lines.reduce((sum, l) => sum + l.quantity * l.unitCost, 0);
 
   return (
     <form action={formAction} className="flex h-full flex-col">
@@ -58,13 +59,27 @@ export function PurchaseOrderForm({
 
       <LineItemEditor variants={variants} lines={lines} onChange={setLines} costLabel="Unit cost" />
 
-      <div>
-        <Label>Expected date (optional)</Label>
-        <input name="expectedDate" type="date" className={inputClass} />
-      </div>
-      <div className="col-span-2">
-        <Label>Note (optional)</Label>
-        <input name="note" className={inputClass} />
+      <div className="col-span-3 grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div className="space-y-4">
+          <div>
+            <Label>Expected date (optional)</Label>
+            <input name="expectedDate" type="date" className={inputClass} />
+          </div>
+          <div>
+            <Label>Note (optional)</Label>
+            <input name="note" className={inputClass} />
+          </div>
+        </div>
+        <div className="rounded-lg border border-slate-200 bg-slate-50/60 p-4">
+          <div className="flex items-center justify-between text-sm text-slate-600">
+            <span>Subtotal</span>
+            <span className="font-medium text-slate-900">{subtotal.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+          </div>
+          <div className="mt-3 border-t border-slate-200 pt-3 flex items-center justify-between text-base font-semibold text-slate-900">
+            <span>Order total</span>
+            <span>{subtotal.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+          </div>
+        </div>
       </div>
       </FormBody>
       <FormFooter>

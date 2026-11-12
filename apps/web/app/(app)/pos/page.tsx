@@ -1,5 +1,5 @@
 import { can, PERMISSIONS } from "@erp/core/rbac";
-import { listWarehouses } from "@erp/core/inventory";
+import { listWarehouses, listStockOnHand } from "@erp/core/inventory";
 import { getOpenRegisterSession } from "@erp/core/pos";
 import { requireSession } from "@/lib/session";
 import { getBranchOptions } from "@/lib/branch-options";
@@ -9,12 +9,13 @@ import { PosTerminal } from "./pos-terminal";
 
 export default async function PosPage() {
   const { tenantId, userId } = await requireSession();
-  const [canSell, branches, warehouses, customers, variants] = await Promise.all([
+  const [canSell, branches, warehouses, customers, variants, stock] = await Promise.all([
     can(userId, PERMISSIONS.POS_SELL),
     getBranchOptions(tenantId),
     listWarehouses(tenantId),
     getCustomerOptions(tenantId),
     getPosVariantOptions(tenantId),
+    listStockOnHand(tenantId),
   ]);
 
   const branchId = branches[0]?.id;
@@ -40,6 +41,7 @@ export default async function PosPage() {
           warehouses={warehouses}
           customers={customers}
           variants={variants}
+          stock={stock.map((s) => ({ warehouseId: s.warehouseId, productVariantId: s.productVariantId, quantity: s.quantity }))}
           openSession={
             openSession
               ? { id: openSession.id, openingBalance: openSession.openingBalance, openedAt: openSession.openedAt.toISOString(), openedByName: openSession.openedBy?.name ?? "" }

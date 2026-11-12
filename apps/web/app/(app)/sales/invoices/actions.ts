@@ -12,18 +12,21 @@ export async function createSalesInvoiceAction(
   const { tenantId, userId } = await requireSession();
   await assertCan(userId, PERMISSIONS.SALES_INVOICE_CREATE);
 
+  const linesRaw = formData.get("lines");
+  let lines: unknown;
+  try {
+    lines = JSON.parse(typeof linesRaw === "string" ? linesRaw : "[]");
+  } catch {
+    return { error: "Invalid line items." };
+  }
+
   const parsed = salesInvoiceInput.safeParse({
     branchId: formData.get("branchId"),
     customerId: formData.get("customerId"),
     invoiceDate: formData.get("invoiceDate"),
     note: formData.get("note") || undefined,
-    lines: [
-      {
-        productVariantId: formData.get("productVariantId"),
-        quantity: formData.get("quantity"),
-        unitPrice: formData.get("unitPrice"),
-      },
-    ],
+    discountPercent: formData.get("discountPercent") || undefined,
+    lines,
   });
 
   if (!parsed.success) {

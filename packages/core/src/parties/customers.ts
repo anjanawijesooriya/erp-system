@@ -1,6 +1,6 @@
-import { and, eq } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 import { db } from "@erp/db";
-import { customers } from "@erp/db/schema";
+import { customers, salesInvoices, salesInvoiceLines, salesPaymentAllocations } from "@erp/db/schema";
 import type { PartyInput } from "./schemas";
 
 const WALK_IN_CUSTOMER_CODE = "WALK-IN";
@@ -10,6 +10,45 @@ export async function listCustomers(tenantId: string) {
     where: eq(customers.tenantId, tenantId),
     orderBy: (c, { asc }) => [asc(c.name)],
   });
+}
+
+/** Customers with their lifetime sales total and current outstanding balance — what the "People & suppliers" list shows per row. */
+export async function listCustomersWithStats(tenantId: string) {
+  const rows = await db.query.customers.findMany({
+    where: eq(customers.tenantId, tenantId),
+    orderBy: (c, { asc }) => [asc(c.name)],
+  });
+  if (rows.length === 0) return [];
+
+  const salesTotals = await db
+    .select({
+      customerId: salesInvoices.customerId,
+      total: sql<string>`coalesce(sum(${salesInvoiceLines.lineTotal}), 0)`,
+    })
+    .from(salesInvoices)
+    .innerJoin(salesInvoiceLines, eq(salesInvoiceLines.invoiceId, salesInvoices.id))
+    .where(and(eq(salesInvoices.tenantId, tenantId), sql`${salesInvoices.status} <> 'cancelled'`))
+    .groupBy(salesInvoices.customerId);
+
+  const balances = await db
+    .select({
+      customerId: salesInvoices.customerId,
+      totalAmount: sql<string>`coalesce(sum(${salesInvoices.totalAmount}), 0)`,
+      applied: sql<string>`coalesce(sum(${salesPaymentAllocations.amountApplied}), 0)`,
+    })
+    .from(salesInvoices)
+    .leftJoin(salesPaymentAllocations, eq(salesPaymentAllocations.invoiceId, salesInvoices.id))
+    .where(and(eq(salesInvoices.tenantId, tenantId), sql`${salesInvoices.status} not in ('paid', 'cancelled')`))
+    .groupBy(salesInvoices.customerId);
+
+  const salesMap = new Map(salesTotals.map((r) => [r.customerId, Number(r.total)]));
+  const balanceMap = new Map(balances.map((r) => [r.customerId, Number(r.totalAmount) - Number(r.applied)]));
+
+  return rows.map((c) => ({
+    ...c,
+    totalSales: salesMap.get(c.id) ?? 0,
+    balance: balanceMap.get(c.id) ?? 0,
+  }));
 }
 
 export async function createCustomer(tenantId: string, input: PartyInput) {

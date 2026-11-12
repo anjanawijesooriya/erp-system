@@ -1,17 +1,17 @@
-import { listCustomers } from "@erp/core/parties";
+import { listCustomersWithStats } from "@erp/core/parties";
 import { can, PERMISSIONS } from "@erp/core/rbac";
 import { PageHeader } from "@erp/ui/card";
 import { requireSession } from "@/lib/session";
 import { ImportForm } from "@/components/import-form";
 import { PartyForm } from "@/components/party-form";
-import { PartyTable } from "@/components/party-table";
+import { PartyStatsList } from "@/components/party-stats-list";
 import { UsersIcon } from "@/components/icons";
 import { createCustomerAction, importCustomersAction } from "./actions";
 
 export default async function CustomersPage() {
   const { tenantId, userId } = await requireSession();
   const [customers, canManage] = await Promise.all([
-    listCustomers(tenantId),
+    listCustomersWithStats(tenantId),
     can(userId, PERMISSIONS.CUSTOMER_MANAGE),
   ]);
 
@@ -34,7 +34,12 @@ export default async function CustomersPage() {
         </div>
       )}
 
-      <PartyTable parties={customers} emptyLabel="No customers yet." />
+      <PartyStatsList
+        parties={customers.map((c) => ({ ...c, totalValue: c.totalSales }))}
+        totalLabel="customers"
+        totalValueLabel="Total sales"
+        emptyLabel="No customers match these filters."
+      />
     </main>
   );
 }

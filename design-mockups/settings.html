@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vertex ERP — Settings</title>
+<style>
+  body{margin:0;font-family:'Inter',system-ui,-apple-system,sans-serif;background:#F6F7FB;color:#101323}
+  a{color:#4338CA;text-decoration:none}
+  a:hover{color:#352C9B}
+  .navlink{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;font-size:13.5px;font-weight:500;color:#475467}
+  .navlink:hover{background:#F2F3FC;color:#1D2130;text-decoration:none}
+  .navlink.active{background:#EEF0FD;color:#4338CA;font-weight:600}
+  .card{background:#fff;border:1px solid #E4E7EC;border-radius:14px}
+  .settingcard{padding:20px;display:flex;flex-direction:column;gap:14px}
+  .ico{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex:0 0 40px}
+</style>
+</head>
+<body>
+
+<div style="display:flex;min-height:1500px;width:100%;box-sizing:border-box">
+
+  <aside style="width:252px;flex:0 0 252px;background:#fff;border-right:1px solid #E4E7EC;display:flex;flex-direction:column;padding:20px 14px;gap:22px;box-sizing:border-box">
+    <div style="display:flex;align-items:center;gap:9px;padding:4px 8px">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <rect x="1" y="1" width="22" height="22" rx="6" fill="#4338CA"/>
+        <path d="M7 15.5L12 7l5 8.5" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span style="font-size:16.5px;font-weight:700;letter-spacing:-0.01em">Vertex ERP</span>
+    </div>
+
+    <nav style="display:flex;flex-direction:column;gap:18px">
+      <div style="display:flex;flex-direction:column;gap:2px">
+        <span style="font-size:11px;font-weight:700;color:#98A2B3;letter-spacing:0.06em;text-transform:uppercase;padding:6px 12px 2px">Overview</span>
+        <a href="dashboard.html" class="navlink">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="9" rx="1.5" stroke="currentColor" stroke-width="1.7"/><rect x="14" y="3" width="7" height="5" rx="1.5" stroke="currentColor" stroke-width="1.7"/><rect x="14" y="12" width="7" height="9" rx="1.5" stroke="currentColor" stroke-width="1.7"/><rect x="3" y="16" width="7" height="5" rx="1.5" stroke="currentColor" stroke-width="1.7"/></svg>
+          Dashboard
+        </a>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:2px">
+        <span style="font-size:11px;font-weight:700;color:#98A2B3;letter-spacing:0.06em;text-transform:uppercase;padding:6px 12px 2px">Sales</span>
+        <a href="invoices.html" class="navlink">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M6 2h9l3 3v17H6V2z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M9 10h6M9 14h6M9 18h3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+          Invoices
+        </a>
+        <a href="pos.html" class="navlink">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="12" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="M8 20h8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+          Point of sale
+        </a>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:2px">
+        <span style="font-size:11px;font-weight:700;color:#98A2B3;letter-spacing:0.06em;text-transform:uppercase;padding:6px 12px 2px">Inventory</span>
+        <a href="inventory.html" class="navlink">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M3 7l9-4 9 4-9 4-9-4z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M3 7v10l9 4 9-4V7M12 11v10" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+          Stock &amp; items
+        </a>
+        <a href="purchase-order.html" class="navlink">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 7l2-4h12l2 4M4 7v13h16V7" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+          Purchase orders
+        </a>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:2px">
+        <span style="font-size:11px;font-weight:700;color:#98A2B3;letter-spacing:0.06em;text-transform:uppercase;padding:6px 12px 2px">Workspace</span>
+        <a href="customers.html" class="navlink">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><circle cx="9" cy="8" r="3.2" stroke="currentColor" stroke-width="1.7"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><circle cx="17.5" cy="9" r="2.4" stroke="currentColor" stroke-width="1.6"/><path d="M15.5 14.3c2.6.1 4.7 2.3 4.9 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          People &amp; suppliers
+        </a>
+        <a href="#" class="navlink">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M4 19V5a2 2 0 012-2h7l5 5v11a2 2 0 01-2 2H6a2 2 0 01-2-2z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M8 13h6M8 16h6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+          Reports
+        </a>
+        <a href="settings.html" class="navlink active">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.7"/><path d="M19.4 13a7.6 7.6 0 000-2l2-1.5-2-3.4-2.3.9a7.6 7.6 0 00-1.7-1l-.3-2.5h-4l-.3 2.5a7.6 7.6 0 00-1.7 1l-2.3-.9-2 3.4L6.6 11a7.6 7.6 0 000 2l-2 1.5 2 3.4 2.3-.9c.5.4 1.1.8 1.7 1l.3 2.5h4l.3-2.5c.6-.2 1.2-.6 1.7-1l2.3.9 2-3.4-2-1.5z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+          Settings
+        </a>
+      </div>
+    </nav>
+  </aside>
+
+  <div style="flex:1;min-width:0;display:flex;flex-direction:column">
+
+    <header style="height:64px;flex:0 0 64px;background:#fff;border-bottom:1px solid #E4E7EC;display:flex;align-items:center;justify-content:space-between;padding:0 28px;box-sizing:border-box">
+      <div style="font-size:13.5px;color:#98A2B3;display:flex;align-items:center;gap:6px">
+        <a href="dashboard.html" style="color:#98A2B3">Home</a><span>/</span><span style="color:#1D2130;font-weight:600">Settings</span>
+      </div>
+      <div style="position:relative;width:260px">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" style="position:absolute;left:11px;top:10px" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="#98A2B3" stroke-width="1.8"/><path d="M21 21l-4.3-4.3" stroke="#98A2B3" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <input placeholder="Search settings…" style="width:100%;height:36px;border-radius:8px;border:1px solid #D0D5DD;padding:0 12px 0 32px;font-size:13px;box-sizing:border-box" />
+      </div>
+    </header>
+
+    <main style="flex:1;padding:28px;display:flex;flex-direction:column;gap:26px;box-sizing:border-box">
+
+      <div>
+        <h1 style="margin:0 0 4px;font-size:22px;font-weight:700;letter-spacing:-0.01em">Settings</h1>
+        <p style="margin:0;font-size:13.5px;color:#6B7280">Manage organization settings, billing customizations, print formats and document layouts.</p>
+      </div>
+
+      <section style="display:flex;flex-direction:column;gap:14px">
+        <span style="font-size:12px;font-weight:700;color:#98A2B3;letter-spacing:0.06em;text-transform:uppercase;border-left:3px solid #4338CA;padding-left:10px">General settings</span>
+        <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px">
+          <div class="card settingcard">
+            <div class="ico" style="background:#EEF0FD"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="#4338CA" stroke-width="1.7"/><path d="M19.4 13a7.6 7.6 0 000-2l2-1.5-2-3.4-2.3.9a7.6 7.6 0 00-1.7-1l-.3-2.5h-4l-.3 2.5a7.6 7.6 0 00-1.7 1l-2.3-.9-2 3.4L6.6 11a7.6 7.6 0 000 2l-2 1.5 2 3.4 2.3-.9c.5.4 1.1.8 1.7 1l.3 2.5h4l.3-2.5c.6-.2 1.2-.6 1.7-1l2.3.9 2-3.4-2-1.5z" stroke="#4338CA" stroke-width="1.5" stroke-linejoin="round"/></svg></div>
+            <div>
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+                <h3 style="margin:0;font-size:15px;font-weight:700">System settings</h3>
+                <span style="font-size:10.5px;font-weight:700;color:#4338CA;background:#EEF0FD;border-radius:999px;padding:2px 8px">Authorized</span>
+              </div>
+              <p style="margin:0;font-size:13px;color:#667085;line-height:1.5">Core business profile, inventory valuation method (FIFO, weighted average), P&amp;L basis, and Excel import managers.</p>
+            </div>
+            <a href="#" style="margin-top:4px;height:40px;border-radius:9px;background:#4338CA;color:#fff;display:flex;align-items:center;justify-content:center;gap:6px;font-size:13.5px;font-weight:600">Manage settings →</a>
+          </div>
+
+          <div class="card settingcard">
+            <div class="ico" style="background:#E9F9EF"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 21V9l8-6 8 6v12" stroke="#15803D" stroke-width="1.7" stroke-linejoin="round"/><path d="M9 21v-7h6v7" stroke="#15803D" stroke-width="1.7"/></svg></div>
+            <div>
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+                <h3 style="margin:0;font-size:15px;font-weight:700">Branch settings</h3>
+                <span style="font-size:10.5px;font-weight:700;color:#15803D;background:#E9F9EF;border-radius:999px;padding:2px 8px">Authorized</span>
+              </div>
+              <p style="margin:0;font-size:13px;color:#667085;line-height:1.5">Branch profiles, physical layout metadata, default printing templates, tax serial numbers and custom rules.</p>
+            </div>
+            <a href="#" style="margin-top:4px;height:40px;border-radius:9px;background:#15803D;color:#fff;display:flex;align-items:center;justify-content:center;gap:6px;font-size:13.5px;font-weight:600">Manage settings →</a>
+          </div>
+        </div>
+      </section>
+
+      <section style="display:flex;flex-direction:column;gap:14px">
+        <span style="font-size:12px;font-weight:700;color:#98A2B3;letter-spacing:0.06em;text-transform:uppercase;border-left:3px solid #B45309;padding-left:10px">Document settings</span>
+        <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px">
+          <div class="card settingcard">
+            <div class="ico" style="background:#E8F2FE"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M6 2h9l3 3v17H6V2z" stroke="#1D6FD1" stroke-width="1.7" stroke-linejoin="round"/><path d="M9 10h6M9 14h6" stroke="#1D6FD1" stroke-width="1.7" stroke-linecap="round"/></svg></div>
+            <div>
+              <h3 style="margin:0 0 6px;font-size:14.5px;font-weight:700">Invoice settings</h3>
+              <p style="margin:0;font-size:12.5px;color:#667085;line-height:1.5">Layout styles, color themes, header &amp; footer images, email alerts, A4 or thermal printing.</p>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px">
+              <button type="button" style="height:34px;border-radius:8px;border:1px solid #E4E7EC;background:#fff;font-size:12.5px;font-weight:600;color:#344054;cursor:pointer;font-family:inherit">Design</button>
+              <button type="button" style="height:34px;border-radius:8px;border:1px solid #E4E7EC;background:#fff;font-size:12.5px;font-weight:600;color:#344054;cursor:pointer;font-family:inherit">Content</button>
+              <button type="button" style="height:34px;border-radius:8px;border:1px solid #E4E7EC;background:#fff;font-size:12.5px;font-weight:600;color:#344054;cursor:pointer;font-family:inherit">Emails</button>
+              <button type="button" style="height:34px;border-radius:8px;border:1px solid #E4E7EC;background:#fff;font-size:12.5px;font-weight:600;color:#344054;cursor:pointer;font-family:inherit">Thermal</button>
+            </div>
+          </div>
+
+          <div class="card settingcard">
+            <div class="ico" style="background:#FFF4E5"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h10" stroke="#B45309" stroke-width="1.7" stroke-linecap="round"/></svg></div>
+            <div>
+              <h3 style="margin:0 0 6px;font-size:14.5px;font-weight:700">Quotation settings</h3>
+              <p style="margin:0;font-size:12.5px;color:#667085;line-height:1.5">Layout formats, custom columns, template defaults and valid-thru rules.</p>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px">
+              <button type="button" style="height:34px;border-radius:8px;border:1px solid #E4E7EC;background:#fff;font-size:12.5px;font-weight:600;color:#344054;cursor:pointer;font-family:inherit">Design</button>
+              <button type="button" style="height:34px;border-radius:8px;border:1px solid #E4E7EC;background:#fff;font-size:12.5px;font-weight:600;color:#344054;cursor:pointer;font-family:inherit">Content</button>
+              <button type="button" style="height:34px;border-radius:8px;border:1px solid #E4E7EC;background:#fff;font-size:12.5px;font-weight:600;color:#344054;cursor:pointer;font-family:inherit">Emails</button>
+              <button type="button" style="height:34px;border-radius:8px;border:1px solid #E4E7EC;background:#fff;font-size:12.5px;font-weight:600;color:#344054;cursor:pointer;font-family:inherit">Thermal</button>
+            </div>
+          </div>
+
+          <div class="card settingcard">
+            <div class="ico" style="background:#FDEAEA"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="#C0362C" stroke-width="1.7"/></svg></div>
+            <div>
+              <h3 style="margin:0 0 6px;font-size:14.5px;font-weight:700">Tax &amp; currency</h3>
+              <p style="margin:0;font-size:12.5px;color:#667085;line-height:1.5">Default tax rates, currency format, rounding rules and multi-currency support.</p>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px">
+              <button type="button" style="height:34px;border-radius:8px;border:1px solid #E4E7EC;background:#fff;font-size:12.5px;font-weight:600;color:#344054;cursor:pointer;font-family:inherit">Taxes</button>
+              <button type="button" style="height:34px;border-radius:8px;border:1px solid #E4E7EC;background:#fff;font-size:12.5px;font-weight:600;color:#344054;cursor:pointer;font-family:inherit">Currency</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section style="display:flex;flex-direction:column;gap:14px">
+        <span style="font-size:12px;font-weight:700;color:#98A2B3;letter-spacing:0.06em;text-transform:uppercase;border-left:3px solid #2DBE8C;padding-left:10px">Users &amp; access</span>
+        <div class="card" style="display:flex;flex-direction:column">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid #E4E7EC">
+            <h3 style="margin:0;font-size:14.5px;font-weight:700">Staff &amp; roles</h3>
+            <a href="#" style="height:34px;padding:0 14px;border-radius:8px;border:1px solid #D0D5DD;display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:#344054">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="#344054" stroke-width="2" stroke-linecap="round"/></svg>
+              Add staff
+            </a>
+          </div>
+          <div style="display:grid;grid-template-columns:2fr 1.4fr 1fr 1fr;padding:11px 20px;font-size:11.5px;font-weight:700;color:#98A2B3;letter-spacing:0.04em;text-transform:uppercase;background:#FAFAFC;border-bottom:1px solid #EEF0F3">
+            <span>Name</span><span>Email</span><span>Branch access</span><span>Role</span>
+          </div>
+          <div style="display:grid;grid-template-columns:2fr 1.4fr 1fr 1fr;padding:13px 20px;font-size:13.5px;align-items:center;border-bottom:1px solid #F3F4F7">
+            <span style="display:flex;align-items:center;gap:10px"><span style="width:30px;height:30px;border-radius:50%;background:#4338CA;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700">IM</span>Imesha Madhushani</span><span style="color:#667085">imeshamadhushani23@gmail.com</span><span>All branches</span><span style="font-size:12px;font-weight:600;color:#4338CA;background:#EEF0FD;border-radius:999px;padding:3px 10px;width:fit-content">Owner</span>
+          </div>
+          <div style="display:grid;grid-template-columns:2fr 1.4fr 1fr 1fr;padding:13px 20px;font-size:13.5px;align-items:center">
+            <span style="display:flex;align-items:center;gap:10px"><span style="width:30px;height:30px;border-radius:50%;background:#2DBE8C;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700">OL</span>Oshan Lahiru</span><span style="color:#667085">oshan.lahiru@vertex.lk</span><span>Main Branch</span><span style="font-size:12px;font-weight:600;color:#B45309;background:#FFF4E5;border-radius:999px;padding:3px 10px;width:fit-content">Cashier</span>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+</body>
+</html>
