@@ -62,7 +62,7 @@ export function AuthShell({
   const panelGradient =
     tone === "slate"
       ? "from-slate-800 via-slate-900 to-black"
-      : "from-brand-700 via-brand-800 to-slate-950";
+      : "from-brand-700 to-brand-900";
   const blobA = tone === "slate" ? "bg-slate-400/10" : "bg-accent-400/20";
   const blobB = tone === "slate" ? "bg-slate-500/10" : "bg-brand-400/20";
   const badgeText = tone === "slate" ? "text-slate-200" : "text-brand-100";
@@ -87,7 +87,7 @@ export function AuthShell({
       >
         <div className="px-6 py-10 sm:px-12 sm:py-14 lg:col-span-3">
           <div className="mb-8 flex items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-600 text-sm font-bold text-white shadow-sm shadow-brand-600/30">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-700 text-sm font-bold text-white shadow-sm shadow-brand-700/30">
               N
             </div>
             <span className="text-lg font-semibold tracking-tight text-slate-900">Nexora ERP</span>

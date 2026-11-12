@@ -34,7 +34,7 @@ export default async function SalesInvoiceDetailPage({ params }: { params: Promi
   return (
     <main className="mx-auto max-w-3xl p-8 print:max-w-none print:p-0">
       <div className="mb-4 flex items-center justify-between print:hidden">
-        <Link href="/sales/invoices" className="text-xs font-medium text-brand-600 hover:text-brand-700">
+        <Link href="/sales/invoices" className="text-xs font-medium text-brand-700 hover:text-brand-800">
           ← Sales invoices
         </Link>
         <div className="flex items-center gap-2">

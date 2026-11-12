@@ -8,7 +8,7 @@ import { signupAction } from "./actions";
 function SectionHeading({ step, title }: { step: number; title: string }) {
   return (
     <div className="mb-4 flex items-center gap-2.5">
-      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand-600 text-xs font-semibold text-white">
+      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand-700 text-xs font-semibold text-white">
         {step}
       </span>
       <h2 className="text-sm font-semibold text-slate-900">{title}</h2>

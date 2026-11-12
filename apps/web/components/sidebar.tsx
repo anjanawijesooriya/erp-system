@@ -90,7 +90,7 @@ export function Sidebar() {
       } ${hydrated ? "" : "invisible"}`}
     >
       <div className="flex h-16 shrink-0 items-center gap-2.5 border-b border-slate-200 px-5">
-        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-brand-600 text-sm font-bold text-white">
+        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-brand-700 text-sm font-bold text-white">
           N
         </div>
         {!collapsed && <span className="text-base font-semibold tracking-tight text-slate-900">Nexora ERP</span>}

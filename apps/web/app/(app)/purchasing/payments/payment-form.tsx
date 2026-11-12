@@ -130,7 +130,7 @@ export function SupplierPaymentForm({
                       <button
                         type="button"
                         onClick={() => selectInvoice(inv)}
-                        className="text-xs font-medium text-brand-600 hover:text-brand-700"
+                        className="text-xs font-medium text-brand-700 hover:text-brand-800"
                       >
                         {invoiceId === inv.invoiceId ? "Selected" : "Pay this"}
                       </button>

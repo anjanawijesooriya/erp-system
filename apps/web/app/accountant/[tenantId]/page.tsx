@@ -46,7 +46,7 @@ export default async function AccountantTenantPage({ params }: { params: Promise
       />
 
       <main className="mx-auto max-w-4xl p-8">
-        <Link href="/accountant" className="text-xs font-medium text-brand-600 hover:text-brand-700">
+        <Link href="/accountant" className="text-xs font-medium text-brand-700 hover:text-brand-800">
           ← Your companies
         </Link>
         <h1 className="mt-1 text-2xl font-semibold tracking-tight text-slate-900">{tenant.name}</h1>

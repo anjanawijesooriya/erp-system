@@ -3,14 +3,19 @@ import { cn } from "./cn";
 
 export type BadgeTone = "slate" | "brand" | "accent" | "amber" | "rose" | "violet" | "sky";
 
+/**
+ * Tone names are kept generic (accent/amber/rose/sky) so call sites don't
+ * need to change, but each now points at the exact semantic hex from the
+ * Vertex ERP mockups: accent=success, amber=warning, rose=danger, sky=info.
+ */
 const TONE_CLASSES: Record<BadgeTone, string> = {
   slate: "bg-slate-100 text-slate-600 ring-slate-200",
   brand: "bg-brand-50 text-brand-700 ring-brand-200",
-  accent: "bg-accent-50 text-accent-700 ring-accent-200",
-  amber: "bg-amber-50 text-amber-700 ring-amber-200",
-  rose: "bg-rose-50 text-rose-700 ring-rose-200",
+  accent: "bg-success-50 text-success-700 ring-success-100",
+  amber: "bg-warning-50 text-warning-700 ring-warning-100",
+  rose: "bg-danger-50 text-danger-700 ring-danger-100",
   violet: "bg-violet-50 text-violet-700 ring-violet-200",
-  sky: "bg-sky-50 text-sky-700 ring-sky-200",
+  sky: "bg-info-50 text-info-700 ring-info-100",
 };
 
 export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {

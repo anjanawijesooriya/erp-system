@@ -48,7 +48,7 @@ export function LineItemEditor({
         <button
           type="button"
           onClick={addLine}
-          className="flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-brand-600 transition-colors hover:bg-brand-50 hover:text-brand-700"
+          className="flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-brand-700 transition-colors hover:bg-brand-50 hover:text-brand-800"
         >
           <PlusIcon className="h-3.5 w-3.5" />
           Add line
