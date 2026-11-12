@@ -12,13 +12,22 @@ export async function createSupplierPaymentAction(
   const { tenantId, userId } = await requireSession();
   await assertCan(userId, PERMISSIONS.SUPPLIER_PAYMENT_CREATE);
 
+  const allocationsRaw = formData.get("allocations");
+  let allocations: unknown;
+  try {
+    allocations = allocationsRaw ? JSON.parse(allocationsRaw as string) : undefined;
+  } catch {
+    return { error: "Invalid bill selection." };
+  }
+
   const parsed = supplierPaymentInput.safeParse({
     branchId: formData.get("branchId"),
     supplierId: formData.get("supplierId"),
     invoiceId: formData.get("invoiceId") || undefined,
+    allocations,
     paymentDate: formData.get("paymentDate"),
     method: formData.get("method"),
-    amount: formData.get("amount"),
+    amount: formData.get("amount") || undefined,
     note: formData.get("note") || undefined,
   });
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Link from "next/link";
 import { Card, EmptyState, StatTile } from "@erp/ui/card";
 import { Pagination } from "@erp/ui/pagination";
 import { UsersIcon } from "./icons";
@@ -43,6 +44,7 @@ export function PartyStatsList({
   totalLabel,
   totalValueLabel,
   emptyLabel,
+  basePath,
 }: {
   parties: PartyStatsRow[];
   /** e.g. "customers" / "suppliers", used in stat tile and empty-state copy. */
@@ -50,6 +52,8 @@ export function PartyStatsList({
   /** e.g. "Total sales" / "Total purchases" column header. */
   totalValueLabel: string;
   emptyLabel: string;
+  /** e.g. "/customers" / "/suppliers" — each row links to `${basePath}/${id}`. */
+  basePath: string;
 }) {
   const [search, setSearch] = useState("");
   const [balanceFilter, setBalanceFilter] = useState("");
@@ -159,12 +163,12 @@ export function PartyStatsList({
               {pageRows.map((p) => (
                 <tr key={p.id} className="border-t border-slate-100 transition-colors hover:bg-slate-50/70">
                   <td className="px-4 py-2.5">
-                    <div className="flex items-center gap-2.5">
+                    <Link href={`${basePath}/${p.id}`} className="flex items-center gap-2.5">
                       <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-bold ${toneFor(p.id)}`}>
                         {initialsOf(p.name)}
                       </span>
                       <span className="font-semibold text-brand-700">{p.name}</span>
-                    </div>
+                    </Link>
                   </td>
                   <td className="px-4 py-2.5 text-slate-600">{p.phone ?? "—"}</td>
                   <td className="px-4 py-2.5 text-right font-medium text-slate-900">{p.totalValue.toLocaleString()}</td>

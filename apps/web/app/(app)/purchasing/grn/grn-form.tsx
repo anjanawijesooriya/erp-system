@@ -5,7 +5,7 @@ import { Button } from "@erp/ui/button";
 import { Label } from "@erp/ui/input";
 import { FormBody, FormFooter, FormSectionLabel } from "@erp/ui/form";
 import { LineItemEditor, type EditableLine } from "@/components/line-item-editor";
-import { PlusIcon } from "@/components/icons";
+import { PlusIcon, AlertTriangleIcon } from "@/components/icons";
 import { useActionToast } from "@/lib/use-action-toast";
 import { createGrnAction } from "./actions";
 
@@ -43,6 +43,15 @@ export function GrnForm({
   const [lines, setLines] = useState<EditableLine[]>([blankLine(variants)]);
 
   const availablePOs = purchaseOrders.filter((po) => po.supplierId === supplierId);
+  const selectedPo = purchaseOrders.find((po) => po.id === purchaseOrderId);
+  const mismatchedLines = selectedPo
+    ? lines.filter((l) => {
+        const poLine = selectedPo.lines.find((pl) => pl.productVariantId === l.productVariantId);
+        return poLine && poLine.remainingQty !== l.quantity;
+      })
+    : [];
+  const variantLabel = (id: string) => variants.find((v) => v.id === id)?.label ?? id;
+  const itemsTotal = lines.reduce((sum, l) => sum + l.quantity * l.unitCost, 0);
 
   function handleSupplierChange(id: string) {
     setSupplierId(id);
@@ -120,6 +129,17 @@ export function GrnForm({
         )}
       </div>
 
+      {mismatchedLines.length > 0 && (
+        <div className="col-span-3 flex items-start gap-2.5 rounded-lg border border-warning-100 bg-warning-50 px-4 py-3 text-sm text-warning-700">
+          <AlertTriangleIcon className="mt-0.5 h-4 w-4 flex-shrink-0" />
+          <span>
+            {mismatchedLines.length} item{mismatchedLines.length === 1 ? "" : "s"} {mismatchedLines.length === 1 ? "has" : "have"} a quantity
+            mismatch against {selectedPo?.docNumber} — check{" "}
+            <strong>{mismatchedLines.map((l) => variantLabel(l.productVariantId)).join(", ")}</strong> before confirming.
+          </span>
+        </div>
+      )}
+
       <LineItemEditor variants={variants} lines={lines} onChange={setLines} costLabel="Unit cost" showBatchExpiry />
 
       <div>
@@ -129,6 +149,18 @@ export function GrnForm({
       <div className="col-span-2">
         <Label>Note (optional)</Label>
         <input name="note" className={inputClass} />
+      </div>
+
+      <div className="col-span-3 rounded-lg border border-slate-200 bg-slate-50/60 p-4">
+        <div className="flex items-center justify-between text-sm text-slate-600">
+          <span>Items received total</span>
+          <span className="font-medium text-slate-900">{itemsTotal.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+        </div>
+        <div className="mt-3 flex items-center justify-between border-t border-slate-200 pt-3 text-base font-semibold text-slate-900">
+          <span>Payable to supplier</span>
+          <span>{itemsTotal.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+        </div>
+        <p className="mt-1.5 text-xs text-slate-400">Will be added to Accounts Payable once confirmed.</p>
       </div>
       </FormBody>
       <FormFooter>

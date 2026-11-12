@@ -18,15 +18,23 @@ interface Transfer {
   lines: { productVariantId: string; quantity: string; batchNumber: string | null }[];
 }
 
+interface StockRow {
+  warehouseId: string;
+  productVariantId: string;
+  quantity: number;
+}
+
 export function TransfersClient({
   transfers,
   warehouses,
   variants,
+  stock,
   canCreate,
 }: {
   transfers: Transfer[];
   warehouses: { id: string; name: string }[];
   variants: { id: string; label: string }[];
+  stock: StockRow[];
   canCreate: boolean;
 }) {
   const [createOpen, setCreateOpen] = useState(false);
@@ -89,7 +97,7 @@ export function TransfersClient({
         description="Move stock between warehouses."
         icon={<SwapIcon className="h-4 w-4" />}
       >
-        <TransferForm warehouses={warehouses} variants={variants} />
+        <TransferForm warehouses={warehouses} variants={variants} stock={stock} />
       </Sheet>
 
       <Sheet

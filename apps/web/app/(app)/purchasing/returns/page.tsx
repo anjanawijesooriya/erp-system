@@ -1,4 +1,4 @@
-import { listPurchaseReturns } from "@erp/core/purchasing";
+import { listPurchaseReturns, listGrns } from "@erp/core/purchasing";
 import { listWarehouses } from "@erp/core/inventory";
 import { can, PERMISSIONS } from "@erp/core/rbac";
 import { PageHeader } from "@erp/ui/card";
@@ -12,14 +12,22 @@ import { PurchaseReturnsClient } from "./return-client";
 
 export default async function PurchaseReturnsPage() {
   const { tenantId, userId } = await requireSession();
-  const [returns, branches, warehouses, suppliers, variants, canCreate] = await Promise.all([
+  const [returns, branches, warehouses, suppliers, variants, grns, canCreate] = await Promise.all([
     listPurchaseReturns(tenantId),
     getBranchOptions(tenantId),
     listWarehouses(tenantId),
     getSupplierOptions(tenantId),
     getVariantOptions(tenantId),
+    listGrns(tenantId),
     can(userId, PERMISSIONS.PURCHASE_RETURN_CREATE),
   ]);
+
+  const grnOptions = grns.map((g) => ({
+    id: g.id,
+    docNumber: g.docNumber,
+    supplierId: g.supplier?.id ?? "",
+    lines: g.lines.map((l) => ({ productVariantId: l.productVariantId, receivedQty: Number(l.receivedQty), unitCost: Number(l.unitCost) })),
+  }));
 
   const ready = branches.length > 0 && warehouses.length > 0 && suppliers.length > 0 && variants.length > 0;
 
@@ -44,6 +52,7 @@ export default async function PurchaseReturnsPage() {
         warehouses={warehouses}
         suppliers={suppliers}
         variants={variants}
+        grns={grnOptions}
         canCreate={canCreate && ready}
       />
     </main>

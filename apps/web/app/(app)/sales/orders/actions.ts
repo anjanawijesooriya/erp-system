@@ -12,18 +12,27 @@ export async function createSalesOrderAction(
   const { tenantId, userId } = await requireSession();
   await assertCan(userId, PERMISSIONS.SALES_ORDER_CREATE);
 
+  const linesRaw = formData.get("lines");
+  let lines: unknown;
+  try {
+    const parsedLines = JSON.parse(typeof linesRaw === "string" ? linesRaw : "[]");
+    lines = Array.isArray(parsedLines)
+      ? parsedLines.map((l: { productVariantId: string; quantity: number; unitCost: number }) => ({
+          productVariantId: l.productVariantId,
+          quantity: l.quantity,
+          unitPrice: l.unitCost,
+        }))
+      : parsedLines;
+  } catch {
+    return { error: "Invalid line items." };
+  }
+
   const parsed = salesOrderInput.safeParse({
     branchId: formData.get("branchId"),
     customerId: formData.get("customerId"),
     orderDate: formData.get("orderDate"),
     note: formData.get("note") || undefined,
-    lines: [
-      {
-        productVariantId: formData.get("productVariantId"),
-        quantity: formData.get("quantity"),
-        unitPrice: formData.get("unitPrice"),
-      },
-    ],
+    lines,
   });
 
   if (!parsed.success) {

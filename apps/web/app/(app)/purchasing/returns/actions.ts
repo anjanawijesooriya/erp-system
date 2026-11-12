@@ -12,20 +12,23 @@ export async function createPurchaseReturnAction(
   const { tenantId, userId } = await requireSession();
   await assertCan(userId, PERMISSIONS.PURCHASE_RETURN_CREATE);
 
+  const linesRaw = formData.get("lines");
+  let lines: unknown;
+  try {
+    lines = JSON.parse(typeof linesRaw === "string" ? linesRaw : "[]");
+  } catch {
+    return { error: "Invalid line items." };
+  }
+
   const parsed = purchaseReturnInput.safeParse({
     branchId: formData.get("branchId"),
     warehouseId: formData.get("warehouseId"),
     supplierId: formData.get("supplierId"),
+    grnId: formData.get("grnId") || undefined,
     returnDate: formData.get("returnDate"),
     reason: formData.get("reason"),
     note: formData.get("note") || undefined,
-    lines: [
-      {
-        productVariantId: formData.get("productVariantId"),
-        quantity: formData.get("quantity"),
-        unitCost: formData.get("unitCost") || 0,
-      },
-    ],
+    lines,
   });
 
   if (!parsed.success) {

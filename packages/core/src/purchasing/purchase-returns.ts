@@ -73,6 +73,6 @@ export async function listPurchaseReturns(tenantId: string) {
   return db.query.purchaseReturns.findMany({
     where: eq(purchaseReturns.tenantId, tenantId),
     orderBy: (r, { desc }) => [desc(r.createdAt)],
-    with: { lines: { with: { productVariant: true } }, supplier: true, warehouse: true },
+    with: { lines: { with: { productVariant: true } }, supplier: true, warehouse: true, grn: true },
   });
 }

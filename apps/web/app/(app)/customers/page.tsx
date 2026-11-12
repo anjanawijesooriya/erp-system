@@ -39,6 +39,7 @@ export default async function CustomersPage() {
         totalLabel="customers"
         totalValueLabel="Total sales"
         emptyLabel="No customers match these filters."
+        basePath="/customers"
       />
     </main>
   );

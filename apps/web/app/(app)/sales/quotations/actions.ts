@@ -12,19 +12,28 @@ export async function createQuotationAction(
   const { tenantId, userId } = await requireSession();
   await assertCan(userId, PERMISSIONS.QUOTATION_CREATE);
 
+  const linesRaw = formData.get("lines");
+  let lines: unknown;
+  try {
+    const parsedLines = JSON.parse(typeof linesRaw === "string" ? linesRaw : "[]");
+    lines = Array.isArray(parsedLines)
+      ? parsedLines.map((l: { productVariantId: string; quantity: number; unitCost: number }) => ({
+          productVariantId: l.productVariantId,
+          quantity: l.quantity,
+          unitPrice: l.unitCost,
+        }))
+      : parsedLines;
+  } catch {
+    return { error: "Invalid line items." };
+  }
+
   const parsed = quotationInput.safeParse({
     branchId: formData.get("branchId"),
     customerId: formData.get("customerId"),
     quoteDate: formData.get("quoteDate"),
     validUntil: formData.get("validUntil") || undefined,
     note: formData.get("note") || undefined,
-    lines: [
-      {
-        productVariantId: formData.get("productVariantId"),
-        quantity: formData.get("quantity"),
-        unitPrice: formData.get("unitPrice"),
-      },
-    ],
+    lines,
   });
 
   if (!parsed.success) {

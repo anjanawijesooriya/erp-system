@@ -8,8 +8,8 @@ import { Sheet, DetailRow, DetailSection } from "@erp/ui/sheet";
 import { ConfirmDialog } from "@erp/ui/dialog";
 import { useToast } from "@erp/ui/toast";
 import { PlusIcon, StoreIcon } from "@/components/icons";
-import { SalesDocForm } from "@/components/sales-doc-form";
-import { createSalesOrderAction, cancelSalesOrderAction } from "./actions";
+import { SalesOrderForm } from "./order-form";
+import { cancelSalesOrderAction } from "./actions";
 
 interface Order {
   id: string;
@@ -21,11 +21,17 @@ interface Order {
   lines: { productVariantId: string; qty: string; unitPrice: string }[];
 }
 
+interface Availability {
+  productVariantId: string;
+  available: number;
+}
+
 export function SalesOrdersClient({
   orders,
   branches,
   customers,
   variants,
+  availability,
   canCreate,
   canCancel,
 }: {
@@ -33,6 +39,7 @@ export function SalesOrdersClient({
   branches: { id: string; name: string }[];
   customers: { id: string; label: string }[];
   variants: { id: string; label: string }[];
+  availability: Availability[];
   canCreate: boolean;
   canCancel: boolean;
 }) {
@@ -113,15 +120,7 @@ export function SalesOrdersClient({
         description="Confirm what a customer is ordering."
         icon={<StoreIcon className="h-4 w-4" />}
       >
-        <SalesDocForm
-          action={createSalesOrderAction}
-          branches={branches}
-          customers={customers}
-          variants={variants}
-          dateFieldName="orderDate"
-          dateLabel="Order date"
-          submitLabel="Create sales order"
-        />
+        <SalesOrderForm branches={branches} customers={customers} variants={variants} availability={availability} />
       </Sheet>
 
       <Sheet

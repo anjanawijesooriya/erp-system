@@ -16,7 +16,15 @@ interface SalesReturn {
   note: string | null;
   customer: { name: string } | null;
   warehouse: { name: string } | null;
+  invoice: { docNumber: string } | null;
   lines: { productVariantId: string; qty: string; unitPrice: string }[];
+}
+
+interface InvoiceOption {
+  id: string;
+  docNumber: string;
+  customerId: string;
+  lines: { productVariantId: string; qty: number; unitPrice: number }[];
 }
 
 export function SalesReturnsClient({
@@ -25,6 +33,7 @@ export function SalesReturnsClient({
   warehouses,
   customers,
   variants,
+  invoices,
   canCreate,
 }: {
   returns: SalesReturn[];
@@ -32,6 +41,7 @@ export function SalesReturnsClient({
   warehouses: { id: string; name: string }[];
   customers: { id: string; label: string }[];
   variants: { id: string; label: string }[];
+  invoices: InvoiceOption[];
   canCreate: boolean;
 }) {
   const [createOpen, setCreateOpen] = useState(false);
@@ -94,7 +104,7 @@ export function SalesReturnsClient({
         description="Take stock back from a customer."
         icon={<UndoIcon className="h-4 w-4" />}
       >
-        <SalesReturnForm branches={branches} warehouses={warehouses} customers={customers} variants={variants} />
+        <SalesReturnForm branches={branches} warehouses={warehouses} customers={customers} variants={variants} invoices={invoices} />
       </Sheet>
 
       <Sheet
@@ -110,6 +120,7 @@ export function SalesReturnsClient({
             <DetailSection title="Overview">
               <DetailRow label="Customer" value={selected.customer?.name ?? "—"} />
               <DetailRow label="Warehouse" value={selected.warehouse?.name ?? "—"} />
+              <DetailRow label="Original invoice" value={selected.invoice?.docNumber ?? "— returned directly —"} />
               <DetailRow label="Return date" value={selected.returnDate} />
               <DetailRow label="Reason" value={<Badge tone="amber">{selected.reason.replace(/_/g, " ")}</Badge>} />
               {selected.note && <DetailRow label="Note" value={selected.note} />}

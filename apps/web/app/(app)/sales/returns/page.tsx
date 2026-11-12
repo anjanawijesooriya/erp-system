@@ -1,4 +1,4 @@
-import { listSalesReturns } from "@erp/core/sales";
+import { listSalesReturns, listSalesInvoices } from "@erp/core/sales";
 import { listWarehouses } from "@erp/core/inventory";
 import { can, PERMISSIONS } from "@erp/core/rbac";
 import { PageHeader } from "@erp/ui/card";
@@ -11,14 +11,22 @@ import { SalesReturnsClient } from "./return-client";
 
 export default async function SalesReturnsPage() {
   const { tenantId, userId } = await requireSession();
-  const [returns, branches, warehouses, customers, variants, canCreate] = await Promise.all([
+  const [returns, branches, warehouses, customers, variants, invoices, canCreate] = await Promise.all([
     listSalesReturns(tenantId),
     getBranchOptions(tenantId),
     listWarehouses(tenantId),
     getCustomerOptions(tenantId),
     getVariantOptions(tenantId),
+    listSalesInvoices(tenantId),
     can(userId, PERMISSIONS.SALES_RETURN_CREATE),
   ]);
+
+  const invoiceOptions = invoices.map((inv) => ({
+    id: inv.id,
+    docNumber: inv.docNumber,
+    customerId: inv.customerId,
+    lines: inv.lines.map((l) => ({ productVariantId: l.productVariantId, qty: Number(l.qty), unitPrice: Number(l.unitPrice) })),
+  }));
 
   const ready = branches.length > 0 && warehouses.length > 0 && customers.length > 0 && variants.length > 0;
 
@@ -36,6 +44,7 @@ export default async function SalesReturnsPage() {
         warehouses={warehouses}
         customers={customers}
         variants={variants}
+        invoices={invoiceOptions}
         canCreate={canCreate && ready}
       />
     </main>

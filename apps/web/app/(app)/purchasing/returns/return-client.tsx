@@ -16,7 +16,15 @@ interface PurchaseReturn {
   note: string | null;
   supplier: { name: string } | null;
   warehouse: { name: string } | null;
+  grn: { docNumber: string } | null;
   lines: { productVariantId: string; qty: string; unitCost: string }[];
+}
+
+interface GrnOption {
+  id: string;
+  docNumber: string;
+  supplierId: string;
+  lines: { productVariantId: string; receivedQty: number; unitCost: number }[];
 }
 
 export function PurchaseReturnsClient({
@@ -25,6 +33,7 @@ export function PurchaseReturnsClient({
   warehouses,
   suppliers,
   variants,
+  grns,
   canCreate,
 }: {
   returns: PurchaseReturn[];
@@ -32,6 +41,7 @@ export function PurchaseReturnsClient({
   warehouses: { id: string; name: string }[];
   suppliers: { id: string; label: string }[];
   variants: { id: string; label: string }[];
+  grns: GrnOption[];
   canCreate: boolean;
 }) {
   const [createOpen, setCreateOpen] = useState(false);
@@ -94,7 +104,7 @@ export function PurchaseReturnsClient({
         description="Send stock back to a supplier."
         icon={<UndoIcon className="h-4 w-4" />}
       >
-        <PurchaseReturnForm branches={branches} warehouses={warehouses} suppliers={suppliers} variants={variants} />
+        <PurchaseReturnForm branches={branches} warehouses={warehouses} suppliers={suppliers} variants={variants} grns={grns} />
       </Sheet>
 
       <Sheet
@@ -110,6 +120,7 @@ export function PurchaseReturnsClient({
             <DetailSection title="Overview">
               <DetailRow label="Supplier" value={selected.supplier?.name ?? "—"} />
               <DetailRow label="Warehouse" value={selected.warehouse?.name ?? "—"} />
+              <DetailRow label="Original GRN" value={selected.grn?.docNumber ?? "— returned directly —"} />
               <DetailRow label="Return date" value={selected.returnDate} />
               <DetailRow label="Reason" value={<Badge tone="amber">{selected.reason.replace("_", " ")}</Badge>} />
               {selected.note && <DetailRow label="Note" value={selected.note} />}

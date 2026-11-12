@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vertex ERP — Customer profile</title>
+<style>
+  body{margin:0;font-family:'Inter',system-ui,-apple-system,sans-serif;background:#F6F7FB;color:#101323}
+  a{color:#4338CA;text-decoration:none}
+  a:hover{color:#352C9B}
+  .card{background:#fff;border:1px solid #E4E7EC;border-radius:14px}
+  .btn-primary{background:#4338CA;color:#fff}
+  .tab{padding:9px 4px;font-size:13.5px;font-weight:600;color:#98A2B3;border-bottom:2px solid transparent;cursor:pointer}
+  .tab.active{color:#4338CA;border-bottom-color:#4338CA}
+  .row:hover{background:#FAFAFD}
+</style>
+</head>
+<body>
+
+<div style="min-height:1400px;width:100%;box-sizing:border-box;background:#F6F7FB">
+
+  <header style="height:64px;background:#fff;border-bottom:1px solid #E4E7EC;display:flex;align-items:center;justify-content:space-between;padding:0 28px;box-sizing:border-box">
+    <div style="display:flex;align-items:center;gap:16px">
+      <a href="customers.html" aria-label="Back" style="width:34px;height:34px;border-radius:9px;border:1px solid #E4E7EC;display:flex;align-items:center;justify-content:center;color:#475467">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <div style="font-size:13.5px;color:#98A2B3;display:flex;align-items:center;gap:6px">
+        <span>People</span><span>/</span><span>Customers</span><span>/</span><span style="color:#1D2130;font-weight:600">Malinsa Liyanage</span>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <a href="#" style="height:38px;padding:0 16px;border-radius:9px;border:1px solid #D0D5DD;display:flex;align-items:center;font-size:13.5px;font-weight:600;color:#344054">Edit profile</a>
+      <a href="new-invoice.html" class="btn-primary" style="height:38px;padding:0 18px;border-radius:9px;display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:600">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
+        New invoice
+      </a>
+    </div>
+  </header>
+
+  <main style="max-width:1200px;margin:0 auto;padding:32px 24px 64px;display:flex;flex-direction:column;gap:20px;box-sizing:border-box">
+
+    <section class="card" style="padding:24px;display:flex;align-items:center;gap:20px;flex-wrap:wrap">
+      <div style="width:64px;height:64px;border-radius:50%;background:#EEF0FD;color:#4338CA;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;flex:0 0 auto">ML</div>
+      <div style="flex:1;min-width:220px;display:flex;flex-direction:column;gap:4px">
+        <div style="display:flex;align-items:center;gap:10px">
+          <h1 style="margin:0;font-size:21px;font-weight:700">Miss Malinsa Liyanage</h1>
+          <span style="font-size:11px;font-weight:700;color:#2DBE8C;background:#E9FBF3;border-radius:999px;padding:3px 9px">VIP customer</span>
+        </div>
+        <span style="font-size:13px;color:#6B7280">076 852 3698 · malinsa.l@gmail.com</span>
+        <span style="font-size:13px;color:#6B7280">24/3, Temple Road, Kohalwila</span>
+      </div>
+      <div style="display:flex;gap:28px">
+        <div style="text-align:right">
+          <div style="font-size:12px;color:#98A2B3">Lifetime sales</div>
+          <div style="font-size:19px;font-weight:700">LKR 48,200</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:12px;color:#98A2B3">Outstanding</div>
+          <div style="font-size:19px;font-weight:700;color:#15803D">LKR 0.00</div>
+        </div>
+      </div>
+    </section>
+
+    <div style="display:flex;gap:28px;border-bottom:1px solid #E4E7EC">
+      <span class="tab active">Invoices</span>
+      <span class="tab">Payments</span>
+      <span class="tab">Quotations</span>
+      <span class="tab">Activity</span>
+    </div>
+
+    <section class="card" style="display:flex;flex-direction:column;overflow:hidden">
+      <div style="display:grid;grid-template-columns:1fr 1.4fr 1fr 1fr 1fr;padding:12px 20px;font-size:11.5px;font-weight:700;color:#98A2B3;letter-spacing:0.04em;text-transform:uppercase;border-bottom:1px solid #EEF0F3;background:#FAFAFC">
+        <span>Invoice</span><span>Items</span><span>Date</span><span>Total</span><span>Status</span>
+      </div>
+
+      <div class="row" style="display:grid;grid-template-columns:1fr 1.4fr 1fr 1fr 1fr;padding:13px 20px;font-size:13.5px;align-items:center;border-bottom:1px solid #F3F4F7">
+        <span style="font-weight:600;color:#4338CA">INV-1015</span><span style="color:#667085">Oil filter ×1, Hikvision CCTV ×1</span><span style="color:#667085">Jul 10, 2026</span><span style="font-weight:600">4,000.00</span>
+        <span style="font-size:12px;font-weight:600;color:#15803D;background:#EFFBEF;border-radius:999px;padding:3px 10px;width:fit-content">Paid</span>
+      </div>
+      <div class="row" style="display:grid;grid-template-columns:1fr 1.4fr 1fr 1fr 1fr;padding:13px 20px;font-size:13.5px;align-items:center;border-bottom:1px solid #F3F4F7">
+        <span style="font-weight:600;color:#4338CA">INV-0965</span><span style="color:#667085">Samsung Galaxy M55 ×1</span><span style="color:#667085">Jun 2, 2026</span><span style="font-weight:600">102,000.00</span>
+        <span style="font-size:12px;font-weight:600;color:#15803D;background:#EFFBEF;border-radius:999px;padding:3px 10px;width:fit-content">Paid</span>
+      </div>
+      <div class="row" style="display:grid;grid-template-columns:1fr 1.4fr 1fr 1fr 1fr;padding:13px 20px;font-size:13.5px;align-items:center">
+        <span style="font-weight:600;color:#4338CA">INV-0812</span><span style="color:#667085">Oil filter ×2</span><span style="color:#667085">Apr 18, 2026</span><span style="font-weight:600">3,600.00</span>
+        <span style="font-size:12px;font-weight:600;color:#15803D;background:#EFFBEF;border-radius:999px;padding:3px 10px;width:fit-content">Paid</span>
+      </div>
+    </section>
+
+    <section class="card" style="padding:20px;display:flex;flex-direction:column;gap:12px">
+      <h3 style="margin:0;font-size:14.5px;font-weight:700">Notes</h3>
+      <p style="margin:0;font-size:13px;color:#667085;line-height:1.6">Prefers WhatsApp for order updates. Usually pays in full on delivery. Introduced by Nimal Perera in March 2026.</p>
+    </section>
+
+  </main>
+</div>
+</body>
+</html>

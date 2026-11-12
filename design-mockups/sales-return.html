@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vertex ERP — Sales return</title>
+<style>
+  body{margin:0;font-family:'Inter',system-ui,-apple-system,sans-serif;background:#F6F7FB;color:#101323}
+  a{color:#4338CA;text-decoration:none}
+  a:hover{color:#352C9B}
+  .card{background:#fff;border:1px solid #E4E7EC;border-radius:14px}
+  .btn-primary{background:#4338CA;color:#fff}
+  .btn-primary:hover{background:#352C9B;color:#fff;text-decoration:none}
+  input,select,textarea{font-family:inherit}
+  .field{display:flex;flex-direction:column;gap:6px}
+  .field label{font-size:12.5px;font-weight:600;color:#344054}
+  .field input, .field select{height:42px;border-radius:9px;border:1px solid #D0D5DD;padding:0 13px;font-size:13.5px;outline:none;box-sizing:border-box}
+  .method{flex:1;height:44px;border-radius:9px;border:1px solid #D0D5DD;background:#fff;display:flex;align-items:center;justify-content:center;gap:7px;font-size:13px;font-weight:600;color:#475467;cursor:pointer}
+  .method.active{border-color:#4338CA;background:#EEF0FD;color:#4338CA}
+</style>
+</head>
+<body>
+
+<div style="min-height:1400px;width:100%;box-sizing:border-box;background:#F6F7FB">
+
+  <header style="height:64px;background:#fff;border-bottom:1px solid #E4E7EC;display:flex;align-items:center;justify-content:space-between;padding:0 28px;box-sizing:border-box">
+    <div style="display:flex;align-items:center;gap:16px">
+      <a href="invoices.html" aria-label="Back" style="width:34px;height:34px;border-radius:9px;border:1px solid #E4E7EC;display:flex;align-items:center;justify-content:center;color:#475467">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <div style="font-size:13.5px;color:#98A2B3;display:flex;align-items:center;gap:6px">
+        <span>Sales</span><span>/</span><span>Returns</span><span>/</span><span style="color:#1D2130;font-weight:600">New</span>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <a href="invoices.html" style="height:38px;padding:0 16px;border-radius:9px;border:1px solid #D0D5DD;display:flex;align-items:center;font-size:13.5px;font-weight:600;color:#344054">Cancel</a>
+      <a href="receivables.html" class="btn-primary" style="height:38px;padding:0 18px;border-radius:9px;display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:600">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12l4.5 4.5L19 7" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Process return
+      </a>
+    </div>
+  </header>
+
+  <main style="max-width:1120px;margin:0 auto;padding:32px 24px 64px;display:flex;flex-direction:column;gap:20px;box-sizing:border-box">
+
+    <div>
+      <h1 style="margin:0 0 4px;font-size:22px;font-weight:700;letter-spacing:-0.01em">New sales return</h1>
+      <p style="margin:0;font-size:13.5px;color:#6B7280">Accept returned goods from a customer and issue a refund or credit note.</p>
+    </div>
+
+    <section class="card" style="padding:22px;display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;gap:18px">
+      <div class="field">
+        <label>Customer *</label>
+        <input value="Mrs Malinsa Perera" />
+      </div>
+      <div class="field">
+        <label>Original invoice</label>
+        <input value="INV-1007" style="color:#4338CA;font-weight:600" />
+      </div>
+      <div class="field">
+        <label>Return number</label>
+        <input value="SR-0033" disabled style="background:#F9FAFB;color:#667085" />
+      </div>
+      <div class="field">
+        <label>Return date</label>
+        <input type="date" value="2026-07-17" />
+      </div>
+    </section>
+
+    <section class="card" style="padding:22px">
+      <label style="font-size:12.5px;font-weight:600;color:#344054">Reason for return *</label>
+      <select style="margin-top:8px;height:42px;width:100%;border-radius:9px;border:1px solid #D0D5DD;padding:0 13px;font-size:13.5px;background:#fff;box-sizing:border-box">
+        <option>Customer changed mind</option>
+        <option>Wrong item delivered</option>
+        <option>Defective / damaged</option>
+        <option>Duplicate order</option>
+      </select>
+    </section>
+
+    <section class="card" style="display:flex;flex-direction:column;overflow:hidden">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid #E4E7EC">
+        <h3 style="margin:0;font-size:14.5px;font-weight:700">Items to return</h3>
+      </div>
+
+      <div style="display:grid;grid-template-columns:2.1fr 0.9fr 0.9fr 1fr 1fr 0.5fr;padding:11px 20px;font-size:11.5px;font-weight:700;color:#98A2B3;letter-spacing:0.04em;text-transform:uppercase;background:#FAFAFC;border-bottom:1px solid #EEF0F3">
+        <span>Item</span><span>Purchased</span><span>Return qty</span><span>Rate (LKR)</span><span>Refund amount</span><span></span>
+      </div>
+
+      <div style="display:grid;grid-template-columns:2.1fr 0.9fr 0.9fr 1fr 1fr 0.5fr;padding:13px 20px;font-size:13.5px;align-items:center">
+        <div>
+          <div style="font-weight:600">Samsung Galaxy M55</div>
+          <div style="font-size:12px;color:#98A2B3">PROD-051572 · Customer changed mind</div>
+        </div>
+        <span style="color:#667085">1</span>
+        <input value="1" style="height:34px;width:64px;border-radius:7px;border:1px solid #D0D5DD;padding:0 8px;font-size:13px" />
+        <span>100,000.00</span><span style="font-weight:600">100,000.00</span>
+        <button type="button" aria-label="Remove item" style="width:28px;height:28px;border-radius:7px;border:none;background:transparent;color:#98A2B3;cursor:pointer">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </section>
+
+    <section class="card" style="padding:20px;display:flex;flex-direction:column;gap:12px">
+      <label style="font-size:12.5px;font-weight:600;color:#344054">Resolution</label>
+      <div style="display:flex;gap:10px">
+        <div class="method active">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="14" height="16" rx="2" stroke="currentColor" stroke-width="1.6"/></svg>
+          Cash refund
+        </div>
+        <div class="method">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><rect x="2" y="6" width="20" height="4" fill="currentColor"/><rect x="2" y="12" width="20" height="8" rx="1" stroke="currentColor" stroke-width="1.6"/></svg>
+          Bank refund
+        </div>
+        <div class="method">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          Store credit
+        </div>
+      </div>
+    </section>
+
+    <section style="display:flex;justify-content:flex-end">
+      <div class="card" style="padding:20px;display:flex;flex-direction:column;gap:12px;width:360px">
+        <div style="display:flex;justify-content:space-between;font-size:13.5px;color:#475467">
+          <span>Items returned</span><span style="font-weight:600;color:#101323">1</span>
+        </div>
+        <div style="height:1px;background:#E4E7EC"></div>
+        <div style="display:flex;justify-content:space-between;font-size:16px;font-weight:700">
+          <span>Refund total</span><span>LKR 100,000.00</span>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+</body>
+</html>

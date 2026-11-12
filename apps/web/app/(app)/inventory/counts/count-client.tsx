@@ -22,15 +22,23 @@ interface StockCount {
   }[];
 }
 
+interface StockRow {
+  warehouseId: string;
+  productVariantId: string;
+  quantity: number;
+}
+
 export function StockCountsClient({
   counts,
   warehouses,
   variants,
+  stock,
   canCreate,
 }: {
   counts: StockCount[];
   warehouses: { id: string; name: string }[];
   variants: { id: string; label: string }[];
+  stock: StockRow[];
   canCreate: boolean;
 }) {
   const [createOpen, setCreateOpen] = useState(false);
@@ -89,7 +97,7 @@ export function StockCountsClient({
         description="Reconcile physical stock against the system."
         icon={<ClipboardIcon className="h-4 w-4" />}
       >
-        <StockCountForm warehouses={warehouses} variants={variants} />
+        <StockCountForm warehouses={warehouses} variants={variants} stock={stock} />
       </Sheet>
 
       <Sheet

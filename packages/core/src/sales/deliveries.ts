@@ -74,6 +74,6 @@ export async function listDeliveries(tenantId: string) {
   return db.query.deliveries.findMany({
     where: eq(deliveries.tenantId, tenantId),
     orderBy: (d, { desc }) => [desc(d.createdAt)],
-    with: { lines: { with: { productVariant: true } }, customer: true, warehouse: true },
+    with: { lines: { with: { productVariant: true } }, customer: true, warehouse: true, invoice: true },
   });
 }

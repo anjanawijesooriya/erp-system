@@ -1,5 +1,5 @@
-import { listDeliveries } from "@erp/core/sales";
-import { listWarehouses } from "@erp/core/inventory";
+import { listDeliveries, listSalesInvoices } from "@erp/core/sales";
+import { listWarehouses, listStockOnHand } from "@erp/core/inventory";
 import { can, PERMISSIONS } from "@erp/core/rbac";
 import { PageHeader } from "@erp/ui/card";
 import { requireSession } from "@/lib/session";
@@ -11,14 +11,24 @@ import { DeliveriesClient } from "./delivery-client";
 
 export default async function DeliveriesPage() {
   const { tenantId, userId } = await requireSession();
-  const [deliveries, branches, warehouses, customers, variants, canCreate] = await Promise.all([
+  const [deliveries, branches, warehouses, customers, variants, invoices, stock, canCreate] = await Promise.all([
     listDeliveries(tenantId),
     getBranchOptions(tenantId),
     listWarehouses(tenantId),
     getCustomerOptions(tenantId),
     getVariantOptions(tenantId),
+    listSalesInvoices(tenantId),
+    listStockOnHand(tenantId),
     can(userId, PERMISSIONS.DELIVERY_CREATE),
   ]);
+
+  const invoiceOptions = invoices.map((inv) => ({
+    id: inv.id,
+    docNumber: inv.docNumber,
+    customerId: inv.customerId,
+    lines: inv.lines.map((l) => ({ productVariantId: l.productVariantId, qty: Number(l.qty) })),
+  }));
+  const stockRows = stock.map((s) => ({ warehouseId: s.warehouseId, productVariantId: s.productVariantId, quantity: Number(s.quantity) }));
 
   const ready = branches.length > 0 && warehouses.length > 0 && customers.length > 0 && variants.length > 0;
 
@@ -36,6 +46,8 @@ export default async function DeliveriesPage() {
         warehouses={warehouses}
         customers={customers}
         variants={variants}
+        invoices={invoiceOptions}
+        stock={stockRows}
         canCreate={canCreate && ready}
       />
     </main>

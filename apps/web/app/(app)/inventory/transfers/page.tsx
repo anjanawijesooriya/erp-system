@@ -1,4 +1,4 @@
-import { listTransfers, listWarehouses } from "@erp/core/inventory";
+import { listTransfers, listWarehouses, listStockOnHand } from "@erp/core/inventory";
 import { can, PERMISSIONS } from "@erp/core/rbac";
 import { PageHeader } from "@erp/ui/card";
 import { requireSession } from "@/lib/session";
@@ -9,12 +9,15 @@ import { TransfersClient } from "./transfer-client";
 
 export default async function TransfersPage() {
   const { tenantId, userId } = await requireSession();
-  const [transfers, warehouses, variants, canTransfer] = await Promise.all([
+  const [transfers, warehouses, variants, stock, canTransfer] = await Promise.all([
     listTransfers(tenantId),
     listWarehouses(tenantId),
     getVariantOptions(tenantId),
+    listStockOnHand(tenantId),
     can(userId, PERMISSIONS.STOCK_TRANSFER),
   ]);
+
+  const stockRows = stock.map((s) => ({ warehouseId: s.warehouseId, productVariantId: s.productVariantId, quantity: Number(s.quantity) }));
 
   return (
     <ModuleGate tenantId={tenantId} moduleKey="inventory">
@@ -31,6 +34,7 @@ export default async function TransfersPage() {
         transfers={transfers}
         warehouses={warehouses}
         variants={variants}
+        stock={stockRows}
         canCreate={canTransfer && warehouses.length >= 2 && variants.length > 0}
       />
     </main>

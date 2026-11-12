@@ -12,20 +12,30 @@ export async function createSalesReturnAction(
   const { tenantId, userId } = await requireSession();
   await assertCan(userId, PERMISSIONS.SALES_RETURN_CREATE);
 
+  const linesRaw = formData.get("lines");
+  let lines: unknown;
+  try {
+    const parsedLines = JSON.parse(typeof linesRaw === "string" ? linesRaw : "[]");
+    lines = Array.isArray(parsedLines)
+      ? parsedLines.map((l: { productVariantId: string; quantity: number; unitCost: number }) => ({
+          productVariantId: l.productVariantId,
+          quantity: l.quantity,
+          unitPrice: l.unitCost,
+        }))
+      : parsedLines;
+  } catch {
+    return { error: "Invalid line items." };
+  }
+
   const parsed = salesReturnInput.safeParse({
     branchId: formData.get("branchId"),
     warehouseId: formData.get("warehouseId"),
     customerId: formData.get("customerId"),
+    invoiceId: formData.get("invoiceId") || undefined,
     returnDate: formData.get("returnDate"),
     reason: formData.get("reason"),
     note: formData.get("note") || undefined,
-    lines: [
-      {
-        productVariantId: formData.get("productVariantId"),
-        quantity: formData.get("quantity"),
-        unitPrice: formData.get("unitPrice") || 0,
-      },
-    ],
+    lines,
   });
 
   if (!parsed.success) {

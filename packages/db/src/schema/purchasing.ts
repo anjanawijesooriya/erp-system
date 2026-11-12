@@ -298,6 +298,7 @@ export const purchaseReturnsRelations = relations(purchaseReturns, ({ many, one 
   lines: many(purchaseReturnLines),
   supplier: one(suppliers, { fields: [purchaseReturns.supplierId], references: [suppliers.id] }),
   warehouse: one(warehouses, { fields: [purchaseReturns.warehouseId], references: [warehouses.id] }),
+  grn: one(goodsReceiptNotes, { fields: [purchaseReturns.grnId], references: [goodsReceiptNotes.id] }),
 }));
 
 export const purchaseReturnLinesRelations = relations(purchaseReturnLines, ({ one }) => ({

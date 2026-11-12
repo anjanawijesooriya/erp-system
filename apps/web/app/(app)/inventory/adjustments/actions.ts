@@ -12,17 +12,19 @@ export async function createAdjustmentAction(
   const { tenantId, userId } = await requireSession();
   await assertCan(userId, PERMISSIONS.STOCK_ADJUST);
 
+  const linesRaw = formData.get("lines");
+  let lines: unknown;
+  try {
+    lines = JSON.parse(typeof linesRaw === "string" ? linesRaw : "[]");
+  } catch {
+    return { error: "Invalid line items." };
+  }
+
   const parsed = adjustmentInput.safeParse({
     warehouseId: formData.get("warehouseId"),
     reason: formData.get("reason"),
     note: formData.get("note") || undefined,
-    lines: [
-      {
-        productVariantId: formData.get("productVariantId"),
-        quantityDelta: formData.get("quantityDelta"),
-        unitCost: formData.get("unitCost") || undefined,
-      },
-    ],
+    lines,
   });
 
   if (!parsed.success) {

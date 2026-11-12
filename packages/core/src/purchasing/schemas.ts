@@ -46,15 +46,25 @@ export const supplierInvoiceInput = z.object({
 });
 export type SupplierInvoiceInput = z.infer<typeof supplierInvoiceInput>;
 
-export const supplierPaymentInput = z.object({
-  branchId: z.string().uuid(),
-  supplierId: z.string().uuid(),
-  invoiceId: z.string().uuid().optional(),
-  paymentDate: z.string().min(1),
-  method: z.enum(["cash", "bank", "cheque"]),
+const supplierPaymentAllocationInput = z.object({
+  invoiceId: z.string().uuid(),
   amount: z.coerce.number().positive(),
-  note: z.string().max(500).optional(),
 });
+
+export const supplierPaymentInput = z
+  .object({
+    branchId: z.string().uuid(),
+    supplierId: z.string().uuid(),
+    invoiceId: z.string().uuid().optional(),
+    allocations: z.array(supplierPaymentAllocationInput).optional(),
+    paymentDate: z.string().min(1),
+    method: z.enum(["cash", "bank", "cheque"]),
+    amount: z.coerce.number().nonnegative().optional(),
+    note: z.string().max(500).optional(),
+  })
+  .refine((v) => (v.allocations && v.allocations.length > 0) || (v.amount ?? 0) > 0, {
+    message: "Select at least one bill to pay, or enter an amount.",
+  });
 export type SupplierPaymentInput = z.infer<typeof supplierPaymentInput>;
 
 export const purchaseReturnInput = z.object({

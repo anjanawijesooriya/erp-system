@@ -12,19 +12,22 @@ export async function createDeliveryAction(
   const { tenantId, userId } = await requireSession();
   await assertCan(userId, PERMISSIONS.DELIVERY_CREATE);
 
+  const linesRaw = formData.get("lines");
+  let lines: unknown;
+  try {
+    lines = JSON.parse(typeof linesRaw === "string" ? linesRaw : "[]");
+  } catch {
+    return { error: "Invalid line items." };
+  }
+
   const parsed = deliveryInput.safeParse({
     branchId: formData.get("branchId"),
     warehouseId: formData.get("warehouseId"),
     customerId: formData.get("customerId"),
+    invoiceId: formData.get("invoiceId") || undefined,
     deliveryDate: formData.get("deliveryDate"),
     note: formData.get("note") || undefined,
-    lines: [
-      {
-        productVariantId: formData.get("productVariantId"),
-        quantity: formData.get("quantity"),
-        batchNumber: formData.get("batchNumber") || undefined,
-      },
-    ],
+    lines,
   });
 
   if (!parsed.success) {

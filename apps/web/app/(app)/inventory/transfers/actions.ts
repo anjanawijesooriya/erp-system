@@ -12,16 +12,19 @@ export async function createTransferAction(
   const { tenantId, userId } = await requireSession();
   await assertCan(userId, PERMISSIONS.STOCK_TRANSFER);
 
+  const linesRaw = formData.get("lines");
+  let lines: unknown;
+  try {
+    lines = JSON.parse(typeof linesRaw === "string" ? linesRaw : "[]");
+  } catch {
+    return { error: "Invalid line items." };
+  }
+
   const parsed = transferInput.safeParse({
     fromWarehouseId: formData.get("fromWarehouseId"),
     toWarehouseId: formData.get("toWarehouseId"),
     note: formData.get("note") || undefined,
-    lines: [
-      {
-        productVariantId: formData.get("productVariantId"),
-        quantity: formData.get("quantity"),
-      },
-    ],
+    lines,
   });
 
   if (!parsed.success) {

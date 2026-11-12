@@ -336,6 +336,7 @@ export const salesReturnsRelations = relations(salesReturns, ({ many, one }) => 
   lines: many(salesReturnLines),
   customer: one(customers, { fields: [salesReturns.customerId], references: [customers.id] }),
   warehouse: one(warehouses, { fields: [salesReturns.warehouseId], references: [warehouses.id] }),
+  invoice: one(salesInvoices, { fields: [salesReturns.invoiceId], references: [salesInvoices.id] }),
 }));
 
 export const salesReturnLinesRelations = relations(salesReturnLines, ({ one }) => ({

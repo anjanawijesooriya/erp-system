@@ -15,7 +15,14 @@ export async function createSalesInvoiceAction(
   const linesRaw = formData.get("lines");
   let lines: unknown;
   try {
-    lines = JSON.parse(typeof linesRaw === "string" ? linesRaw : "[]");
+    const parsedLines = JSON.parse(typeof linesRaw === "string" ? linesRaw : "[]");
+    lines = Array.isArray(parsedLines)
+      ? parsedLines.map((l: { productVariantId: string; quantity: number; unitCost: number }) => ({
+          productVariantId: l.productVariantId,
+          quantity: l.quantity,
+          unitPrice: l.unitCost,
+        }))
+      : parsedLines;
   } catch {
     return { error: "Invalid line items." };
   }

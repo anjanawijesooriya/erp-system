@@ -11,14 +11,22 @@ import type { SupplierPaymentInput } from "./schemas";
 
 /**
  * Allocates the payment across the supplier's outstanding invoices,
- * updating each invoice's status as it's paid off. If `invoiceId` is given
- * (the payment form's "pay this invoice" picker), that invoice is settled
- * first regardless of due date; any amount left over after it — or the
- * whole payment, if no invoice was targeted — falls through FIFO (oldest
- * due date first) across the rest. Any amount left over after every
- * outstanding invoice is fully covered is left unallocated — there's no
- * supplier credit-balance concept yet, so an overpayment just doesn't get
- * applied anywhere (documented limitation).
+ * updating each invoice's status as it's paid off.
+ *
+ * If `allocations` is given (the payment form's bill-picker checkboxes with
+ * per-row pay amounts), each named invoice gets exactly the amount
+ * specified, capped at what's actually still due — no FIFO fallback. The
+ * payment's total amount is the sum of those allocations.
+ *
+ * Otherwise, falls back to the older single-target behavior: if `invoiceId`
+ * is given, that invoice is settled first regardless of due date; any
+ * amount left over after it — or the whole payment, if no invoice was
+ * targeted — falls through FIFO (oldest due date first) across the rest.
+ *
+ * Either way, any amount left over after every outstanding invoice is fully
+ * covered is left unallocated — there's no supplier credit-balance concept
+ * yet, so an overpayment just doesn't get applied anywhere (documented
+ * limitation).
  */
 export async function createSupplierPayment(tenantId: string, userId: string, input: SupplierPaymentInput) {
   return db.transaction(async (tx) => {
@@ -29,6 +37,10 @@ export async function createSupplierPayment(tenantId: string, userId: string, in
       "SPAY",
     );
 
+    const paymentAmount = input.allocations?.length
+      ? input.allocations.reduce((sum, a) => sum + a.amount, 0)
+      : (input.amount ?? 0);
+
     const [payment] = await tx
       .insert(supplierPayments)
       .values({
@@ -38,7 +50,7 @@ export async function createSupplierPayment(tenantId: string, userId: string, in
         docNumber,
         paymentDate: input.paymentDate,
         method: input.method,
-        amount: input.amount.toString(),
+        amount: paymentAmount.toString(),
         note: input.note,
         createdByUserId: userId,
       })
@@ -63,39 +75,62 @@ export async function createSupplierPayment(tenantId: string, userId: string, in
       .groupBy(supplierInvoices.id, supplierInvoices.totalAmount, supplierInvoices.dueDate)
       .orderBy(supplierInvoices.dueDate);
 
-    const orderedInvoices = input.invoiceId
-      ? [
-          ...outstandingInvoices.filter((inv) => inv.id === input.invoiceId),
-          ...outstandingInvoices.filter((inv) => inv.id !== input.invoiceId),
-        ]
-      : outstandingInvoices;
+    let remaining = paymentAmount;
 
-    let remaining = input.amount;
+    if (input.allocations?.length) {
+      for (const alloc of input.allocations) {
+        const inv = outstandingInvoices.find((i) => i.id === alloc.invoiceId);
+        if (!inv) continue;
+        const due = Number(inv.totalAmount) - Number(inv.applied);
+        if (due <= 0.0001) continue;
 
-    for (const inv of orderedInvoices) {
-      if (remaining <= 0.0001) break;
-      const due = Number(inv.totalAmount) - Number(inv.applied);
-      if (due <= 0.0001) continue;
+        const toApply = Math.min(due, alloc.amount);
+        if (toApply <= 0.0001) continue;
+        await tx.insert(supplierPaymentAllocations).values({
+          paymentId: payment.id,
+          invoiceId: inv.id,
+          amountApplied: toApply.toString(),
+        });
+        remaining -= toApply;
 
-      const toApply = Math.min(due, remaining);
-      await tx.insert(supplierPaymentAllocations).values({
-        paymentId: payment.id,
-        invoiceId: inv.id,
-        amountApplied: toApply.toString(),
-      });
-      remaining -= toApply;
+        const newApplied = Number(inv.applied) + toApply;
+        const newStatus =
+          newApplied >= Number(inv.totalAmount) - 0.0001 ? "paid" : "partially_paid";
+        await tx.update(supplierInvoices).set({ status: newStatus }).where(eq(supplierInvoices.id, inv.id));
+      }
+    } else {
+      const orderedInvoices = input.invoiceId
+        ? [
+            ...outstandingInvoices.filter((inv) => inv.id === input.invoiceId),
+            ...outstandingInvoices.filter((inv) => inv.id !== input.invoiceId),
+          ]
+        : outstandingInvoices;
 
-      const newApplied = Number(inv.applied) + toApply;
-      const newStatus =
-        newApplied >= Number(inv.totalAmount) - 0.0001 ? "paid" : "partially_paid";
-      await tx.update(supplierInvoices).set({ status: newStatus }).where(eq(supplierInvoices.id, inv.id));
+      for (const inv of orderedInvoices) {
+        if (remaining <= 0.0001) break;
+        const due = Number(inv.totalAmount) - Number(inv.applied);
+        if (due <= 0.0001) continue;
+
+        const toApply = Math.min(due, remaining);
+        await tx.insert(supplierPaymentAllocations).values({
+          paymentId: payment.id,
+          invoiceId: inv.id,
+          amountApplied: toApply.toString(),
+        });
+        remaining -= toApply;
+
+        const newApplied = Number(inv.applied) + toApply;
+        const newStatus =
+          newApplied >= Number(inv.totalAmount) - 0.0001 ? "paid" : "partially_paid";
+        await tx.update(supplierInvoices).set({ status: newStatus }).where(eq(supplierInvoices.id, inv.id));
+      }
     }
 
     // Only the portion actually applied to an invoice is posted to the
     // ledger — an unapplied remainder (overpayment beyond total
     // outstanding) isn't recorded anywhere, consistent with the documented
     // "no supplier credit balance" limitation above.
-    const appliedTotal = input.amount - remaining;
+    const appliedTotal = paymentAmount - remaining;
     await postSupplierPaymentJournal(
       tx,
       { tenantId, branchId: input.branchId, userId },

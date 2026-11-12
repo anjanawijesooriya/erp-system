@@ -1,8 +1,9 @@
 import { listPayablesAging } from "@erp/core/purchasing";
-import { PageHeader, Card, EmptyState, StatTile } from "@erp/ui/card";
+import { PageHeader, StatTile } from "@erp/ui/card";
 import { requireSession } from "@/lib/session";
 import { ModuleGate } from "@/components/module-gate";
 import { WalletIcon } from "@/components/icons";
+import { PayablesClient } from "./payables-client";
 
 const BUCKET_LABELS: Record<string, string> = {
   current: "Current",
@@ -33,49 +34,25 @@ export default async function PayablesAgingPage() {
 
   return (
     <ModuleGate tenantId={tenantId} moduleKey="purchasing">
-    <main className="mx-auto max-w-5xl p-8">
+    <main className="mx-auto max-w-6xl p-8">
       <PageHeader
         title="Payables aging"
         description="What's owed to suppliers, grouped by how overdue it is."
         icon={<WalletIcon className="h-5 w-5" />}
       />
 
-      <div className="mb-6 grid grid-cols-5 gap-3">
+      <div className="mb-6 grid grid-cols-3 gap-3 sm:grid-cols-6">
+        <StatTile
+          label="Total payable"
+          value={rows.reduce((sum, r) => sum + Number(r.amountDue), 0).toFixed(2)}
+          tone="rose"
+        />
         {Object.entries(BUCKET_LABELS).map(([bucket, label]) => (
           <StatTile key={bucket} label={label} value={(totalsByBucket[bucket] ?? 0).toFixed(2)} tone={BUCKET_TONE[bucket]} />
         ))}
       </div>
 
-      {rows.length === 0 ? (
-        <Card>
-          <EmptyState icon={<WalletIcon className="h-5 w-5" />} title="No outstanding payables." description="Everything owed to suppliers is settled." />
-        </Card>
-      ) : (
-        <Card className="overflow-hidden">
-          <table className="w-full text-left text-sm">
-            <thead className="bg-slate-50 text-xs uppercase text-slate-500">
-              <tr>
-                <th className="px-4 py-2.5">Invoice</th>
-                <th className="px-4 py-2.5">Supplier</th>
-                <th className="px-4 py-2.5">Due date</th>
-                <th className="px-4 py-2.5 text-right">Amount due</th>
-                <th className="px-4 py-2.5">Bucket</th>
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map((r) => (
-                <tr key={r.invoiceId} className="border-t border-slate-100 transition-colors hover:bg-slate-50/70">
-                  <td className="px-4 py-2.5 font-medium text-slate-900">{r.docNumber}</td>
-                  <td className="px-4 py-2.5 text-slate-600">{r.supplierName}</td>
-                  <td className="px-4 py-2.5 text-slate-600">{r.dueDate}</td>
-                  <td className="px-4 py-2.5 text-right text-slate-600">{r.amountDue}</td>
-                  <td className="px-4 py-2.5">{BUCKET_LABELS[r.bucket]}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </Card>
-      )}
+      <PayablesClient rows={rows} />
     </main>
     </ModuleGate>
   );

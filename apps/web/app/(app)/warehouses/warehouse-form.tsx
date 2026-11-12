@@ -3,8 +3,8 @@
 import { useActionState } from "react";
 import { Button } from "@erp/ui/button";
 import { Label } from "@erp/ui/input";
-import { FormHeader, FormBody, FormFooter } from "@erp/ui/form";
-import { PlusIcon, BuildingIcon } from "@/components/icons";
+import { FormBody, FormFooter } from "@erp/ui/form";
+import { PlusIcon } from "@/components/icons";
 import { useActionToast } from "@/lib/use-action-toast";
 import { createWarehouseAction } from "./actions";
 
@@ -16,8 +16,7 @@ export function WarehouseForm({ branches }: { branches: { id: string; name: stri
   useActionToast(state, pending, "Warehouse added.");
 
   return (
-    <form action={formAction} className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-      <FormHeader icon={<BuildingIcon className="h-4 w-4" />} title="New warehouse" />
+    <form action={formAction} className="flex h-full flex-col">
       <FormBody>
       <div>
         <Label>Branch</Label>

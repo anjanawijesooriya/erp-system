@@ -43,6 +43,7 @@ export default async function SuppliersPage() {
         totalLabel="suppliers"
         totalValueLabel="Total purchases"
         emptyLabel="No suppliers match these filters."
+        basePath="/suppliers"
       />
     </main>
   );

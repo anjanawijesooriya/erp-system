@@ -8,8 +8,8 @@ import { Sheet, DetailRow, DetailSection } from "@erp/ui/sheet";
 import { ConfirmDialog } from "@erp/ui/dialog";
 import { useToast } from "@erp/ui/toast";
 import { PlusIcon, ReceiptIcon } from "@/components/icons";
-import { SalesDocForm } from "@/components/sales-doc-form";
-import { createQuotationAction, cancelQuotationAction } from "./actions";
+import { QuotationForm } from "./quotation-form";
+import { cancelQuotationAction } from "./actions";
 
 interface Quotation {
   id: string;
@@ -114,16 +114,7 @@ export function QuotationsClient({
         description="Quote a customer before they order."
         icon={<ReceiptIcon className="h-4 w-4" />}
       >
-        <SalesDocForm
-          action={createQuotationAction}
-          branches={branches}
-          customers={customers}
-          variants={variants}
-          dateFieldName="quoteDate"
-          dateLabel="Quote date"
-          submitLabel="Create quotation"
-          showValidUntil
-        />
+        <QuotationForm branches={branches} customers={customers} variants={variants} />
       </Sheet>
 
       <Sheet

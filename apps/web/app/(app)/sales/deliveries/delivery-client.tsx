@@ -14,7 +14,21 @@ interface Delivery {
   note: string | null;
   customer: { name: string } | null;
   warehouse: { name: string } | null;
+  invoice: { docNumber: string } | null;
   lines: { productVariantId: string; qty: string; batchNumber: string | null }[];
+}
+
+interface InvoiceOption {
+  id: string;
+  docNumber: string;
+  customerId: string;
+  lines: { productVariantId: string; qty: number }[];
+}
+
+interface StockRow {
+  warehouseId: string;
+  productVariantId: string;
+  quantity: number;
 }
 
 export function DeliveriesClient({
@@ -23,6 +37,8 @@ export function DeliveriesClient({
   warehouses,
   customers,
   variants,
+  invoices,
+  stock,
   canCreate,
 }: {
   deliveries: Delivery[];
@@ -30,6 +46,8 @@ export function DeliveriesClient({
   warehouses: { id: string; name: string }[];
   customers: { id: string; label: string }[];
   variants: { id: string; label: string }[];
+  invoices: InvoiceOption[];
+  stock: StockRow[];
   canCreate: boolean;
 }) {
   const [createOpen, setCreateOpen] = useState(false);
@@ -91,7 +109,7 @@ export function DeliveriesClient({
         description="Ship goods out of a warehouse."
         icon={<TruckIcon className="h-4 w-4" />}
       >
-        <DeliveryForm branches={branches} warehouses={warehouses} customers={customers} variants={variants} />
+        <DeliveryForm branches={branches} warehouses={warehouses} customers={customers} variants={variants} invoices={invoices} stock={stock} />
       </Sheet>
 
       <Sheet
@@ -107,6 +125,7 @@ export function DeliveriesClient({
             <DetailSection title="Overview">
               <DetailRow label="Customer" value={selected.customer?.name ?? "—"} />
               <DetailRow label="Warehouse" value={selected.warehouse?.name ?? "—"} />
+              <DetailRow label="Linked invoice" value={selected.invoice?.docNumber ?? "— delivered directly —"} />
               <DetailRow label="Delivery date" value={selected.deliveryDate} />
               {selected.note && <DetailRow label="Note" value={selected.note} />}
             </DetailSection>

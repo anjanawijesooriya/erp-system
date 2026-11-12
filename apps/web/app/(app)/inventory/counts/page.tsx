@@ -1,4 +1,4 @@
-import { listStockCounts, listWarehouses } from "@erp/core/inventory";
+import { listStockCounts, listWarehouses, listStockOnHand } from "@erp/core/inventory";
 import { can, PERMISSIONS } from "@erp/core/rbac";
 import { PageHeader } from "@erp/ui/card";
 import { requireSession } from "@/lib/session";
@@ -9,12 +9,15 @@ import { StockCountsClient } from "./count-client";
 
 export default async function StockCountsPage() {
   const { tenantId, userId } = await requireSession();
-  const [counts, warehouses, variants, canManage] = await Promise.all([
+  const [counts, warehouses, variants, stock, canManage] = await Promise.all([
     listStockCounts(tenantId),
     listWarehouses(tenantId),
     getVariantOptions(tenantId),
+    listStockOnHand(tenantId),
     can(userId, PERMISSIONS.STOCK_COUNT_MANAGE),
   ]);
+
+  const stockRows = stock.map((s) => ({ warehouseId: s.warehouseId, productVariantId: s.productVariantId, quantity: Number(s.quantity) }));
 
   return (
     <ModuleGate tenantId={tenantId} moduleKey="inventory">
@@ -31,6 +34,7 @@ export default async function StockCountsPage() {
         counts={counts}
         warehouses={warehouses}
         variants={variants}
+        stock={stockRows}
         canCreate={canManage && warehouses.length > 0 && variants.length > 0}
       />
     </main>
