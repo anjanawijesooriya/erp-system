@@ -5,24 +5,27 @@ import { db } from "@erp/db";
 import { tenants } from "@erp/db/schema";
 import { getSalesInvoice } from "@erp/core/sales";
 import { getDocumentBranding } from "@erp/core/tenants";
+import { can, PERMISSIONS } from "@erp/core/rbac";
 import { requireSession } from "@/lib/session";
 import { PrintButton } from "./print-button";
+import { VoidButton } from "./void-button";
 
 const STATUS_BADGE: Record<string, string> = {
   paid: "bg-accent-100 text-accent-700",
   unpaid: "bg-amber-100 text-amber-700",
   partially_paid: "bg-sky-100 text-sky-700",
-  void: "bg-slate-200 text-slate-500",
+  cancelled: "bg-slate-200 text-slate-500",
 };
 
 export default async function SalesInvoiceDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const { tenantId } = await requireSession();
+  const { tenantId, userId } = await requireSession();
 
-  const [invoice, branding, tenant] = await Promise.all([
+  const [invoice, branding, tenant, canVoid] = await Promise.all([
     getSalesInvoice(tenantId, id),
     getDocumentBranding(tenantId),
     db.query.tenants.findFirst({ where: eq(tenants.id, tenantId) }),
+    can(userId, PERMISSIONS.SALES_INVOICE_VOID),
   ]);
   if (!invoice) notFound();
 
@@ -34,7 +37,10 @@ export default async function SalesInvoiceDetailPage({ params }: { params: Promi
         <Link href="/sales/invoices" className="text-xs font-medium text-brand-600 hover:text-brand-700">
           ← Sales invoices
         </Link>
-        <PrintButton />
+        <div className="flex items-center gap-2">
+          {canVoid && invoice.status === "unpaid" && <VoidButton invoiceId={invoice.id} />}
+          <PrintButton />
+        </div>
       </div>
 
       <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm print:rounded-none print:border-0 print:shadow-none">

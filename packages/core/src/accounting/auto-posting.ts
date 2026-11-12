@@ -51,6 +51,28 @@ export async function postSupplierInvoiceJournal(
   });
 }
 
+/** Reverses a previously-posted supplier invoice journal when the invoice is cancelled before any payment is applied — mirrors postSupplierInvoiceJournal's debit/credit. */
+export async function postSupplierInvoiceCancellationJournal(
+  tx: DbTx,
+  ctx: Ctx,
+  params: { invoiceId: string; cancelDate: string; totalAmount: number; hasGrn: boolean },
+) {
+  if (params.totalAmount <= 0) return;
+  const creditAccount = params.hasGrn ? "1250" : "1200";
+  return postJournalEntry(tx, {
+    tenantId: ctx.tenantId,
+    branchId: ctx.branchId,
+    entryDate: params.cancelDate,
+    referenceType: "supplier_invoice",
+    referenceId: params.invoiceId,
+    createdByUserId: ctx.userId,
+    lines: [
+      { accountCode: "2000", debit: params.totalAmount, description: "Supplier invoice cancelled" },
+      { accountCode: creditAccount, credit: params.totalAmount, description: "Supplier invoice cancelled" },
+    ],
+  });
+}
+
 /**
  * Supplier payment: a cheque issued doesn't clear the bank immediately, so
  * it credits Post-Dated Cheques Payable instead of Bank — see cheques.ts
@@ -115,6 +137,27 @@ export async function postSalesInvoiceJournal(
     lines: [
       { accountCode: "1100", debit: params.totalAmount, description: "Sales invoice" },
       { accountCode: "4000", credit: params.totalAmount, description: "Sales invoice" },
+    ],
+  });
+}
+
+/** Reverses a previously-posted sales invoice journal when it's voided before any payment or delivery — mirrors postSalesInvoiceJournal's debit/credit. */
+export async function postSalesInvoiceVoidJournal(
+  tx: DbTx,
+  ctx: Ctx,
+  params: { invoiceId: string; voidDate: string; totalAmount: number },
+) {
+  if (params.totalAmount <= 0) return;
+  return postJournalEntry(tx, {
+    tenantId: ctx.tenantId,
+    branchId: ctx.branchId,
+    entryDate: params.voidDate,
+    referenceType: "sales_invoice",
+    referenceId: params.invoiceId,
+    createdByUserId: ctx.userId,
+    lines: [
+      { accountCode: "4000", debit: params.totalAmount, description: "Sales invoice voided" },
+      { accountCode: "1100", credit: params.totalAmount, description: "Sales invoice voided" },
     ],
   });
 }

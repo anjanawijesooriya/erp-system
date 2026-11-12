@@ -1,6 +1,8 @@
 import { listStockOnHand, listLowStock } from "@erp/core/inventory";
+import { PageHeader, Card, EmptyState } from "@erp/ui/card";
 import { requireSession } from "@/lib/session";
 import { ModuleGate } from "@/components/module-gate";
+import { PackageIcon, AlertTriangleIcon } from "@/components/icons";
 
 export default async function InventoryPage() {
   const { tenantId } = await requireSession();
@@ -9,11 +11,14 @@ export default async function InventoryPage() {
   return (
     <ModuleGate tenantId={tenantId} moduleKey="inventory">
     <main className="mx-auto max-w-4xl p-8">
-      <h1 className="mb-4 text-2xl font-semibold tracking-tight text-slate-900">Stock on hand</h1>
+      <PageHeader title="Stock on hand" description="Current quantity and weighted-average cost by warehouse." icon={<PackageIcon className="h-5 w-5" />} />
 
       {lowStock.length > 0 && (
-        <div className="mb-6 rounded-lg border border-amber-300 bg-amber-50 p-4">
-          <h2 className="mb-2 text-sm font-semibold text-amber-800">Low stock</h2>
+        <Card className="mb-6 border-amber-200 bg-amber-50 p-4">
+          <h2 className="mb-2 flex items-center gap-1.5 text-sm font-semibold text-amber-800">
+            <AlertTriangleIcon className="h-4 w-4" />
+            Low stock
+          </h2>
           <ul className="space-y-1 text-sm text-amber-900">
             {lowStock.map((item) => (
               <li key={`${item.warehouseId}-${item.productVariantId}`}>
@@ -22,40 +27,39 @@ export default async function InventoryPage() {
               </li>
             ))}
           </ul>
-        </div>
+        </Card>
       )}
 
-      <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
-        <table className="w-full text-left text-sm">
-          <thead className="bg-slate-50 text-xs uppercase text-slate-500">
-            <tr>
-              <th className="px-4 py-2.5">Warehouse</th>
-              <th className="px-4 py-2.5">SKU</th>
-              <th className="px-4 py-2.5">Product</th>
-              <th className="px-4 py-2.5 text-right">Qty</th>
-              <th className="px-4 py-2.5 text-right">Avg cost</th>
-            </tr>
-          </thead>
-          <tbody>
-            {stock.map((row) => (
-              <tr key={`${row.warehouseId}-${row.productVariantId}`} className="border-t border-slate-100">
-                <td className="px-4 py-2.5">{row.warehouseName}</td>
-                <td className="px-4 py-2.5">{row.sku}</td>
-                <td className="px-4 py-2.5">{row.productName}</td>
-                <td className="px-4 py-2.5 text-right">{Number(row.quantity).toFixed(2)}</td>
-                <td className="px-4 py-2.5 text-right">{Number(row.averageCost).toFixed(2)}</td>
-              </tr>
-            ))}
-            {stock.length === 0 && (
+      {stock.length === 0 ? (
+        <Card>
+          <EmptyState icon={<PackageIcon className="h-5 w-5" />} title="No stock movements yet." description="Stock will show up here once a GRN, transfer, or adjustment is posted." />
+        </Card>
+      ) : (
+        <Card className="overflow-hidden">
+          <table className="w-full text-left text-sm">
+            <thead className="bg-slate-50 text-xs uppercase text-slate-500">
               <tr>
-                <td colSpan={5} className="px-4 py-8 text-center text-slate-400">
-                  No stock movements yet.
-                </td>
+                <th className="px-4 py-2.5">Warehouse</th>
+                <th className="px-4 py-2.5">SKU</th>
+                <th className="px-4 py-2.5">Product</th>
+                <th className="px-4 py-2.5 text-right">Qty</th>
+                <th className="px-4 py-2.5 text-right">Avg cost</th>
               </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {stock.map((row) => (
+                <tr key={`${row.warehouseId}-${row.productVariantId}`} className="border-t border-slate-100 transition-colors hover:bg-slate-50/70">
+                  <td className="px-4 py-2.5 text-slate-600">{row.warehouseName}</td>
+                  <td className="px-4 py-2.5 text-slate-500">{row.sku}</td>
+                  <td className="px-4 py-2.5 font-medium text-slate-900">{row.productName}</td>
+                  <td className="px-4 py-2.5 text-right text-slate-600">{Number(row.quantity).toFixed(2)}</td>
+                  <td className="px-4 py-2.5 text-right text-slate-600">{Number(row.averageCost).toFixed(2)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </Card>
+      )}
     </main>
     </ModuleGate>
   );

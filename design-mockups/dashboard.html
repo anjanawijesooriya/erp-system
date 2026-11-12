@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vertex ERP — Dashboard</title>
+<style>
+  body{margin:0;font-family:'Inter',system-ui,-apple-system,sans-serif;background:#F6F7FB;color:#101323}
+  a{color:#4338CA;text-decoration:none}
+  a:hover{color:#352C9B}
+  .navlink{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;font-size:13.5px;font-weight:500;color:#475467}
+  .navlink:hover{background:#F2F3FC;color:#1D2130;text-decoration:none}
+  .navlink.active{background:#EEF0FD;color:#4338CA;font-weight:600}
+  .card{background:#fff;border:1px solid #E4E7EC;border-radius:14px}
+  .btn-primary{background:#4338CA;color:#fff}
+  .btn-primary:hover{background:#352C9B;color:#fff;text-decoration:none}
+</style>
+</head>
+<body>
+
+<div style="display:flex;min-height:1700px;width:100%;box-sizing:border-box">
+
+  <aside style="width:252px;flex:0 0 252px;background:#fff;border-right:1px solid #E4E7EC;display:flex;flex-direction:column;padding:20px 14px;gap:22px;box-sizing:border-box">
+    <div style="display:flex;align-items:center;gap:9px;padding:4px 8px">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <rect x="1" y="1" width="22" height="22" rx="6" fill="#4338CA"/>
+        <path d="M7 15.5L12 7l5 8.5" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span style="font-size:16.5px;font-weight:700;letter-spacing:-0.01em">Vertex ERP</span>
+    </div>
+
+    <nav style="display:flex;flex-direction:column;gap:18px">
+      <div style="display:flex;flex-direction:column;gap:2px">
+        <span style="font-size:11px;font-weight:700;color:#98A2B3;letter-spacing:0.06em;text-transform:uppercase;padding:6px 12px 2px">Overview</span>
+        <a href="dashboard.html" class="navlink active">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="9" rx="1.5" stroke="currentColor" stroke-width="1.7"/><rect x="14" y="3" width="7" height="5" rx="1.5" stroke="currentColor" stroke-width="1.7"/><rect x="14" y="12" width="7" height="9" rx="1.5" stroke="currentColor" stroke-width="1.7"/><rect x="3" y="16" width="7" height="5" rx="1.5" stroke="currentColor" stroke-width="1.7"/></svg>
+          Dashboard
+        </a>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:2px">
+        <span style="font-size:11px;font-weight:700;color:#98A2B3;letter-spacing:0.06em;text-transform:uppercase;padding:6px 12px 2px">Sales</span>
+        <a href="invoices.html" class="navlink">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M6 2h9l3 3v17H6V2z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M9 10h6M9 14h6M9 18h3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+          Invoices
+        </a>
+        <a href="#" class="navlink">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h10" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+          Quotations
+        </a>
+        <a href="#" class="navlink">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="18" height="13" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="M3 10h18" stroke="currentColor" stroke-width="1.7"/></svg>
+          Payments
+        </a>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:2px">
+        <span style="font-size:11px;font-weight:700;color:#98A2B3;letter-spacing:0.06em;text-transform:uppercase;padding:6px 12px 2px">Inventory</span>
+        <a href="inventory.html" class="navlink">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M3 7l9-4 9 4-9 4-9-4z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M3 7v10l9 4 9-4V7M12 11v10" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+          Stock &amp; items
+        </a>
+        <a href="#" class="navlink">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 7l2-4h12l2 4M4 7v13h16V7" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+          Purchase orders
+        </a>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:2px">
+        <span style="font-size:11px;font-weight:700;color:#98A2B3;letter-spacing:0.06em;text-transform:uppercase;padding:6px 12px 2px">Workspace</span>
+        <a href="#" class="navlink">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><circle cx="9" cy="8" r="3.2" stroke="currentColor" stroke-width="1.7"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><circle cx="17.5" cy="9" r="2.4" stroke="currentColor" stroke-width="1.6"/><path d="M15.5 14.3c2.6.1 4.7 2.3 4.9 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          People &amp; suppliers
+        </a>
+        <a href="#" class="navlink">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M4 19V5a2 2 0 012-2h7l5 5v11a2 2 0 01-2 2H6a2 2 0 01-2-2z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M8 13h6M8 16h6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+          Reports
+        </a>
+        <a href="#" class="navlink">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.7"/><path d="M19.4 13a7.6 7.6 0 000-2l2-1.5-2-3.4-2.3.9a7.6 7.6 0 00-1.7-1l-.3-2.5h-4l-.3 2.5a7.6 7.6 0 00-1.7 1l-2.3-.9-2 3.4L6.6 11a7.6 7.6 0 000 2l-2 1.5 2 3.4 2.3-.9c.5.4 1.1.8 1.7 1l.3 2.5h4l.3-2.5c.6-.2 1.2-.6 1.7-1l2.3.9 2-3.4-2-1.5z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+          Settings
+        </a>
+      </div>
+    </nav>
+
+    <div style="margin-top:auto;background:#F7F6FF;border:1px solid #E4E2FB;border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:8px">
+      <span style="font-size:11px;font-weight:700;color:#6D5FD8;letter-spacing:0.04em;text-transform:uppercase">Standard plan</span>
+      <span style="font-size:12.5px;color:#475467;line-height:1.5">3 of 5 branches used. Upgrade for unlimited branches &amp; users.</span>
+      <a href="#" style="font-size:12.5px;font-weight:700;color:#4338CA">Upgrade plan →</a>
+    </div>
+  </aside>
+
+  <div style="flex:1;min-width:0;display:flex;flex-direction:column">
+
+    <header style="height:64px;flex:0 0 64px;background:#fff;border-bottom:1px solid #E4E7EC;display:flex;align-items:center;justify-content:space-between;padding:0 28px;gap:20px;box-sizing:border-box">
+      <button type="button" style="height:38px;padding:0 14px;border-radius:9px;border:1px solid #D0D5DD;background:#fff;display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:600;color:#344054;cursor:pointer;font-family:inherit">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M4 21V9l8-6 8 6v12" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M9 21v-7h6v7" stroke="currentColor" stroke-width="1.7"/></svg>
+        Main Branch
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+
+      <div style="flex:1;max-width:420px;position:relative">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="position:absolute;left:13px;top:11px" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="#98A2B3" stroke-width="1.8"/><path d="M21 21l-4.3-4.3" stroke="#98A2B3" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <input placeholder="Search invoices, customers, items…" style="width:100%;height:38px;border-radius:9px;border:1px solid #D0D5DD;padding:0 14px 0 38px;font-size:13.5px;font-family:inherit;outline:none;box-sizing:border-box" />
+      </div>
+
+      <div style="display:flex;align-items:center;gap:14px;flex:0 0 auto">
+        <a href="new-invoice.html" class="btn-primary" style="height:38px;padding:0 16px;border-radius:9px;display:flex;align-items:center;gap:7px;font-size:13.5px;font-weight:600">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
+          New invoice
+        </a>
+        <button type="button" aria-label="Notifications" style="position:relative;width:36px;height:36px;border-radius:9px;border:1px solid #E4E7EC;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M6 10a6 6 0 1112 0c0 4 1.5 5.5 1.5 5.5H4.5S6 14 6 10z" stroke="#475467" stroke-width="1.7" stroke-linejoin="round"/><path d="M10 19a2 2 0 004 0" stroke="#475467" stroke-width="1.7" stroke-linecap="round"/></svg>
+          <span style="position:absolute;top:6px;right:6px;width:7px;height:7px;border-radius:50%;background:#EF4444;border:1.5px solid #fff"></span>
+        </button>
+        <div style="display:flex;align-items:center;gap:9px;padding-left:12px;border-left:1px solid #E4E7EC">
+          <div style="width:34px;height:34px;border-radius:50%;background:#4338CA;color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700">IM</div>
+          <div style="display:flex;flex-direction:column;line-height:1.25">
+            <span style="font-size:13px;font-weight:600">Imesha M.</span>
+            <span style="font-size:11.5px;color:#98A2B3">Owner</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main style="flex:1;padding:28px 28px 48px;display:flex;flex-direction:column;gap:26px;box-sizing:border-box">
+
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+        <div>
+          <h1 style="margin:0 0 4px;font-size:23px;font-weight:700;letter-spacing:-0.01em">Good afternoon, Imesha</h1>
+          <p style="margin:0;font-size:13.5px;color:#6B7280">Here's what's happening across Main Branch today, Friday 10 July 2026.</p>
+        </div>
+        <span style="display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;color:#15803D;background:#EFFBEF;border:1px solid #D4EED4;border-radius:999px;padding:6px 12px">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M4 12a8 8 0 1114.9 4" stroke="#15803D" stroke-width="2" stroke-linecap="round"/><path d="M17 12l2 2 3-4" stroke="#15803D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Synced just now
+        </span>
+      </div>
+
+      <section style="display:flex;flex-direction:column;gap:12px">
+        <span style="font-size:12px;font-weight:700;color:#98A2B3;letter-spacing:0.06em;text-transform:uppercase">Quick actions</span>
+        <div style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px">
+          <a href="new-invoice.html" class="card" style="padding:18px;display:flex;flex-direction:column;gap:12px;text-decoration:none;color:inherit">
+            <div style="width:38px;height:38px;border-radius:10px;background:#EEF0FD;display:flex;align-items:center;justify-content:center"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M6 2h9l3 3v17H6V2z" stroke="#4338CA" stroke-width="1.8" stroke-linejoin="round"/><path d="M9 10h6M9 14h6" stroke="#4338CA" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+            <span style="font-size:13.5px;font-weight:600">New invoice</span>
+          </a>
+          <a href="#" class="card" style="padding:18px;display:flex;flex-direction:column;gap:12px;text-decoration:none;color:inherit">
+            <div style="width:38px;height:38px;border-radius:10px;background:#E9F9EF;display:flex;align-items:center;justify-content:center"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><circle cx="9" cy="8" r="3" stroke="#15803D" stroke-width="1.8"/><path d="M3 19c0-3 2.7-5.5 6-5.5s6 2.5 6 5.5" stroke="#15803D" stroke-width="1.8" stroke-linecap="round"/><path d="M17 8v5M14.5 10.5h5" stroke="#15803D" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+            <span style="font-size:13.5px;font-weight:600">Add customer</span>
+          </a>
+          <a href="#" class="card" style="padding:18px;display:flex;flex-direction:column;gap:12px;text-decoration:none;color:inherit">
+            <div style="width:38px;height:38px;border-radius:10px;background:#FFF4E5;display:flex;align-items:center;justify-content:center"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="18" height="13" rx="2" stroke="#B45309" stroke-width="1.8"/><path d="M3 10h18" stroke="#B45309" stroke-width="1.8"/></svg></div>
+            <span style="font-size:13.5px;font-weight:600">Record payment</span>
+          </a>
+          <a href="#" class="card" style="padding:18px;display:flex;flex-direction:column;gap:12px;text-decoration:none;color:inherit">
+            <div style="width:38px;height:38px;border-radius:10px;background:#FDEAEA;display:flex;align-items:center;justify-content:center"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 7l2-4h12l2 4M4 7v13h16V7" stroke="#C0362C" stroke-width="1.8" stroke-linejoin="round"/></svg></div>
+            <span style="font-size:13.5px;font-weight:600">Add GRN</span>
+          </a>
+          <a href="inventory.html" class="card" style="padding:18px;display:flex;flex-direction:column;gap:12px;text-decoration:none;color:inherit">
+            <div style="width:38px;height:38px;border-radius:10px;background:#E8F2FE;display:flex;align-items:center;justify-content:center"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M4 19V9l8-5 8 5v10" stroke="#1D6FD1" stroke-width="1.8" stroke-linejoin="round"/><path d="M9 19v-6h6v6" stroke="#1D6FD1" stroke-width="1.8"/></svg></div>
+            <span style="font-size:13.5px;font-weight:600">View reports</span>
+          </a>
+        </div>
+      </section>
+
+      <section style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px">
+        <div class="card" style="padding:18px;display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start">
+            <span style="font-size:12.5px;color:#6B7280;font-weight:500">Today's invoices</span>
+            <span style="font-size:11px;font-weight:700;color:#15803D;background:#EFFBEF;border-radius:999px;padding:2px 8px">+12%</span>
+          </div>
+          <span style="font-size:26px;font-weight:700;letter-spacing:-0.01em">14</span>
+          <span style="font-size:12.5px;color:#98A2B3">LKR 186,400.00</span>
+        </div>
+        <div class="card" style="padding:18px;display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start">
+            <span style="font-size:12.5px;color:#6B7280;font-weight:500">Total customers</span>
+            <span style="font-size:11px;font-weight:700;color:#B45309;background:#FFF4E5;border-radius:999px;padding:2px 8px">+3</span>
+          </div>
+          <span style="font-size:26px;font-weight:700;letter-spacing:-0.01em">128</span>
+          <span style="font-size:12.5px;color:#98A2B3">Active accounts</span>
+        </div>
+        <div class="card" style="padding:18px;display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start">
+            <span style="font-size:12.5px;color:#6B7280;font-weight:500">Outstanding receivables</span>
+            <span style="font-size:11px;font-weight:700;color:#C0362C;background:#FDEAEA;border-radius:999px;padding:2px 8px">24 due</span>
+          </div>
+          <span style="font-size:26px;font-weight:700;letter-spacing:-0.01em">LKR 452,900</span>
+          <span style="font-size:12.5px;color:#98A2B3">Across 24 customers</span>
+        </div>
+        <div class="card" style="padding:18px;display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start">
+            <span style="font-size:12.5px;color:#6B7280;font-weight:500">Stock value on hand</span>
+            <span style="font-size:11px;font-weight:700;color:#1D6FD1;background:#E8F2FE;border-radius:999px;padding:2px 8px">320 SKUs</span>
+          </div>
+          <span style="font-size:26px;font-weight:700;letter-spacing:-0.01em">LKR 12.6M</span>
+          <span style="font-size:12.5px;color:#98A2B3">At cost, all branches</span>
+        </div>
+      </section>
+
+      <section style="display:grid;grid-template-columns:1.4fr 1fr;gap:14px;align-items:stretch">
+
+        <div class="card" style="padding:22px;display:flex;flex-direction:column;gap:18px">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <h3 style="margin:0 0 2px;font-size:15px;font-weight:700">Sales overview</h3>
+              <span style="font-size:12px;color:#98A2B3">Last 14 days</span>
+            </div>
+            <div style="display:flex;gap:14px;font-size:12px;color:#475467">
+              <span style="display:flex;align-items:center;gap:5px"><span style="width:8px;height:8px;border-radius:2px;background:#4338CA;display:inline-block"></span>Daily sales</span>
+              <span style="display:flex;align-items:center;gap:5px"><span style="width:8px;height:8px;border-radius:2px;background:#F5A524;display:inline-block"></span>7-day avg</span>
+            </div>
+          </div>
+          <div style="display:flex;align-items:flex-end;gap:10px;height:170px;padding:0 4px;position:relative">
+            <svg width="100%" height="100" viewBox="0 0 560 100" preserveAspectRatio="none" style="position:absolute;left:0;top:0;height:170px" aria-hidden="true">
+              <polyline points="20,70 60,60 100,65 140,45 180,50 220,35 260,38 300,28 340,30 380,20 420,22 460,15 500,18 540,10" fill="none" stroke="#F5A524" stroke-width="2.2" />
+            </svg>
+            <div style="display:flex;align-items:flex-end;gap:12px;width:100%;height:100%;position:relative;z-index:1">
+              <div style="flex:1;background:#EEF0FD;border-radius:5px 5px 0 0;height:38%"></div>
+              <div style="flex:1;background:#4338CA;border-radius:5px 5px 0 0;height:52%"></div>
+              <div style="flex:1;background:#EEF0FD;border-radius:5px 5px 0 0;height:30%"></div>
+              <div style="flex:1;background:#EEF0FD;border-radius:5px 5px 0 0;height:60%"></div>
+              <div style="flex:1;background:#EEF0FD;border-radius:5px 5px 0 0;height:48%"></div>
+              <div style="flex:1;background:#4338CA;border-radius:5px 5px 0 0;height:70%"></div>
+              <div style="flex:1;background:#EEF0FD;border-radius:5px 5px 0 0;height:55%"></div>
+              <div style="flex:1;background:#EEF0FD;border-radius:5px 5px 0 0;height:66%"></div>
+              <div style="flex:1;background:#EEF0FD;border-radius:5px 5px 0 0;height:50%"></div>
+              <div style="flex:1;background:#4338CA;border-radius:5px 5px 0 0;height:80%"></div>
+              <div style="flex:1;background:#EEF0FD;border-radius:5px 5px 0 0;height:58%"></div>
+              <div style="flex:1;background:#EEF0FD;border-radius:5px 5px 0 0;height:72%"></div>
+              <div style="flex:1;background:#EEF0FD;border-radius:5px 5px 0 0;height:62%"></div>
+              <div style="flex:1;background:#4338CA;border-radius:5px 5px 0 0;height:90%"></div>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:#98A2B3;padding:0 2px">
+            <span>Jun 27</span><span>Jun 30</span><span>Jul 3</span><span>Jul 6</span><span>Jul 10</span>
+          </div>
+        </div>
+
+        <div class="card" style="padding:22px;display:flex;flex-direction:column;gap:16px">
+          <div>
+            <h3 style="margin:0 0 2px;font-size:15px;font-weight:700">Customer mix</h3>
+            <span style="font-size:12px;color:#98A2B3">By relationship type</span>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:center;flex:1">
+            <div style="width:150px;height:150px;border-radius:50%;background:conic-gradient(#4338CA 0deg 252deg,#F5A524 252deg 324deg,#2DBE8C 324deg 360deg);display:flex;align-items:center;justify-content:center">
+              <div style="width:96px;height:96px;border-radius:50%;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center">
+                <span style="font-size:21px;font-weight:700">128</span>
+                <span style="font-size:10.5px;color:#98A2B3">Customers</span>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;justify-content:space-between;font-size:12.5px"><span style="display:flex;align-items:center;gap:7px;color:#475467"><span style="width:8px;height:8px;border-radius:50%;background:#4338CA;display:inline-block"></span>Returning</span><span style="font-weight:600">70%</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:12.5px"><span style="display:flex;align-items:center;gap:7px;color:#475467"><span style="width:8px;height:8px;border-radius:50%;background:#F5A524;display:inline-block"></span>New</span><span style="font-weight:600">20%</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:12.5px"><span style="display:flex;align-items:center;gap:7px;color:#475467"><span style="width:8px;height:8px;border-radius:50%;background:#2DBE8C;display:inline-block"></span>VIP</span><span style="font-weight:600">10%</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card" style="display:flex;flex-direction:column">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:18px 22px;border-bottom:1px solid #E4E7EC">
+          <h3 style="margin:0;font-size:15px;font-weight:700">Recent invoices</h3>
+          <a href="invoices.html" style="font-size:13px;font-weight:600">View all →</a>
+        </div>
+        <div style="display:flex;flex-direction:column">
+          <div style="display:grid;grid-template-columns:1.1fr 1.6fr 1fr 1fr 0.9fr;padding:11px 22px;font-size:11.5px;font-weight:700;color:#98A2B3;letter-spacing:0.04em;text-transform:uppercase;border-bottom:1px solid #EEF0F3">
+            <span>Invoice</span><span>Customer</span><span>Date</span><span>Amount</span><span>Status</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1.1fr 1.6fr 1fr 1fr 0.9fr;padding:13px 22px;font-size:13.5px;align-items:center;border-bottom:1px solid #F3F4F7">
+            <span style="font-weight:600;color:#4338CA">INV-1015</span><span>Malinsa Liyanage</span><span style="color:#667085">Jul 10, 2026</span><span style="font-weight:600">LKR 4,000</span><span style="font-size:12px;font-weight:600;color:#15803D;background:#EFFBEF;border-radius:999px;padding:3px 10px;width:fit-content">Paid</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1.1fr 1.6fr 1fr 1fr 0.9fr;padding:13px 22px;font-size:13.5px;align-items:center;border-bottom:1px solid #F3F4F7">
+            <span style="font-weight:600;color:#4338CA">INV-1014</span><span>Imesha Madhushani</span><span style="color:#667085">Jul 9, 2026</span><span style="font-weight:600">LKR 1,200</span><span style="font-size:12px;font-weight:600;color:#15803D;background:#EFFBEF;border-radius:999px;padding:3px 10px;width:fit-content">Paid</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1.1fr 1.6fr 1fr 1fr 0.9fr;padding:13px 22px;font-size:13.5px;align-items:center;border-bottom:1px solid #F3F4F7">
+            <span style="font-weight:600;color:#4338CA">INV-1013</span><span>Oshan Lahiru</span><span style="color:#667085">Jul 8, 2026</span><span style="font-weight:600">LKR 142,500</span><span style="font-size:12px;font-weight:600;color:#B45309;background:#FFF4E5;border-radius:999px;padding:3px 10px;width:fit-content">Partial</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1.1fr 1.6fr 1fr 1fr 0.9fr;padding:13px 22px;font-size:13.5px;align-items:center">
+            <span style="font-weight:600;color:#4338CA">INV-1012</span><span>Nimal Perera</span><span style="color:#667085">Jul 8, 2026</span><span style="font-weight:600">LKR 2,210</span><span style="font-size:12px;font-weight:600;color:#C0362C;background:#FDEAEA;border-radius:999px;padding:3px 10px;width:fit-content">Overdue</span>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+</body>
+</html>

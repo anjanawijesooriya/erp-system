@@ -1,8 +1,8 @@
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { db } from "@erp/db";
-import { customers, salesInvoices, salesInvoiceLines } from "@erp/db/schema";
+import { customers, salesInvoices, salesInvoiceLines, deliveries } from "@erp/db/schema";
 import { nextDocNumber } from "../doc-numbers";
-import { postSalesInvoiceJournal } from "../accounting/auto-posting";
+import { postSalesInvoiceJournal, postSalesInvoiceVoidJournal } from "../accounting/auto-posting";
 import type { DbTx } from "../tenant-context";
 import type { SalesInvoiceInput } from "./schemas";
 
@@ -71,6 +71,42 @@ export async function listSalesInvoices(tenantId: string) {
     where: eq(salesInvoices.tenantId, tenantId),
     orderBy: (i, { desc }) => [desc(i.createdAt)],
     with: { lines: true, customer: true, allocations: true },
+  });
+}
+
+/**
+ * Voids a sales invoice. Only allowed while it's still fully unpaid and no
+ * delivery has shipped against it yet — once a delivery exists, the stock
+ * has physically left and must be reversed through a sales return instead.
+ */
+export async function voidSalesInvoice(tenantId: string, userId: string, invoiceId: string) {
+  return db.transaction(async (tx) => {
+    const invoice = await tx.query.salesInvoices.findFirst({
+      where: and(eq(salesInvoices.id, invoiceId), eq(salesInvoices.tenantId, tenantId)),
+    });
+    if (!invoice) throw new Error("Sales invoice not found");
+    if (invoice.status !== "unpaid") throw new Error("Only a fully unpaid invoice can be voided");
+
+    const [delivery] = await tx
+      .select({ id: deliveries.id })
+      .from(deliveries)
+      .where(eq(deliveries.invoiceId, invoiceId))
+      .limit(1);
+    if (delivery) throw new Error("A delivery has already shipped against this invoice");
+
+    const [row] = await tx
+      .update(salesInvoices)
+      .set({ status: "cancelled" })
+      .where(and(eq(salesInvoices.id, invoiceId), eq(salesInvoices.tenantId, tenantId)))
+      .returning();
+
+    await postSalesInvoiceVoidJournal(
+      tx,
+      { tenantId, branchId: invoice.branchId, userId },
+      { invoiceId, voidDate: new Date().toISOString().slice(0, 10), totalAmount: Number(invoice.totalAmount) },
+    );
+
+    return row;
   });
 }
 

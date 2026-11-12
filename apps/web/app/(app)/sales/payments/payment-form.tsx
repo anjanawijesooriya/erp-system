@@ -2,6 +2,10 @@
 
 import { useActionState } from "react";
 import { Button } from "@erp/ui/button";
+import { Label } from "@erp/ui/input";
+import { FormBody, FormFooter } from "@erp/ui/form";
+import { CreditCardIcon } from "@/components/icons";
+import { useActionToast } from "@/lib/use-action-toast";
 import { createSalesPaymentAction } from "./actions";
 
 const inputClass =
@@ -15,11 +19,13 @@ export function SalesPaymentForm({
   customers: { id: string; label: string }[];
 }) {
   const [state, formAction, pending] = useActionState(createSalesPaymentAction, undefined);
+  useActionToast(state, pending, "Receipt recorded.");
 
   return (
-    <form action={formAction} className="grid grid-cols-3 gap-3 rounded-xl border border-slate-200 bg-white shadow-sm p-4">
+    <form action={formAction} className="flex h-full flex-col">
+      <FormBody>
       <div>
-        <label className="mb-1.5 block text-sm font-medium text-slate-700">Branch</label>
+        <Label>Branch</Label>
         <select name="branchId" required className={inputClass}>
           {branches.map((b) => (
             <option key={b.id} value={b.id}>
@@ -29,7 +35,7 @@ export function SalesPaymentForm({
         </select>
       </div>
       <div>
-        <label className="mb-1.5 block text-sm font-medium text-slate-700">Customer</label>
+        <Label>Customer</Label>
         <select name="customerId" required className={inputClass}>
           {customers.map((c) => (
             <option key={c.id} value={c.id}>
@@ -39,11 +45,11 @@ export function SalesPaymentForm({
         </select>
       </div>
       <div>
-        <label className="mb-1.5 block text-sm font-medium text-slate-700">Payment date</label>
+        <Label>Payment date</Label>
         <input name="paymentDate" type="date" required className={inputClass} />
       </div>
       <div>
-        <label className="mb-1.5 block text-sm font-medium text-slate-700">Method</label>
+        <Label>Method</Label>
         <select name="method" required className={inputClass} defaultValue="cash">
           <option value="cash">Cash</option>
           <option value="bank">Bank</option>
@@ -51,22 +57,23 @@ export function SalesPaymentForm({
         </select>
       </div>
       <div>
-        <label className="mb-1.5 block text-sm font-medium text-slate-700">Amount</label>
+        <Label>Amount</Label>
         <input name="amount" type="number" step="0.01" min="0.01" required className={inputClass} />
       </div>
       <div>
-        <label className="mb-1.5 block text-sm font-medium text-slate-700">Note (optional)</label>
+        <Label>Note (optional)</Label>
         <input name="note" className={inputClass} />
       </div>
       <p className="col-span-3 text-xs text-slate-500">
         Applies against the customer&apos;s oldest outstanding invoices first.
       </p>
-      {state?.error && <p className="col-span-3 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">{state.error}</p>}
-      <div className="col-span-3">
-        <Button type="submit" disabled={pending}>
+      </FormBody>
+      <FormFooter>
+        <Button type="submit" disabled={pending} className="gap-1.5">
+          <CreditCardIcon className="h-4 w-4" />
           {pending ? "Saving..." : "Record receipt"}
         </Button>
-      </div>
+      </FormFooter>
     </form>
   );
 }

@@ -1,5 +1,7 @@
 import { listReceivablesAging } from "@erp/core/sales";
+import { PageHeader, Card, EmptyState, StatTile } from "@erp/ui/card";
 import { requireSession } from "@/lib/session";
+import { WalletIcon } from "@/components/icons";
 
 const BUCKET_LABELS: Record<string, string> = {
   current: "Current",
@@ -7,6 +9,14 @@ const BUCKET_LABELS: Record<string, string> = {
   "31-60": "31–60 days",
   "61-90": "61–90 days",
   "90+": "90+ days",
+};
+
+const BUCKET_TONE: Record<string, "default" | "accent" | "amber" | "rose"> = {
+  current: "accent",
+  "1-30": "amber",
+  "31-60": "amber",
+  "61-90": "rose",
+  "90+": "rose",
 };
 
 export default async function ReceivablesAgingPage() {
@@ -22,48 +32,48 @@ export default async function ReceivablesAgingPage() {
 
   return (
     <main className="mx-auto max-w-5xl p-8">
-      <h1 className="mb-4 text-2xl font-semibold tracking-tight text-slate-900">Receivables aging</h1>
+      <PageHeader
+        title="Receivables aging"
+        description="What's owed by customers, grouped by how overdue it is."
+        icon={<WalletIcon className="h-5 w-5" />}
+      />
 
       <div className="mb-6 grid grid-cols-5 gap-3">
         {Object.entries(BUCKET_LABELS).map(([bucket, label]) => (
-          <div key={bucket} className="rounded-xl border border-slate-200 bg-white shadow-sm p-3 text-center">
-            <div className="text-xs text-slate-500">{label}</div>
-            <div className="text-lg font-semibold">{totalsByBucket[bucket]?.toFixed(2) ?? "0.00"}</div>
-          </div>
+          <StatTile key={bucket} label={label} value={(totalsByBucket[bucket] ?? 0).toFixed(2)} tone={BUCKET_TONE[bucket]} />
         ))}
       </div>
 
-      <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
-        <table className="w-full text-left text-sm">
-          <thead className="bg-slate-50 text-xs uppercase text-slate-500">
-            <tr>
-              <th className="px-4 py-2.5">Invoice</th>
-              <th className="px-4 py-2.5">Customer</th>
-              <th className="px-4 py-2.5">Due date</th>
-              <th className="px-4 py-2.5 text-right">Amount due</th>
-              <th className="px-4 py-2.5">Bucket</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((r) => (
-              <tr key={r.invoiceId} className="border-t border-slate-100">
-                <td className="px-4 py-2.5">{r.docNumber}</td>
-                <td className="px-4 py-2.5">{r.customerName}</td>
-                <td className="px-4 py-2.5">{r.dueDate}</td>
-                <td className="px-4 py-2.5 text-right">{r.amountDue}</td>
-                <td className="px-4 py-2.5">{BUCKET_LABELS[r.bucket]}</td>
-              </tr>
-            ))}
-            {rows.length === 0 && (
+      {rows.length === 0 ? (
+        <Card>
+          <EmptyState icon={<WalletIcon className="h-5 w-5" />} title="No outstanding receivables." description="Everything owed by customers is settled." />
+        </Card>
+      ) : (
+        <Card className="overflow-hidden">
+          <table className="w-full text-left text-sm">
+            <thead className="bg-slate-50 text-xs uppercase text-slate-500">
               <tr>
-                <td colSpan={5} className="px-4 py-8 text-center text-slate-400">
-                  No outstanding receivables.
-                </td>
+                <th className="px-4 py-2.5">Invoice</th>
+                <th className="px-4 py-2.5">Customer</th>
+                <th className="px-4 py-2.5">Due date</th>
+                <th className="px-4 py-2.5 text-right">Amount due</th>
+                <th className="px-4 py-2.5">Bucket</th>
               </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {rows.map((r) => (
+                <tr key={r.invoiceId} className="border-t border-slate-100 transition-colors hover:bg-slate-50/70">
+                  <td className="px-4 py-2.5 font-medium text-slate-900">{r.docNumber}</td>
+                  <td className="px-4 py-2.5 text-slate-600">{r.customerName}</td>
+                  <td className="px-4 py-2.5 text-slate-600">{r.dueDate}</td>
+                  <td className="px-4 py-2.5 text-right text-slate-600">{r.amountDue}</td>
+                  <td className="px-4 py-2.5">{BUCKET_LABELS[r.bucket]}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </Card>
+      )}
     </main>
   );
 }

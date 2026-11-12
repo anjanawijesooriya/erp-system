@@ -26,15 +26,19 @@ export const PERMISSIONS = {
 
   // Purchasing
   PURCHASE_ORDER_CREATE: "purchasing.order.create",
+  PURCHASE_ORDER_CANCEL: "purchasing.order.cancel",
   GRN_CREATE: "purchasing.grn.create",
   SUPPLIER_INVOICE_CREATE: "purchasing.invoice.create",
+  SUPPLIER_INVOICE_CANCEL: "purchasing.invoice.cancel",
   SUPPLIER_PAYMENT_CREATE: "purchasing.payment.create",
   PURCHASE_RETURN_CREATE: "purchasing.return.create",
   PAYABLES_VIEW: "purchasing.payables.view",
 
   // Sales
   QUOTATION_CREATE: "sales.quotation.create",
+  QUOTATION_CANCEL: "sales.quotation.cancel",
   SALES_ORDER_CREATE: "sales.order.create",
+  SALES_ORDER_CANCEL: "sales.order.cancel",
   SALES_INVOICE_CREATE: "sales.invoice.create",
   SALES_INVOICE_VOID: "sales.invoice.void",
   DELIVERY_CREATE: "sales.delivery.create",

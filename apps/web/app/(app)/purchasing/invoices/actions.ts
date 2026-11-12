@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { createSupplierInvoice, supplierInvoiceInput } from "@erp/core/purchasing";
+import { createSupplierInvoice, supplierInvoiceInput, cancelSupplierInvoice } from "@erp/core/purchasing";
 import { assertCan, PERMISSIONS } from "@erp/core/rbac";
 import { requireSession } from "@/lib/session";
 
@@ -38,6 +38,21 @@ export async function createSupplierInvoiceAction(
     await createSupplierInvoice(tenantId, userId, parsed.data);
   } catch (err) {
     return { error: err instanceof Error ? err.message : "Failed to create supplier invoice" };
+  }
+
+  revalidatePath("/purchasing/invoices");
+  revalidatePath("/purchasing/payables");
+  return {};
+}
+
+export async function cancelSupplierInvoiceAction(invoiceId: string): Promise<{ error?: string }> {
+  const { tenantId, userId } = await requireSession();
+  await assertCan(userId, PERMISSIONS.SUPPLIER_INVOICE_CANCEL);
+
+  try {
+    await cancelSupplierInvoice(tenantId, userId, invoiceId);
+  } catch (err) {
+    return { error: err instanceof Error ? err.message : "Failed to cancel supplier invoice" };
   }
 
   revalidatePath("/purchasing/invoices");

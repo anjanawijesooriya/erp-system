@@ -1,9 +1,11 @@
 import { listCustomers } from "@erp/core/parties";
 import { can, PERMISSIONS } from "@erp/core/rbac";
+import { PageHeader } from "@erp/ui/card";
 import { requireSession } from "@/lib/session";
 import { ImportForm } from "@/components/import-form";
 import { PartyForm } from "@/components/party-form";
 import { PartyTable } from "@/components/party-table";
+import { UsersIcon } from "@/components/icons";
 import { createCustomerAction, importCustomersAction } from "./actions";
 
 export default async function CustomersPage() {
@@ -15,11 +17,16 @@ export default async function CustomersPage() {
 
   return (
     <main className="mx-auto max-w-5xl p-8">
-      <h1 className="mb-4 text-2xl font-semibold tracking-tight text-slate-900">Customers</h1>
+      <PageHeader title="Customers" description="People and businesses you sell to." icon={<UsersIcon className="h-5 w-5" />} />
 
       {canManage && (
         <div className="mb-6 space-y-4">
-          <PartyForm action={createCustomerAction} submitLabel="Add customer" />
+          <PartyForm
+            action={createCustomerAction}
+            submitLabel="Add customer"
+            title="New customer"
+            icon={<UsersIcon className="h-4 w-4" />}
+          />
           <ImportForm
             action={importCustomersAction}
             columnsHint="code, name, phone, email, address, taxId, creditLimit, creditTermDays"

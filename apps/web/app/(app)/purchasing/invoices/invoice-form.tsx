@@ -2,7 +2,11 @@
 
 import { useActionState, useState } from "react";
 import { Button } from "@erp/ui/button";
+import { Label } from "@erp/ui/input";
+import { FormBody, FormFooter, FormSectionLabel } from "@erp/ui/form";
 import { LineItemEditor, type EditableLine } from "@/components/line-item-editor";
+import { PlusIcon } from "@/components/icons";
+import { useActionToast } from "@/lib/use-action-toast";
 import { createSupplierInvoiceAction } from "./actions";
 
 const inputClass =
@@ -31,6 +35,7 @@ export function SupplierInvoiceForm({
   grns: UninvoicedGrn[];
 }) {
   const [state, formAction, pending] = useActionState(createSupplierInvoiceAction, undefined);
+  useActionToast(state, pending, "Supplier invoice recorded.");
   const [supplierId, setSupplierId] = useState(suppliers[0]?.id ?? "");
   const [grnId, setGrnId] = useState("");
   const [lines, setLines] = useState<EditableLine[]>([blankLine(variants)]);
@@ -56,11 +61,12 @@ export function SupplierInvoiceForm({
   }
 
   return (
-    <form action={formAction} className="grid grid-cols-3 gap-3 rounded-xl border border-slate-200 bg-white shadow-sm p-4">
+    <form action={formAction} className="flex h-full flex-col">
       <input type="hidden" name="lines" value={JSON.stringify(lines)} />
       <input type="hidden" name="grnId" value={grnId} />
+      <FormBody>
       <div>
-        <label className="mb-1.5 block text-sm font-medium text-slate-700">Branch</label>
+        <Label>Branch</Label>
         <select name="branchId" required className={inputClass}>
           {branches.map((b) => (
             <option key={b.id} value={b.id}>
@@ -70,7 +76,7 @@ export function SupplierInvoiceForm({
         </select>
       </div>
       <div>
-        <label className="mb-1.5 block text-sm font-medium text-slate-700">Supplier</label>
+        <Label>Supplier</Label>
         <select
           name="supplierId"
           required
@@ -86,12 +92,13 @@ export function SupplierInvoiceForm({
         </select>
       </div>
       <div>
-        <label className="mb-1.5 block text-sm font-medium text-slate-700">Invoice date</label>
+        <Label>Invoice date</Label>
         <input name="invoiceDate" type="date" required className={inputClass} />
       </div>
 
+      <FormSectionLabel>Sourcing</FormSectionLabel>
       <div className="col-span-3">
-        <label className="mb-1.5 block text-sm font-medium text-slate-700">Bill from GRN (optional)</label>
+        <Label>Bill from GRN (optional)</Label>
         <select value={grnId} onChange={(e) => handleGrnChange(e.target.value)} className={inputClass}>
           <option value="">— No GRN, enter items manually —</option>
           {availableGrns.map((g) => (
@@ -108,22 +115,23 @@ export function SupplierInvoiceForm({
       <LineItemEditor variants={variants} lines={lines} onChange={setLines} costLabel="Unit cost" />
 
       <div>
-        <label className="mb-1.5 block text-sm font-medium text-slate-700">Supplier ref # (optional)</label>
+        <Label>Supplier ref # (optional)</Label>
         <input name="supplierRefNumber" className={inputClass} />
       </div>
       <div className="col-span-2">
-        <label className="mb-1.5 block text-sm font-medium text-slate-700">Note (optional)</label>
+        <Label>Note (optional)</Label>
         <input name="note" className={inputClass} />
       </div>
       <p className="col-span-3 text-xs text-slate-500">
         Due date is calculated automatically from the supplier&apos;s credit terms.
       </p>
-      {state?.error && <p className="col-span-3 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">{state.error}</p>}
-      <div className="col-span-3">
-        <Button type="submit" disabled={pending}>
+      </FormBody>
+      <FormFooter>
+        <Button type="submit" disabled={pending} className="gap-1.5">
+          <PlusIcon className="h-4 w-4" />
           {pending ? "Saving..." : "Record invoice"}
         </Button>
-      </div>
+      </FormFooter>
     </form>
   );
 }

@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { createSalesOrder, salesOrderInput } from "@erp/core/sales";
+import { createSalesOrder, salesOrderInput, cancelSalesOrder } from "@erp/core/sales";
 import { assertCan, PERMISSIONS } from "@erp/core/rbac";
 import { requireSession } from "@/lib/session";
 
@@ -34,6 +34,20 @@ export async function createSalesOrderAction(
     await createSalesOrder(tenantId, userId, parsed.data);
   } catch (err) {
     return { error: err instanceof Error ? err.message : "Failed to create sales order" };
+  }
+
+  revalidatePath("/sales/orders");
+  return {};
+}
+
+export async function cancelSalesOrderAction(salesOrderId: string): Promise<{ error?: string }> {
+  const { tenantId, userId } = await requireSession();
+  await assertCan(userId, PERMISSIONS.SALES_ORDER_CANCEL);
+
+  try {
+    await cancelSalesOrder(tenantId, salesOrderId);
+  } catch (err) {
+    return { error: err instanceof Error ? err.message : "Failed to cancel sales order" };
   }
 
   revalidatePath("/sales/orders");

@@ -112,3 +112,31 @@ export async function closePurchaseOrder(tenantId: string, purchaseOrderId: stri
     .returning();
   return row;
 }
+
+/**
+ * Cancels a purchase order. Only allowed while it's still "open" and nothing
+ * has been received against it yet — once a GRN links to it, cancelling
+ * would leave that GRN's received stock pointing at a dead order, so the
+ * supplier must be told to reject/reroute it instead.
+ */
+export async function cancelPurchaseOrder(tenantId: string, purchaseOrderId: string) {
+  const existing = await db.query.purchaseOrders.findFirst({
+    where: and(eq(purchaseOrders.id, purchaseOrderId), eq(purchaseOrders.tenantId, tenantId)),
+  });
+  if (!existing) throw new Error("Purchase order not found");
+  if (existing.status !== "open") throw new Error("Only an open purchase order can be cancelled");
+
+  const [receipt] = await db
+    .select({ id: goodsReceiptNotes.id })
+    .from(goodsReceiptNotes)
+    .where(eq(goodsReceiptNotes.purchaseOrderId, purchaseOrderId))
+    .limit(1);
+  if (receipt) throw new Error("This purchase order already has goods received against it and can't be cancelled");
+
+  const [row] = await db
+    .update(purchaseOrders)
+    .set({ status: "cancelled" })
+    .where(and(eq(purchaseOrders.id, purchaseOrderId), eq(purchaseOrders.tenantId, tenantId)))
+    .returning();
+  return row;
+}

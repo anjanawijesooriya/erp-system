@@ -2,7 +2,11 @@
 
 import { useActionState, useState } from "react";
 import { Button } from "@erp/ui/button";
+import { Label } from "@erp/ui/input";
+import { FormBody, FormFooter, FormSectionLabel } from "@erp/ui/form";
 import { LineItemEditor, type EditableLine } from "@/components/line-item-editor";
+import { PlusIcon } from "@/components/icons";
+import { useActionToast } from "@/lib/use-action-toast";
 import { createGrnAction } from "./actions";
 
 const inputClass =
@@ -33,6 +37,7 @@ export function GrnForm({
   purchaseOrders: OutstandingPO[];
 }) {
   const [state, formAction, pending] = useActionState(createGrnAction, undefined);
+  useActionToast(state, pending, "GRN posted.");
   const [supplierId, setSupplierId] = useState(suppliers[0]?.id ?? "");
   const [purchaseOrderId, setPurchaseOrderId] = useState("");
   const [lines, setLines] = useState<EditableLine[]>([blankLine(variants)]);
@@ -58,11 +63,12 @@ export function GrnForm({
   }
 
   return (
-    <form action={formAction} className="grid grid-cols-3 gap-3 rounded-xl border border-slate-200 bg-white shadow-sm p-4">
+    <form action={formAction} className="flex h-full flex-col">
       <input type="hidden" name="lines" value={JSON.stringify(lines)} />
       <input type="hidden" name="purchaseOrderId" value={purchaseOrderId} />
+      <FormBody>
       <div>
-        <label className="mb-1.5 block text-sm font-medium text-slate-700">Branch</label>
+        <Label>Branch</Label>
         <select name="branchId" required className={inputClass}>
           {branches.map((b) => (
             <option key={b.id} value={b.id}>
@@ -72,7 +78,7 @@ export function GrnForm({
         </select>
       </div>
       <div>
-        <label className="mb-1.5 block text-sm font-medium text-slate-700">Warehouse</label>
+        <Label>Warehouse</Label>
         <select name="warehouseId" required className={inputClass}>
           {warehouses.map((w) => (
             <option key={w.id} value={w.id}>
@@ -82,7 +88,7 @@ export function GrnForm({
         </select>
       </div>
       <div>
-        <label className="mb-1.5 block text-sm font-medium text-slate-700">Supplier</label>
+        <Label>Supplier</Label>
         <select
           name="supplierId"
           required
@@ -98,8 +104,9 @@ export function GrnForm({
         </select>
       </div>
 
+      <FormSectionLabel>Sourcing</FormSectionLabel>
       <div className="col-span-3">
-        <label className="mb-1.5 block text-sm font-medium text-slate-700">Receive against PO (optional)</label>
+        <Label>Receive against PO (optional)</Label>
         <select value={purchaseOrderId} onChange={(e) => handlePoChange(e.target.value)} className={inputClass}>
           <option value="">— No PO, receive directly —</option>
           {availablePOs.map((po) => (
@@ -116,19 +123,20 @@ export function GrnForm({
       <LineItemEditor variants={variants} lines={lines} onChange={setLines} costLabel="Unit cost" showBatchExpiry />
 
       <div>
-        <label className="mb-1.5 block text-sm font-medium text-slate-700">Received date</label>
+        <Label>Received date</Label>
         <input name="receivedDate" type="date" required className={inputClass} />
       </div>
       <div className="col-span-2">
-        <label className="mb-1.5 block text-sm font-medium text-slate-700">Note (optional)</label>
+        <Label>Note (optional)</Label>
         <input name="note" className={inputClass} />
       </div>
-      {state?.error && <p className="col-span-3 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">{state.error}</p>}
-      <div className="col-span-3">
-        <Button type="submit" disabled={pending}>
+      </FormBody>
+      <FormFooter>
+        <Button type="submit" disabled={pending} className="gap-1.5">
+          <PlusIcon className="h-4 w-4" />
           {pending ? "Saving..." : "Post GRN"}
         </Button>
-      </div>
+      </FormFooter>
     </form>
   );
 }

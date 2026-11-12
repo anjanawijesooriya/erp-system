@@ -1,6 +1,6 @@
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { db } from "@erp/db";
-import { quotations, quotationLines } from "@erp/db/schema";
+import { quotations, quotationLines, salesOrders } from "@erp/db/schema";
 import { nextDocNumber } from "../doc-numbers";
 import type { QuotationInput } from "./schemas";
 
@@ -42,4 +42,31 @@ export async function listQuotations(tenantId: string) {
     orderBy: (q, { desc }) => [desc(q.createdAt)],
     with: { lines: { with: { productVariant: true } }, customer: true },
   });
+}
+
+/**
+ * Cancels a quotation. Only allowed while it's still "open" and no sales
+ * order has been created from it yet — once one exists, cancelling the
+ * quotation underneath it would leave that order's `quotationId` dangling.
+ */
+export async function cancelQuotation(tenantId: string, quotationId: string) {
+  const existing = await db.query.quotations.findFirst({
+    where: and(eq(quotations.id, quotationId), eq(quotations.tenantId, tenantId)),
+  });
+  if (!existing) throw new Error("Quotation not found");
+  if (existing.status !== "open") throw new Error("Only an open quotation can be cancelled");
+
+  const [order] = await db
+    .select({ id: salesOrders.id })
+    .from(salesOrders)
+    .where(eq(salesOrders.quotationId, quotationId))
+    .limit(1);
+  if (order) throw new Error("A sales order has already been created from this quotation");
+
+  const [row] = await db
+    .update(quotations)
+    .set({ status: "cancelled" })
+    .where(and(eq(quotations.id, quotationId), eq(quotations.tenantId, tenantId)))
+    .returning();
+  return row;
 }

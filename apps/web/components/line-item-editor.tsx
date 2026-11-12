@@ -1,5 +1,7 @@
 "use client";
 
+import { PlusIcon } from "./icons";
+
 export interface EditableLine {
   productVariantId: string;
   quantity: number;
@@ -42,9 +44,14 @@ export function LineItemEditor({
   return (
     <div className="col-span-3 space-y-2">
       <div className="flex items-center justify-between">
-        <label className="text-sm font-medium text-slate-700">Items</label>
-        <button type="button" onClick={addLine} className="text-xs font-medium text-brand-600 hover:text-brand-700">
-          + Add line
+        <span className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Line items</span>
+        <button
+          type="button"
+          onClick={addLine}
+          className="flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-brand-600 transition-colors hover:bg-brand-50 hover:text-brand-700"
+        >
+          <PlusIcon className="h-3.5 w-3.5" />
+          Add line
         </button>
       </div>
       <div className="overflow-x-auto rounded-lg border border-slate-200">
@@ -62,7 +69,7 @@ export function LineItemEditor({
           </thead>
           <tbody>
             {lines.map((l, i) => (
-              <tr key={i} className="border-t border-slate-100">
+              <tr key={i} className="border-t border-slate-100 transition-colors hover:bg-slate-50/70">
                 <td className="px-3 py-1.5">
                   <select
                     value={l.productVariantId}
@@ -123,7 +130,7 @@ export function LineItemEditor({
                     type="button"
                     onClick={() => removeLine(i)}
                     disabled={lines.length === 1}
-                    className="text-slate-400 hover:text-red-600 disabled:opacity-30"
+                    className="flex h-6 w-6 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-rose-50 hover:text-rose-600 disabled:opacity-30 disabled:hover:bg-transparent"
                   >
                     ✕
                   </button>

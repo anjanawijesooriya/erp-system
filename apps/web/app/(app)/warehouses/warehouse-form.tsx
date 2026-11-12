@@ -2,6 +2,10 @@
 
 import { useActionState } from "react";
 import { Button } from "@erp/ui/button";
+import { Label } from "@erp/ui/input";
+import { FormHeader, FormBody, FormFooter } from "@erp/ui/form";
+import { PlusIcon, BuildingIcon } from "@/components/icons";
+import { useActionToast } from "@/lib/use-action-toast";
 import { createWarehouseAction } from "./actions";
 
 const inputClass =
@@ -9,11 +13,14 @@ const inputClass =
 
 export function WarehouseForm({ branches }: { branches: { id: string; name: string }[] }) {
   const [state, formAction, pending] = useActionState(createWarehouseAction, undefined);
+  useActionToast(state, pending, "Warehouse added.");
 
   return (
-    <form action={formAction} className="grid grid-cols-3 gap-3 rounded-xl border border-slate-200 bg-white shadow-sm p-4">
+    <form action={formAction} className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+      <FormHeader icon={<BuildingIcon className="h-4 w-4" />} title="New warehouse" />
+      <FormBody>
       <div>
-        <label className="mb-1.5 block text-sm font-medium text-slate-700">Branch</label>
+        <Label>Branch</Label>
         <select name="branchId" required className={inputClass}>
           {branches.map((b) => (
             <option key={b.id} value={b.id}>
@@ -23,19 +30,20 @@ export function WarehouseForm({ branches }: { branches: { id: string; name: stri
         </select>
       </div>
       <div>
-        <label className="mb-1.5 block text-sm font-medium text-slate-700">Name</label>
+        <Label>Name</Label>
         <input name="name" required className={inputClass} />
       </div>
       <div>
-        <label className="mb-1.5 block text-sm font-medium text-slate-700">Code</label>
+        <Label>Code</Label>
         <input name="code" required placeholder="WH-MAIN" className={inputClass} />
       </div>
-      {state?.error && <p className="col-span-3 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">{state.error}</p>}
-      <div className="col-span-3">
-        <Button type="submit" disabled={pending}>
+      </FormBody>
+      <FormFooter>
+        <Button type="submit" disabled={pending} className="gap-1.5">
+          <PlusIcon className="h-4 w-4" />
           {pending ? "Saving..." : "Add warehouse"}
         </Button>
-      </div>
+      </FormFooter>
     </form>
   );
 }

@@ -1,6 +1,6 @@
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { db } from "@erp/db";
-import { salesOrders, salesOrderLines } from "@erp/db/schema";
+import { salesOrders, salesOrderLines, salesInvoices } from "@erp/db/schema";
 import { nextDocNumber } from "../doc-numbers";
 import type { SalesOrderInput } from "./schemas";
 
@@ -42,4 +42,31 @@ export async function listSalesOrders(tenantId: string) {
     orderBy: (o, { desc }) => [desc(o.createdAt)],
     with: { lines: { with: { productVariant: true } }, customer: true },
   });
+}
+
+/**
+ * Cancels a sales order. Only allowed while it's still "open" and no sales
+ * invoice has been billed from it yet — once one exists, cancelling the
+ * order underneath it would leave that invoice's `salesOrderId` dangling.
+ */
+export async function cancelSalesOrder(tenantId: string, salesOrderId: string) {
+  const existing = await db.query.salesOrders.findFirst({
+    where: and(eq(salesOrders.id, salesOrderId), eq(salesOrders.tenantId, tenantId)),
+  });
+  if (!existing) throw new Error("Sales order not found");
+  if (existing.status !== "open") throw new Error("Only an open sales order can be cancelled");
+
+  const [invoice] = await db
+    .select({ id: salesInvoices.id })
+    .from(salesInvoices)
+    .where(eq(salesInvoices.salesOrderId, salesOrderId))
+    .limit(1);
+  if (invoice) throw new Error("A sales invoice has already been billed from this order");
+
+  const [row] = await db
+    .update(salesOrders)
+    .set({ status: "cancelled" })
+    .where(and(eq(salesOrders.id, salesOrderId), eq(salesOrders.tenantId, tenantId)))
+    .returning();
+  return row;
 }

@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { createPurchaseOrder, purchaseOrderInput } from "@erp/core/purchasing";
+import { createPurchaseOrder, purchaseOrderInput, cancelPurchaseOrder } from "@erp/core/purchasing";
 import { assertCan, PERMISSIONS } from "@erp/core/rbac";
 import { requireSession } from "@/lib/session";
 
@@ -40,5 +40,20 @@ export async function createPurchaseOrderAction(
   }
 
   revalidatePath("/purchasing/orders");
+  return {};
+}
+
+export async function cancelPurchaseOrderAction(purchaseOrderId: string): Promise<{ error?: string }> {
+  const { tenantId, userId } = await requireSession();
+  await assertCan(userId, PERMISSIONS.PURCHASE_ORDER_CANCEL);
+
+  try {
+    await cancelPurchaseOrder(tenantId, purchaseOrderId);
+  } catch (err) {
+    return { error: err instanceof Error ? err.message : "Failed to cancel purchase order" };
+  }
+
+  revalidatePath("/purchasing/orders");
+  revalidatePath("/purchasing/grn");
   return {};
 }

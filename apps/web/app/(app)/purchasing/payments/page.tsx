@@ -1,10 +1,12 @@
 import { listSupplierPayments, listPayablesAging } from "@erp/core/purchasing";
 import { can, PERMISSIONS } from "@erp/core/rbac";
+import { PageHeader } from "@erp/ui/card";
 import { requireSession } from "@/lib/session";
 import { ModuleGate } from "@/components/module-gate";
 import { getBranchOptions } from "@/lib/branch-options";
 import { getSupplierOptions } from "@/lib/party-options";
-import { SupplierPaymentForm } from "./payment-form";
+import { CreditCardIcon } from "@/components/icons";
+import { SupplierPaymentsClient } from "./payment-client";
 
 export default async function SupplierPaymentsPage() {
   const { tenantId, userId } = await requireSession();
@@ -21,50 +23,23 @@ export default async function SupplierPaymentsPage() {
   return (
     <ModuleGate tenantId={tenantId} moduleKey="purchasing">
     <main className="mx-auto max-w-5xl p-8">
-      <h1 className="mb-4 text-2xl font-semibold tracking-tight text-slate-900">Supplier payments</h1>
+      <PageHeader
+        title="Supplier payments"
+        description="Pay down what's owed on open supplier invoices."
+        icon={<CreditCardIcon className="h-5 w-5" />}
+      />
 
-      {canCreate && ready && (
-        <div className="mb-6">
-          <SupplierPaymentForm branches={branches} suppliers={suppliers} outstanding={outstanding} />
-        </div>
-      )}
       {canCreate && !ready && (
         <p className="mb-6 text-sm text-slate-500">Add a supplier before recording a payment.</p>
       )}
 
-      <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
-        <table className="w-full text-left text-sm">
-          <thead className="bg-slate-50 text-xs uppercase text-slate-500">
-            <tr>
-              <th className="px-4 py-2.5">Doc #</th>
-              <th className="px-4 py-2.5">Supplier</th>
-              <th className="px-4 py-2.5">Method</th>
-              <th className="px-4 py-2.5 text-right">Amount</th>
-              <th className="px-4 py-2.5">Applied to</th>
-            </tr>
-          </thead>
-          <tbody>
-            {payments.map((p) => (
-              <tr key={p.id} className="border-t border-slate-100">
-                <td className="px-4 py-2.5">{p.docNumber}</td>
-                <td className="px-4 py-2.5">{p.supplier?.name}</td>
-                <td className="px-4 py-2.5 capitalize">{p.method}</td>
-                <td className="px-4 py-2.5 text-right">{p.amount}</td>
-                <td className="px-4 py-2.5">
-                  {p.allocations.map((a) => a.invoice?.docNumber).join(", ") || "—"}
-                </td>
-              </tr>
-            ))}
-            {payments.length === 0 && (
-              <tr>
-                <td colSpan={5} className="px-4 py-8 text-center text-slate-400">
-                  No payments yet.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+      <SupplierPaymentsClient
+        payments={payments}
+        branches={branches}
+        suppliers={suppliers}
+        outstanding={outstanding}
+        canCreate={canCreate && ready}
+      />
     </main>
     </ModuleGate>
   );

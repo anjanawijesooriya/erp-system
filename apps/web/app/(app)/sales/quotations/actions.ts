@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { createQuotation, quotationInput } from "@erp/core/sales";
+import { createQuotation, quotationInput, cancelQuotation } from "@erp/core/sales";
 import { assertCan, PERMISSIONS } from "@erp/core/rbac";
 import { requireSession } from "@/lib/session";
 
@@ -35,6 +35,20 @@ export async function createQuotationAction(
     await createQuotation(tenantId, userId, parsed.data);
   } catch (err) {
     return { error: err instanceof Error ? err.message : "Failed to create quotation" };
+  }
+
+  revalidatePath("/sales/quotations");
+  return {};
+}
+
+export async function cancelQuotationAction(quotationId: string): Promise<{ error?: string }> {
+  const { tenantId, userId } = await requireSession();
+  await assertCan(userId, PERMISSIONS.QUOTATION_CANCEL);
+
+  try {
+    await cancelQuotation(tenantId, quotationId);
+  } catch (err) {
+    return { error: err instanceof Error ? err.message : "Failed to cancel quotation" };
   }
 
   revalidatePath("/sales/quotations");

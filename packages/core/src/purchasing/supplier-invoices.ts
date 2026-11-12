@@ -2,7 +2,7 @@ import { and, eq, isNotNull } from "drizzle-orm";
 import { db } from "@erp/db";
 import { suppliers, supplierInvoices, supplierInvoiceLines, goodsReceiptNotes } from "@erp/db/schema";
 import { nextDocNumber } from "../doc-numbers";
-import { postSupplierInvoiceJournal } from "../accounting/auto-posting";
+import { postSupplierInvoiceJournal, postSupplierInvoiceCancellationJournal } from "../accounting/auto-posting";
 import type { SupplierInvoiceInput } from "./schemas";
 
 export async function createSupplierInvoice(tenantId: string, userId: string, input: SupplierInvoiceInput) {
@@ -91,6 +91,41 @@ export async function listUninvoicedGrns(tenantId: string) {
         unitCost: Number(l.unitCost),
       })),
     }));
+}
+
+/**
+ * Cancels a supplier invoice. Only allowed while it's still fully unpaid —
+ * once any payment has been allocated to it, cancelling would leave that
+ * payment's allocation pointing at a dead invoice, so it must be reversed
+ * through a payment correction instead.
+ */
+export async function cancelSupplierInvoice(tenantId: string, userId: string, invoiceId: string) {
+  return db.transaction(async (tx) => {
+    const invoice = await tx.query.supplierInvoices.findFirst({
+      where: and(eq(supplierInvoices.id, invoiceId), eq(supplierInvoices.tenantId, tenantId)),
+    });
+    if (!invoice) throw new Error("Supplier invoice not found");
+    if (invoice.status !== "unpaid") throw new Error("Only a fully unpaid invoice can be cancelled");
+
+    const [row] = await tx
+      .update(supplierInvoices)
+      .set({ status: "cancelled" })
+      .where(and(eq(supplierInvoices.id, invoiceId), eq(supplierInvoices.tenantId, tenantId)))
+      .returning();
+
+    await postSupplierInvoiceCancellationJournal(
+      tx,
+      { tenantId, branchId: invoice.branchId, userId },
+      {
+        invoiceId,
+        cancelDate: new Date().toISOString().slice(0, 10),
+        totalAmount: Number(invoice.totalAmount),
+        hasGrn: !!invoice.grnId,
+      },
+    );
+
+    return row;
+  });
 }
 
 export async function listSupplierInvoices(tenantId: string) {

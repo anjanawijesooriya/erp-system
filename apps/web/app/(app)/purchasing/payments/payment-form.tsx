@@ -2,17 +2,22 @@
 
 import { useActionState, useState } from "react";
 import { Button } from "@erp/ui/button";
+import { Label } from "@erp/ui/input";
+import { Badge, type BadgeTone } from "@erp/ui/badge";
+import { FormBody, FormFooter, FormSectionLabel } from "@erp/ui/form";
+import { CreditCardIcon } from "@/components/icons";
+import { useActionToast } from "@/lib/use-action-toast";
 import { createSupplierPaymentAction } from "./actions";
 
 const inputClass =
   "w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm shadow-sm transition-colors placeholder:text-slate-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30";
 
-const BUCKET_BADGE: Record<string, string> = {
-  current: "bg-accent-100 text-accent-700",
-  "1-30": "bg-amber-100 text-amber-700",
-  "31-60": "bg-orange-100 text-orange-700",
-  "61-90": "bg-rose-100 text-rose-700",
-  "90+": "bg-red-200 text-red-800",
+const BUCKET_TONE: Record<string, BadgeTone> = {
+  current: "accent",
+  "1-30": "amber",
+  "31-60": "amber",
+  "61-90": "rose",
+  "90+": "rose",
 };
 
 interface OutstandingInvoice {
@@ -35,6 +40,7 @@ export function SupplierPaymentForm({
   outstanding: OutstandingInvoice[];
 }) {
   const [state, formAction, pending] = useActionState(createSupplierPaymentAction, undefined);
+  useActionToast(state, pending, "Payment recorded.");
   const [supplierId, setSupplierId] = useState(suppliers[0]?.id ?? "");
   const [invoiceId, setInvoiceId] = useState("");
   const [amount, setAmount] = useState("");
@@ -54,10 +60,11 @@ export function SupplierPaymentForm({
   }
 
   return (
-    <form action={formAction} className="grid grid-cols-3 gap-3 rounded-xl border border-slate-200 bg-white shadow-sm p-4">
+    <form action={formAction} className="flex h-full flex-col">
       <input type="hidden" name="invoiceId" value={invoiceId} />
+      <FormBody>
       <div>
-        <label className="mb-1.5 block text-sm font-medium text-slate-700">Branch</label>
+        <Label>Branch</Label>
         <select name="branchId" required className={inputClass}>
           {branches.map((b) => (
             <option key={b.id} value={b.id}>
@@ -67,7 +74,7 @@ export function SupplierPaymentForm({
         </select>
       </div>
       <div>
-        <label className="mb-1.5 block text-sm font-medium text-slate-700">Supplier</label>
+        <Label>Supplier</Label>
         <select
           name="supplierId"
           required
@@ -83,17 +90,15 @@ export function SupplierPaymentForm({
         </select>
       </div>
       <div>
-        <label className="mb-1.5 block text-sm font-medium text-slate-700">Payment date</label>
+        <Label>Payment date</Label>
         <input name="paymentDate" type="date" required className={inputClass} />
       </div>
 
+      <FormSectionLabel>Outstanding invoices</FormSectionLabel>
       <div className="col-span-3">
-        <div className="flex items-center justify-between">
-          <label className="mb-1.5 block text-sm font-medium text-slate-700">Outstanding invoices</label>
-          {supplierInvoices.length > 0 && (
-            <span className="text-xs text-slate-500">Total due: {totalDue.toLocaleString()}</span>
-          )}
-        </div>
+        {supplierInvoices.length > 0 && (
+          <p className="mb-1.5 text-right text-xs text-slate-500">Total due: {totalDue.toLocaleString()}</p>
+        )}
         {supplierInvoices.length === 0 ? (
           <p className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-400">
             No outstanding invoices for this supplier.
@@ -116,9 +121,9 @@ export function SupplierPaymentForm({
                     <td className="px-3 py-1.5 font-medium text-slate-900">{inv.docNumber}</td>
                     <td className="px-3 py-1.5 text-slate-600">{inv.dueDate}</td>
                     <td className="px-3 py-1.5">
-                      <span className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${BUCKET_BADGE[inv.bucket] ?? "bg-slate-100 text-slate-600"}`}>
+                      <Badge tone={BUCKET_TONE[inv.bucket] ?? "slate"}>
                         {inv.daysPastDue > 0 ? `${inv.daysPastDue}d overdue` : "current"}
-                      </span>
+                      </Badge>
                     </td>
                     <td className="px-3 py-1.5 text-right font-medium text-slate-900">{Number(inv.amountDue).toLocaleString()}</td>
                     <td className="px-3 py-1.5 text-right">
@@ -142,7 +147,7 @@ export function SupplierPaymentForm({
       </div>
 
       <div>
-        <label className="mb-1.5 block text-sm font-medium text-slate-700">Method</label>
+        <Label>Method</Label>
         <select name="method" required className={inputClass} defaultValue="bank">
           <option value="cash">Cash</option>
           <option value="bank">Bank</option>
@@ -150,7 +155,7 @@ export function SupplierPaymentForm({
         </select>
       </div>
       <div>
-        <label className="mb-1.5 block text-sm font-medium text-slate-700">Amount</label>
+        <Label>Amount</Label>
         <input
           name="amount"
           type="number"
@@ -163,15 +168,16 @@ export function SupplierPaymentForm({
         />
       </div>
       <div>
-        <label className="mb-1.5 block text-sm font-medium text-slate-700">Note (optional)</label>
+        <Label>Note (optional)</Label>
         <input name="note" className={inputClass} />
       </div>
-      {state?.error && <p className="col-span-3 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">{state.error}</p>}
-      <div className="col-span-3">
-        <Button type="submit" disabled={pending}>
+      </FormBody>
+      <FormFooter>
+        <Button type="submit" disabled={pending} className="gap-1.5">
+          <CreditCardIcon className="h-4 w-4" />
           {pending ? "Saving..." : "Record payment"}
         </Button>
-      </div>
+      </FormFooter>
     </form>
   );
 }
