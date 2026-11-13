@@ -1,9 +1,10 @@
 import { can, listRoles, PERMISSIONS } from "@erp/core/rbac";
 import { listTenantUsers } from "@erp/core/tenants";
+import { PageHeader } from "@erp/ui/card";
 import { requireSession } from "@/lib/session";
 import { getBranchOptions } from "@/lib/branch-options";
-import { InviteUserForm } from "./invite-form";
-import { DeactivateButton } from "./deactivate-button";
+import { UsersIcon } from "@/components/icons";
+import { UsersClient } from "./users-client";
 
 export default async function UsersPage() {
   const { tenantId, userId } = await requireSession();
@@ -14,53 +15,28 @@ export default async function UsersPage() {
     can(userId, PERMISSIONS.USER_MANAGE),
   ]);
 
+  const branchCount = new Set(
+    users.flatMap((u) => u.roles.map((r) => r.branch?.id).filter(Boolean)),
+  ).size;
+
+  const rows = users.map((u) => ({
+    id: u.id,
+    name: u.name,
+    email: u.email,
+    isActive: u.isActive,
+    roleNames: Array.from(new Set(u.roles.map((r) => r.role?.name).filter((n): n is string => !!n))),
+    branchNames: Array.from(new Set(u.roles.map((r) => r.branch?.name).filter((n): n is string => !!n))),
+  }));
+
   return (
-    <main className="mx-auto max-w-4xl p-8">
-      <h1 className="mb-4 text-2xl font-semibold tracking-tight text-slate-900">Users</h1>
+    <main className="mx-auto max-w-5xl p-8">
+      <PageHeader
+        title="Staff & users"
+        description={`${rows.length} staff${branchCount > 0 ? ` across ${branchCount} branch${branchCount === 1 ? "" : "es"}` : ""}`}
+        icon={<UsersIcon className="h-5 w-5" />}
+      />
 
-      {canManage && roles.length > 0 && (
-        <div className="mb-6">
-          <InviteUserForm roles={roles} branches={branches} />
-        </div>
-      )}
-
-      <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
-        <table className="w-full text-left text-sm">
-          <thead className="bg-slate-50 text-xs uppercase text-slate-500">
-            <tr>
-              <th className="px-4 py-2.5">Name</th>
-              <th className="px-4 py-2.5">Email</th>
-              <th className="px-4 py-2.5">Roles</th>
-              <th className="px-4 py-2.5">Status</th>
-              <th className="px-4 py-2.5">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.map((u) => (
-              <tr key={u.id} className="border-t border-slate-100">
-                <td className="px-4 py-2.5">{u.name}</td>
-                <td className="px-4 py-2.5">{u.email}</td>
-                <td className="px-4 py-2.5">
-                  {u.roles
-                    .map((r) => `${r.role?.name ?? "?"}${r.branch ? ` (${r.branch.name})` : ""}`)
-                    .join(", ") || "—"}
-                </td>
-                <td className="px-4 py-2.5">{u.isActive ? "Active" : "Inactive"}</td>
-                <td className="px-4 py-2.5">
-                  {canManage && u.isActive && <DeactivateButton userId={u.id} />}
-                </td>
-              </tr>
-            ))}
-            {users.length === 0 && (
-              <tr>
-                <td colSpan={5} className="px-4 py-8 text-center text-slate-400">
-                  No users yet.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+      <UsersClient users={rows} roles={roles} branches={branches} canManage={canManage} />
     </main>
   );
 }

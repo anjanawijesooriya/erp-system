@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vertex ERP — Periods &amp; reports</title>
+<style>
+  body{margin:0;font-family:'Inter',system-ui,-apple-system,sans-serif;background:#F6F7FB;color:#101323}
+  a{color:#4338CA;text-decoration:none}
+  a:hover{color:#352C9B}
+  .card{background:#fff;border:1px solid #E4E7EC;border-radius:14px}
+  .btn-primary{background:#4338CA;color:#fff}
+  .row:hover{background:#FAFAFD}
+  .rep-card{padding:18px;display:flex;flex-direction:column;gap:10px;text-decoration:none;color:inherit}
+</style>
+</head>
+<body>
+
+<div style="min-height:1300px;width:100%;box-sizing:border-box;background:#F6F7FB">
+
+  <header style="height:64px;background:#fff;border-bottom:1px solid #E4E7EC;display:flex;align-items:center;justify-content:space-between;padding:0 28px;box-sizing:border-box">
+    <div style="display:flex;align-items:center;gap:16px">
+      <a href="chart-of-accounts.html" aria-label="Back" style="width:34px;height:34px;border-radius:9px;border:1px solid #E4E7EC;display:flex;align-items:center;justify-content:center;color:#475467">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <div style="font-size:13.5px;color:#98A2B3;display:flex;align-items:center;gap:6px">
+        <span>Accounting</span><span>/</span><span style="color:#1D2130;font-weight:600">Periods &amp; reports</span>
+      </div>
+    </div>
+    <div style="width:34px;height:34px;border-radius:50%;background:#4338CA;color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700">IM</div>
+  </header>
+
+  <main style="max-width:1200px;margin:0 auto;padding:32px 24px 64px;display:flex;flex-direction:column;gap:26px;box-sizing:border-box">
+
+    <div>
+      <h1 style="margin:0 0 4px;font-size:22px;font-weight:700;letter-spacing:-0.01em">Accounting periods &amp; reports</h1>
+      <p style="margin:0;font-size:13.5px;color:#6B7280">Close periods to lock the books, and run the standard financial statements.</p>
+    </div>
+
+    <section style="display:flex;flex-direction:column;gap:14px">
+      <span style="font-size:12px;font-weight:700;color:#98A2B3;letter-spacing:0.06em;text-transform:uppercase;border-left:3px solid #4338CA;padding-left:10px">Accounting periods</span>
+      <section class="card" style="display:flex;flex-direction:column;overflow:hidden">
+        <div style="display:grid;grid-template-columns:1.4fr 1fr 1fr 0.8fr;padding:12px 20px;font-size:11.5px;font-weight:700;color:#98A2B3;letter-spacing:0.04em;text-transform:uppercase;border-bottom:1px solid #EEF0F3;background:#FAFAFC">
+          <span>Period</span><span>Start</span><span>End</span><span>Status</span>
+        </div>
+        <div class="row" style="display:grid;grid-template-columns:1.4fr 1fr 1fr 0.8fr;padding:13px 20px;font-size:13.5px;align-items:center;border-bottom:1px solid #F3F4F7">
+          <span style="font-weight:600">July 2026</span><span style="color:#667085">Jul 1, 2026</span><span style="color:#667085">Jul 31, 2026</span>
+          <span style="font-size:12px;font-weight:600;color:#15803D;background:#EFFBEF;border-radius:999px;padding:3px 10px;width:fit-content">Open</span>
+        </div>
+        <div class="row" style="display:grid;grid-template-columns:1.4fr 1fr 1fr 0.8fr;padding:13px 20px;font-size:13.5px;align-items:center;border-bottom:1px solid #F3F4F7">
+          <span style="font-weight:600">June 2026</span><span style="color:#667085">Jun 1, 2026</span><span style="color:#667085">Jun 30, 2026</span>
+          <span style="font-size:12px;font-weight:600;color:#98A2B3;background:#F2F4F7;border-radius:999px;padding:3px 10px;width:fit-content">Closed</span>
+        </div>
+        <div class="row" style="display:grid;grid-template-columns:1.4fr 1fr 1fr 0.8fr;padding:13px 20px;font-size:13.5px;align-items:center">
+          <span style="font-weight:600">May 2026</span><span style="color:#667085">May 1, 2026</span><span style="color:#667085">May 31, 2026</span>
+          <span style="font-size:12px;font-weight:600;color:#98A2B3;background:#F2F4F7;border-radius:999px;padding:3px 10px;width:fit-content">Closed</span>
+        </div>
+        <div style="display:flex;justify-content:flex-end;padding:14px 20px;border-top:1px solid #EEF0F3">
+          <button type="button" style="height:38px;padding:0 16px;border-radius:9px;border:1px solid #D0D5DD;background:#fff;font-size:13px;font-weight:600;color:#344054;cursor:pointer;font-family:inherit">Close July 2026</button>
+        </div>
+      </section>
+    </section>
+
+    <section style="display:flex;flex-direction:column;gap:14px">
+      <span style="font-size:12px;font-weight:700;color:#98A2B3;letter-spacing:0.06em;text-transform:uppercase;border-left:3px solid #15803D;padding-left:10px">Financial reports</span>
+      <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px">
+        <a href="#" class="card rep-card">
+          <div style="width:38px;height:38px;border-radius:10px;background:#EEF0FD;display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 19V5a2 2 0 012-2h7l5 5v11a2 2 0 01-2 2H6a2 2 0 01-2-2z" stroke="#4338CA" stroke-width="1.7" stroke-linejoin="round"/><path d="M8 13h6M8 16h6" stroke="#4338CA" stroke-width="1.7" stroke-linecap="round"/></svg></div>
+          <h3 style="margin:0;font-size:15px;font-weight:700">Profit &amp; loss</h3>
+          <p style="margin:0;font-size:12.5px;color:#667085;line-height:1.5">Revenue, cost of goods sold and expenses over any date range.</p>
+        </a>
+        <a href="#" class="card rep-card">
+          <div style="width:38px;height:38px;border-radius:10px;background:#E9F9EF;display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 7l2-4h12l2 4M4 7v13h16V7" stroke="#15803D" stroke-width="1.7" stroke-linejoin="round"/></svg></div>
+          <h3 style="margin:0;font-size:15px;font-weight:700">Balance sheet</h3>
+          <p style="margin:0;font-size:12.5px;color:#667085;line-height:1.5">Assets, liabilities and equity as of a chosen date.</p>
+        </a>
+        <a href="#" class="card rep-card">
+          <div style="width:38px;height:38px;border-radius:10px;background:#FFF4E5;display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 2h9l3 3v17H6V2z" stroke="#B45309" stroke-width="1.7" stroke-linejoin="round"/><path d="M9 10h6M9 14h6" stroke="#B45309" stroke-width="1.7" stroke-linecap="round"/></svg></div>
+          <h3 style="margin:0;font-size:15px;font-weight:700">Trial balance</h3>
+          <p style="margin:0;font-size:12.5px;color:#667085;line-height:1.5">Every account's debit and credit balance, checked for agreement.</p>
+        </a>
+        <a href="#" class="card rep-card">
+          <div style="width:38px;height:38px;border-radius:10px;background:#E8F2FE;display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 21V9l8-6 8 6v12" stroke="#1D6FD1" stroke-width="1.7" stroke-linejoin="round"/><path d="M9 21v-7h6v7" stroke="#1D6FD1" stroke-width="1.7"/></svg></div>
+          <h3 style="margin:0;font-size:15px;font-weight:700">Cash flow statement</h3>
+          <p style="margin:0;font-size:12.5px;color:#667085;line-height:1.5">Operating, investing and financing cash movements.</p>
+        </a>
+      </div>
+    </section>
+
+  </main>
+</div>
+</body>
+</html>

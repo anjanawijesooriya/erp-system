@@ -1,7 +1,10 @@
 import { listExpenseAccounts, listExpenses } from "@erp/core/accounting";
 import { can, PERMISSIONS } from "@erp/core/rbac";
+import { PageHeader, Card, EmptyState, StatTile } from "@erp/ui/card";
+import { Badge } from "@erp/ui/badge";
 import { requireSession } from "@/lib/session";
 import { getBranchOptions } from "@/lib/branch-options";
+import { ReceiptIcon } from "@/components/icons";
 import { ExpenseForm } from "./expense-form";
 
 export default async function ExpensesPage() {
@@ -13,67 +16,83 @@ export default async function ExpensesPage() {
     can(userId, PERMISSIONS.EXPENSE_RECORD),
   ]);
 
-  const total = expenses.reduce((sum, e) => sum + Number(e.lines.find((l) => Number(l.debit) > 0)?.debit ?? 0), 0);
+  const rows = expenses.map((e) => ({
+    id: e.id,
+    entryDate: e.entryDate,
+    memo: e.memo,
+    branchName: e.branch?.name ?? "—",
+    category: e.lines.find((l) => Number(l.debit) > 0)?.account.name ?? "—",
+    paidFrom: e.lines.find((l) => Number(l.credit) > 0)?.account.name ?? "—",
+    amount: Number(e.lines.find((l) => Number(l.debit) > 0)?.debit ?? 0),
+  }));
+
+  const now = new Date();
+  const monthRows = rows.filter((r) => {
+    const d = new Date(r.entryDate);
+    return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth();
+  });
+  const monthTotal = monthRows.reduce((sum, r) => sum + r.amount, 0);
+
+  const categoryTotals = new Map<string, number>();
+  for (const r of monthRows) categoryTotals.set(r.category, (categoryTotals.get(r.category) ?? 0) + r.amount);
+  const topCategories = Array.from(categoryTotals, ([name, total]) => ({ name, total }))
+    .sort((a, b) => b.total - a.total)
+    .slice(0, 2);
 
   return (
-    <main className="mx-auto max-w-4xl p-8">
-      <h1 className="text-2xl font-semibold tracking-tight text-slate-900">Expenses</h1>
-      <p className="mt-1 text-sm text-slate-500">
-        Day-to-day spending — rent, utilities, supplies. Posts straight through to your P&amp;L; for
-        full double-entry control, use Journal instead.
-      </p>
+    <main className="mx-auto max-w-5xl p-8">
+      <PageHeader
+        title="Expenses"
+        description="Day-to-day business spending, categorized for your P&L."
+        icon={<ReceiptIcon className="h-5 w-5" />}
+      />
+
+      <div className="mb-6 grid grid-cols-2 gap-3.5 sm:grid-cols-4">
+        <StatTile label="This month" value={monthTotal.toLocaleString(undefined, { maximumFractionDigits: 0 })} />
+        {topCategories.map((c) => (
+          <StatTile key={c.name} label={c.name} value={c.total.toLocaleString(undefined, { maximumFractionDigits: 0 })} />
+        ))}
+        {topCategories.length === 0 && <StatTile label="This month's top category" value="—" />}
+      </div>
 
       {canRecord && (
-        <div className="mt-6">
+        <div className="mb-6">
           <ExpenseForm branches={branches} accounts={accounts.map((a) => ({ code: a.code, name: a.name }))} />
         </div>
       )}
 
-      <div className="mt-8 flex items-center justify-between">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">Recent expenses</h2>
-        <p className="text-sm text-slate-500">
-          Total: <span className="font-semibold text-slate-900">{total.toLocaleString()}</span>
-        </p>
-      </div>
-      <div className="mt-2 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
-        <table className="w-full text-left text-sm">
-          <thead className="bg-slate-50 text-xs uppercase text-slate-500">
-            <tr>
-              <th className="px-4 py-2.5">Date</th>
-              <th className="px-4 py-2.5">Category</th>
-              <th className="px-4 py-2.5">Description</th>
-              <th className="px-4 py-2.5">Branch</th>
-              <th className="px-4 py-2.5">Paid from</th>
-              <th className="px-4 py-2.5 text-right">Amount</th>
-            </tr>
-          </thead>
-          <tbody>
-            {expenses.map((e) => {
-              const expenseLine = e.lines.find((l) => Number(l.debit) > 0);
-              const paidFromLine = e.lines.find((l) => Number(l.credit) > 0);
-              return (
-                <tr key={e.id} className="border-t border-slate-100">
-                  <td className="px-4 py-2.5">{e.entryDate}</td>
-                  <td className="px-4 py-2.5">{expenseLine?.account.name}</td>
-                  <td className="px-4 py-2.5 text-slate-600">{e.memo}</td>
-                  <td className="px-4 py-2.5">{e.branch?.name}</td>
-                  <td className="px-4 py-2.5">{paidFromLine?.account.name}</td>
-                  <td className="px-4 py-2.5 text-right font-medium">
-                    {Number(expenseLine?.debit ?? 0).toLocaleString()}
-                  </td>
-                </tr>
-              );
-            })}
-            {expenses.length === 0 && (
+      {rows.length === 0 ? (
+        <Card>
+          <EmptyState icon={<ReceiptIcon className="h-5 w-5" />} title="No expenses recorded yet." description="Record one above — it posts straight to your P&L." />
+        </Card>
+      ) : (
+        <Card className="overflow-hidden">
+          <table className="w-full text-left text-sm">
+            <thead className="bg-slate-50 text-xs uppercase text-slate-500">
               <tr>
-                <td colSpan={6} className="px-4 py-8 text-center text-slate-400">
-                  No expenses recorded yet.
-                </td>
+                <th className="px-4 py-2.5">Category</th>
+                <th className="px-4 py-2.5">Description</th>
+                <th className="px-4 py-2.5">Branch</th>
+                <th className="px-4 py-2.5">Date</th>
+                <th className="px-4 py-2.5 text-right">Amount</th>
               </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {rows.map((r) => (
+                <tr key={r.id} className="border-t border-slate-100 transition-colors hover:bg-slate-50/70">
+                  <td className="px-4 py-2.5">
+                    <Badge tone="slate">{r.category}</Badge>
+                  </td>
+                  <td className="px-4 py-2.5 text-slate-600">{r.memo}</td>
+                  <td className="px-4 py-2.5 text-slate-600">{r.branchName}</td>
+                  <td className="px-4 py-2.5 text-slate-600">{r.entryDate}</td>
+                  <td className="px-4 py-2.5 text-right font-medium text-slate-900">{r.amount.toLocaleString()}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </Card>
+      )}
     </main>
   );
 }

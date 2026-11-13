@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { inviteUser, inviteUserInput, deactivateUser } from "@erp/core/tenants";
+import { inviteUser, inviteUserInput, deactivateUser, reactivateUser } from "@erp/core/tenants";
 import { assertCan, PERMISSIONS } from "@erp/core/rbac";
 import { requireSession } from "@/lib/session";
 
@@ -38,5 +38,12 @@ export async function deactivateUserAction(targetUserId: string) {
   const { tenantId, userId } = await requireSession();
   await assertCan(userId, PERMISSIONS.USER_MANAGE);
   await deactivateUser(tenantId, targetUserId);
+  revalidatePath("/users");
+}
+
+export async function reactivateUserAction(targetUserId: string) {
+  const { tenantId, userId } = await requireSession();
+  await assertCan(userId, PERMISSIONS.USER_MANAGE);
+  await reactivateUser(tenantId, targetUserId);
   revalidatePath("/users");
 }

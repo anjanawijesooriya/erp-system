@@ -1,6 +1,8 @@
 import { getBalanceSheet, getProfitAndLoss, getTrialBalance } from "@erp/core/accounting";
+import { PageHeader, Card } from "@erp/ui/card";
 import { requireSession } from "@/lib/session";
 import { ModuleGate } from "@/components/module-gate";
+import { ReceiptIcon, BuildingIcon, WalletIcon } from "@/components/icons";
 
 function today() {
   return new Date().toISOString().slice(0, 10);
@@ -26,7 +28,41 @@ export default async function ReportsPage({
   return (
     <ModuleGate tenantId={tenantId} moduleKey="accounting">
     <main className="mx-auto max-w-5xl p-8">
-      <h1 className="mb-4 text-2xl font-semibold tracking-tight text-slate-900">Financial reports</h1>
+      <PageHeader
+        title="Financial reports"
+        description="Revenue, costs and balances over any date range."
+        icon={<ReceiptIcon className="h-5 w-5" />}
+      />
+
+      <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <a href="#profit-and-loss" className="block">
+          <Card className="flex flex-col gap-2.5 p-5 transition-colors hover:border-brand-300">
+            <span className="flex h-9 w-9 items-center justify-center rounded-[10px] bg-brand-50 text-brand-700">
+              <ReceiptIcon className="h-4.5 w-4.5" />
+            </span>
+            <h3 className="text-[15px] font-semibold text-slate-900">Profit &amp; loss</h3>
+            <p className="text-[13px] leading-relaxed text-slate-500">Revenue and expenses over your chosen date range.</p>
+          </Card>
+        </a>
+        <a href="#balance-sheet" className="block">
+          <Card className="flex flex-col gap-2.5 p-5 transition-colors hover:border-brand-300">
+            <span className="flex h-9 w-9 items-center justify-center rounded-[10px] bg-success-50 text-success-700">
+              <BuildingIcon className="h-4.5 w-4.5" />
+            </span>
+            <h3 className="text-[15px] font-semibold text-slate-900">Balance sheet</h3>
+            <p className="text-[13px] leading-relaxed text-slate-500">Assets, liabilities and equity as of a chosen date.</p>
+          </Card>
+        </a>
+        <a href="#trial-balance" className="block">
+          <Card className="flex flex-col gap-2.5 p-5 transition-colors hover:border-brand-300">
+            <span className="flex h-9 w-9 items-center justify-center rounded-[10px] bg-warning-50 text-warning-700">
+              <WalletIcon className="h-4.5 w-4.5" />
+            </span>
+            <h3 className="text-[15px] font-semibold text-slate-900">Trial balance</h3>
+            <p className="text-[13px] leading-relaxed text-slate-500">Every account's debit and credit balance, checked for agreement.</p>
+          </Card>
+        </a>
+      </div>
 
       <form className="mb-6 flex flex-wrap items-end gap-3 rounded-xl border border-slate-200 bg-white shadow-sm p-4 text-sm">
         <div>
@@ -46,7 +82,7 @@ export default async function ReportsPage({
         </button>
       </form>
 
-      <section className="mb-8">
+      <section id="trial-balance" className="mb-8">
         <h2 className="mb-2 text-sm font-semibold uppercase text-slate-500">Trial balance ({from} – {to})</h2>
         <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
           <table className="w-full text-left text-sm">
@@ -81,7 +117,7 @@ export default async function ReportsPage({
         </div>
       </section>
 
-      <section className="mb-8">
+      <section id="profit-and-loss" className="mb-8">
         <h2 className="mb-2 text-sm font-semibold uppercase text-slate-500">Profit &amp; loss ({from} – {to})</h2>
         <div className="rounded-xl border border-slate-200 bg-white shadow-sm p-4 text-sm">
           <div className="mb-2 font-medium">Income</div>
@@ -113,7 +149,7 @@ export default async function ReportsPage({
         </div>
       </section>
 
-      <section>
+      <section id="balance-sheet">
         <h2 className="mb-2 text-sm font-semibold uppercase text-slate-500">Balance sheet (as of {asOf})</h2>
         <div className="rounded-xl border border-slate-200 bg-white shadow-sm p-4 text-sm">
           <div className="mb-2 font-medium">Assets</div>

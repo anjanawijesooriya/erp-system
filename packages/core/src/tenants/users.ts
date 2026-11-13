@@ -49,3 +49,12 @@ export async function deactivateUser(tenantId: string, userId: string) {
     .returning();
   return row;
 }
+
+export async function reactivateUser(tenantId: string, userId: string) {
+  const [row] = await db
+    .update(users)
+    .set({ isActive: true })
+    .where(and(eq(users.id, userId), eq(users.tenantId, tenantId)))
+    .returning();
+  return row;
+}

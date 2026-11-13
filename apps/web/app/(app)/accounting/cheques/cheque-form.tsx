@@ -1,7 +1,11 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 import { Button } from "@erp/ui/button";
+import { Label } from "@erp/ui/input";
+import { FormBody, FormFooter } from "@erp/ui/form";
+import { useToast } from "@erp/ui/toast";
+import { PlusIcon } from "@/components/icons";
 import { recordChequeAction } from "./actions";
 
 const inputClass =
@@ -11,18 +15,40 @@ export function ChequeForm({
   branches,
   customers,
   suppliers,
+  onDone,
 }: {
   branches: { id: string; name: string }[];
   customers: { id: string; label: string }[];
   suppliers: { id: string; label: string }[];
+  onDone: () => void;
 }) {
   const [state, formAction, pending] = useActionState(recordChequeAction, undefined);
   const [direction, setDirection] = useState<"received" | "issued">("received");
+  const toast = useToast();
+  const wasPending = useRef(false);
+
+  useEffect(() => {
+    if (pending) {
+      wasPending.current = true;
+      return;
+    }
+    if (!wasPending.current) return;
+    wasPending.current = false;
+
+    if (state?.error) {
+      toast(state.error, "error");
+    } else {
+      toast("Cheque recorded.", "success");
+      onDone();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pending]);
 
   return (
-    <form action={formAction} className="grid grid-cols-3 gap-3 rounded-xl border border-slate-200 bg-white shadow-sm p-4">
+    <form action={formAction} className="flex h-full flex-col">
+      <FormBody>
       <div>
-        <label className="mb-1.5 block text-sm font-medium text-slate-700">Branch</label>
+        <Label>Branch</Label>
         <select name="branchId" required className={inputClass}>
           {branches.map((b) => (
             <option key={b.id} value={b.id}>
@@ -31,8 +57,8 @@ export function ChequeForm({
           ))}
         </select>
       </div>
-      <div>
-        <label className="mb-1.5 block text-sm font-medium text-slate-700">Direction</label>
+      <div className="col-span-2">
+        <Label>Direction</Label>
         <select
           name="direction"
           value={direction}
@@ -44,8 +70,8 @@ export function ChequeForm({
         </select>
       </div>
       {direction === "received" ? (
-        <div>
-          <label className="mb-1.5 block text-sm font-medium text-slate-700">Customer</label>
+        <div className="col-span-3">
+          <Label>Customer</Label>
           <select name="customerId" required className={inputClass}>
             {customers.map((c) => (
               <option key={c.id} value={c.id}>
@@ -55,8 +81,8 @@ export function ChequeForm({
           </select>
         </div>
       ) : (
-        <div>
-          <label className="mb-1.5 block text-sm font-medium text-slate-700">Supplier</label>
+        <div className="col-span-3">
+          <Label>Supplier</Label>
           <select name="supplierId" required className={inputClass}>
             {suppliers.map((s) => (
               <option key={s.id} value={s.id}>
@@ -67,31 +93,32 @@ export function ChequeForm({
         </div>
       )}
       <div>
-        <label className="mb-1.5 block text-sm font-medium text-slate-700">Cheque number</label>
+        <Label>Cheque number</Label>
         <input name="chequeNumber" required className={inputClass} />
       </div>
       <div>
-        <label className="mb-1.5 block text-sm font-medium text-slate-700">Bank name</label>
+        <Label>Bank name</Label>
         <input name="bankName" className={inputClass} />
       </div>
       <div>
-        <label className="mb-1.5 block text-sm font-medium text-slate-700">Cheque date</label>
+        <Label>Cheque date</Label>
         <input name="chequeDate" type="date" required className={inputClass} />
       </div>
-      <div>
-        <label className="mb-1.5 block text-sm font-medium text-slate-700">Amount</label>
+      <div className="col-span-3">
+        <Label>Amount</Label>
         <input name="amount" type="number" step="0.01" min="0.01" required className={inputClass} />
       </div>
-      <div className="col-span-2">
-        <label className="mb-1.5 block text-sm font-medium text-slate-700">Note (optional)</label>
+      <div className="col-span-3">
+        <Label>Note (optional)</Label>
         <input name="note" className={inputClass} />
       </div>
-      {state?.error && <p className="col-span-3 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">{state.error}</p>}
-      <div className="col-span-3">
-        <Button type="submit" disabled={pending}>
+      </FormBody>
+      <FormFooter>
+        <Button type="submit" disabled={pending} className="gap-1.5">
+          <PlusIcon className="h-4 w-4" />
           {pending ? "Saving..." : "Record cheque"}
         </Button>
-      </div>
+      </FormFooter>
     </form>
   );
 }

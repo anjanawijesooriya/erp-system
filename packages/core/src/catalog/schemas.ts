@@ -23,3 +23,14 @@ export const productInput = z.object({
   conversions: z.array(uomConversionInput).optional().default([]),
 });
 export type ProductInput = z.infer<typeof productInput>;
+
+export const updateProductInput = z.object({
+  name: z.string().min(1).max(200),
+  description: z.string().max(2000).optional(),
+  tracksBatches: z.boolean().optional().default(false),
+  isActive: z.boolean().optional().default(true),
+  costPrice: z.coerce.number().nonnegative().optional().default(0),
+  sellingPrice: z.coerce.number().nonnegative().optional().default(0),
+  barcode: z.string().max(64).optional(),
+});
+export type UpdateProductInput = z.infer<typeof updateProductInput>;

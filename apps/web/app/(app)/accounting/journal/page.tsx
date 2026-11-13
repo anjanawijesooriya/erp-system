@@ -1,10 +1,12 @@
 import { listAccounts, listJournalEntries } from "@erp/core/accounting";
 import { can, PERMISSIONS } from "@erp/core/rbac";
+import { PageHeader } from "@erp/ui/card";
 import { requireSession } from "@/lib/session";
 import { ModuleGate } from "@/components/module-gate";
 import { getBranchOptions } from "@/lib/branch-options";
+import { ReceiptIcon } from "@/components/icons";
 import { JournalForm } from "./journal-form";
-import { EntryActions } from "./entry-row";
+import { JournalClient } from "./journal-client";
 
 export default async function JournalPage() {
   const { tenantId, userId } = await requireSession();
@@ -20,7 +22,11 @@ export default async function JournalPage() {
   return (
     <ModuleGate tenantId={tenantId} moduleKey="accounting">
     <main className="mx-auto max-w-5xl p-8">
-      <h1 className="mb-4 text-2xl font-semibold tracking-tight text-slate-900">Journal entries</h1>
+      <PageHeader
+        title="Journal entries"
+        description="Manual double-entry postings — every entry must balance before it can be posted."
+        icon={<ReceiptIcon className="h-5 w-5" />}
+      />
 
       {canPost && branches.length > 0 && accounts.length > 0 && (
         <div className="mb-6">
@@ -28,34 +34,7 @@ export default async function JournalPage() {
         </div>
       )}
 
-      <div className="space-y-3">
-        {entries.map((e) => (
-          <div key={e.id} className="rounded-xl border border-slate-200 bg-white shadow-sm p-4 text-sm">
-            <div className="mb-2 flex items-center justify-between">
-              <span>
-                {e.docNumber} · {e.entryDate} · <span className="capitalize">{e.referenceType.replace(/_/g, " ")}</span>
-                {e.memo ? ` — ${e.memo}` : ""}
-                {e.reversalOfEntryId && <span className="ml-2 text-xs text-amber-600">(reversal)</span>}
-              </span>
-              <EntryActions entryId={e.id} branchId={e.branchId} canPost={canPost} isReversal={!!e.reversalOfEntryId} />
-            </div>
-            <table className="w-full text-left">
-              <tbody>
-                {e.lines.map((line) => (
-                  <tr key={line.id} className="border-t border-slate-100">
-                    <td className="py-1">
-                      {line.account.code} — {line.account.name}
-                    </td>
-                    <td className="py-1 text-right">{Number(line.debit) > 0 ? Number(line.debit).toFixed(2) : ""}</td>
-                    <td className="py-1 text-right">{Number(line.credit) > 0 ? Number(line.credit).toFixed(2) : ""}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        ))}
-        {entries.length === 0 && <p className="text-sm text-slate-400">No journal entries yet.</p>}
-      </div>
+      <JournalClient entries={entries} canPost={canPost} />
     </main>
     </ModuleGate>
   );

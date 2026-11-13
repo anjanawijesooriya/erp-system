@@ -1,11 +1,12 @@
 import { listCheques } from "@erp/core/accounting";
 import { can, PERMISSIONS } from "@erp/core/rbac";
+import { PageHeader } from "@erp/ui/card";
 import { requireSession } from "@/lib/session";
 import { ModuleGate } from "@/components/module-gate";
 import { getBranchOptions } from "@/lib/branch-options";
 import { getCustomerOptions, getSupplierOptions } from "@/lib/party-options";
-import { ChequeForm } from "./cheque-form";
-import { ChequeStatusActions } from "./cheque-actions";
+import { CreditCardIcon } from "@/components/icons";
+import { ChequesClient } from "./cheques-client";
 
 export default async function ChequesPage() {
   const { tenantId, userId } = await requireSession();
@@ -17,54 +18,27 @@ export default async function ChequesPage() {
     can(userId, PERMISSIONS.CHEQUE_MANAGE),
   ]);
 
+  const rows = cheques.map((c) => ({
+    id: c.id,
+    chequeNumber: c.chequeNumber,
+    direction: c.direction,
+    partyName: c.customer?.name ?? c.supplier?.name ?? "—",
+    chequeDate: c.chequeDate,
+    amount: c.amount,
+    bankName: c.bankName,
+    status: c.status,
+  }));
+
   return (
     <ModuleGate tenantId={tenantId} moduleKey="accounting">
     <main className="mx-auto max-w-5xl p-8">
-      <h1 className="mb-4 text-2xl font-semibold tracking-tight text-slate-900">Cheques (PDC tracking)</h1>
+      <PageHeader
+        title="Cheques register"
+        description="Track issued and received cheques through to clearing."
+        icon={<CreditCardIcon className="h-5 w-5" />}
+      />
 
-      {canManage && branches.length > 0 && (
-        <div className="mb-6">
-          <ChequeForm branches={branches} customers={customers} suppliers={suppliers} />
-        </div>
-      )}
-
-      <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
-        <table className="w-full text-left text-sm">
-          <thead className="bg-slate-50 text-xs uppercase text-slate-500">
-            <tr>
-              <th className="px-4 py-2.5">Cheque #</th>
-              <th className="px-4 py-2.5">Direction</th>
-              <th className="px-4 py-2.5">Party</th>
-              <th className="px-4 py-2.5">Date</th>
-              <th className="px-4 py-2.5 text-right">Amount</th>
-              <th className="px-4 py-2.5">Status</th>
-              <th className="px-4 py-2.5">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {cheques.map((c) => (
-              <tr key={c.id} className="border-t border-slate-100">
-                <td className="px-4 py-2.5">{c.chequeNumber}</td>
-                <td className="px-4 py-2.5 capitalize">{c.direction}</td>
-                <td className="px-4 py-2.5">{c.customer?.name ?? c.supplier?.name ?? "—"}</td>
-                <td className="px-4 py-2.5">{c.chequeDate}</td>
-                <td className="px-4 py-2.5 text-right">{c.amount}</td>
-                <td className="px-4 py-2.5 capitalize">{c.status}</td>
-                <td className="px-4 py-2.5">
-                  {canManage && <ChequeStatusActions chequeId={c.id} status={c.status} />}
-                </td>
-              </tr>
-            ))}
-            {cheques.length === 0 && (
-              <tr>
-                <td colSpan={7} className="px-4 py-8 text-center text-slate-400">
-                  No cheques recorded yet.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+      <ChequesClient cheques={rows} branches={branches} customers={customers} suppliers={suppliers} canManage={canManage} />
     </main>
     </ModuleGate>
   );

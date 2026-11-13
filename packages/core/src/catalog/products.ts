@@ -3,7 +3,7 @@ import { db } from "@erp/db";
 import { productUomConversions, productVariants, products } from "@erp/db/schema";
 import { getOrCreateUomByCode } from "./uom";
 import { assertWithinLimit } from "../plans/feature-gate";
-import type { ProductInput } from "./schemas";
+import type { ProductInput, UpdateProductInput } from "./schemas";
 
 /**
  * Creates a product with its base UoM, any extra UoM conversions, and a
@@ -52,6 +52,42 @@ export async function createProduct(tenantId: string, input: ProductInput) {
         factor: conversion.factor.toString(),
       });
     }
+
+    return product;
+  });
+}
+
+/**
+ * Updates a product's own fields plus its default variant's pricing — SKU
+ * is immutable once created (it's the identifier used across every
+ * inventory movement and document line referencing this variant), so it's
+ * not part of this input.
+ */
+export async function updateProduct(tenantId: string, productId: string, input: UpdateProductInput) {
+  return db.transaction(async (tx) => {
+    const [product] = await tx
+      .update(products)
+      .set({
+        name: input.name,
+        description: input.description,
+        tracksBatches: input.tracksBatches,
+        isActive: input.isActive,
+        updatedAt: new Date(),
+      })
+      .where(and(eq(products.id, productId), eq(products.tenantId, tenantId)))
+      .returning();
+    if (!product) throw new Error("Product not found");
+
+    await tx
+      .update(productVariants)
+      .set({
+        barcode: input.barcode,
+        costPrice: input.costPrice.toString(),
+        sellingPrice: input.sellingPrice.toString(),
+        isActive: input.isActive,
+        updatedAt: new Date(),
+      })
+      .where(and(eq(productVariants.productId, productId), eq(productVariants.tenantId, tenantId)));
 
     return product;
   });

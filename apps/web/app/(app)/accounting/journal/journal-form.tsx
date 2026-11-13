@@ -2,6 +2,7 @@
 
 import { useMemo, useState, useTransition } from "react";
 import { Button } from "@erp/ui/button";
+import { Badge } from "@erp/ui/badge";
 import { postManualJournalAction } from "./actions";
 
 const inputClass =
@@ -85,6 +86,7 @@ export function JournalForm({
 
   return (
     <div className="rounded-xl border border-slate-200 bg-white shadow-sm p-4">
+      <h3 className="mb-3 text-sm font-bold text-slate-900">New journal entry</h3>
       <div className="mb-3 grid grid-cols-3 gap-3">
         <div>
           <label className="mb-1.5 block text-sm font-medium text-slate-700">Branch</label>
@@ -178,8 +180,14 @@ export function JournalForm({
         <Button type="button" variant="outline" size="sm" onClick={addLine}>
           Add line
         </Button>
-        <span className={balanced ? "text-green-700" : "text-amber-600"}>
-          Debit {totalDebit.toFixed(2)} / Credit {totalCredit.toFixed(2)} {balanced ? "(balanced)" : "(not balanced)"}
+        <span className="flex items-center gap-3 text-slate-600">
+          <span>
+            Debits <strong className="text-slate-900">{totalDebit.toFixed(2)}</strong>
+          </span>
+          <span>
+            Credits <strong className="text-slate-900">{totalCredit.toFixed(2)}</strong>
+          </span>
+          <Badge tone={balanced ? "accent" : "amber"}>{balanced ? "Balanced" : "Not balanced"}</Badge>
         </span>
       </div>
 

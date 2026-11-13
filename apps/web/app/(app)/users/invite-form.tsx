@@ -1,7 +1,11 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useEffect, useRef } from "react";
 import { Button } from "@erp/ui/button";
+import { Label } from "@erp/ui/input";
+import { FormBody, FormFooter, FormSectionLabel } from "@erp/ui/form";
+import { useToast } from "@erp/ui/toast";
+import { PlusIcon } from "@/components/icons";
 import { inviteUserAction } from "./actions";
 
 const inputClass =
@@ -10,28 +14,53 @@ const inputClass =
 export function InviteUserForm({
   roles,
   branches,
+  onDone,
 }: {
   roles: { id: string; name: string }[];
   branches: { id: string; name: string }[];
+  onDone: () => void;
 }) {
   const [state, formAction, pending] = useActionState(inviteUserAction, undefined);
+  const toast = useToast();
+  const wasPending = useRef(false);
+
+  useEffect(() => {
+    if (pending) {
+      wasPending.current = true;
+      return;
+    }
+    if (!wasPending.current) return;
+    wasPending.current = false;
+
+    if (state?.error) {
+      toast(state.error, "error");
+    } else {
+      toast("Staff member added.", "success");
+      onDone();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pending]);
 
   return (
-    <form action={formAction} className="grid grid-cols-3 gap-3 rounded-xl border border-slate-200 bg-white shadow-sm p-4">
-      <div>
-        <label className="mb-1.5 block text-sm font-medium text-slate-700">Name</label>
-        <input name="name" required className={inputClass} />
+    <form action={formAction} className="flex h-full flex-col">
+      <FormBody>
+      <FormSectionLabel>Personal information</FormSectionLabel>
+      <div className="col-span-2">
+        <Label>Name</Label>
+        <input name="name" required placeholder="e.g. Ranil Fernando" className={inputClass} />
       </div>
       <div>
-        <label className="mb-1.5 block text-sm font-medium text-slate-700">Email</label>
-        <input name="email" type="email" required className={inputClass} />
+        <Label>Email</Label>
+        <input name="email" type="email" required placeholder="name@company.com" className={inputClass} />
       </div>
-      <div>
-        <label className="mb-1.5 block text-sm font-medium text-slate-700">Temporary password</label>
-        <input name="password" type="password" required minLength={8} className={inputClass} />
+      <div className="col-span-3">
+        <Label>Temporary password</Label>
+        <input name="password" type="password" required minLength={8} placeholder="At least 8 characters" className={inputClass} />
       </div>
+
+      <FormSectionLabel>Role &amp; access</FormSectionLabel>
       <div>
-        <label className="mb-1.5 block text-sm font-medium text-slate-700">Role</label>
+        <Label>Role</Label>
         <select name="roleId" required className={inputClass}>
           {roles.map((r) => (
             <option key={r.id} value={r.id}>
@@ -41,11 +70,9 @@ export function InviteUserForm({
         </select>
       </div>
       <div className="col-span-2">
-        <label className="mb-1.5 block text-sm font-medium text-slate-700">
-          Branch (optional — leave blank for tenant-wide access)
-        </label>
+        <Label>Branch access</Label>
         <select name="branchId" defaultValue="" className={inputClass}>
-          <option value="">All branches</option>
+          <option value="">All branches (current company)</option>
           {branches.map((b) => (
             <option key={b.id} value={b.id}>
               {b.name}
@@ -53,12 +80,13 @@ export function InviteUserForm({
           ))}
         </select>
       </div>
-      {state?.error && <p className="col-span-3 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">{state.error}</p>}
-      <div className="col-span-3">
-        <Button type="submit" disabled={pending}>
-          {pending ? "Inviting..." : "Invite user"}
+      </FormBody>
+      <FormFooter>
+        <Button type="submit" disabled={pending} className="gap-1.5">
+          <PlusIcon className="h-4 w-4" />
+          {pending ? "Saving..." : "Save staff member"}
         </Button>
-      </div>
+      </FormFooter>
     </form>
   );
 }

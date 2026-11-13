@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vertex ERP — Cheques register</title>
+<style>
+  body{margin:0;font-family:'Inter',system-ui,-apple-system,sans-serif;background:#F6F7FB;color:#101323}
+  a{color:#4338CA;text-decoration:none}
+  a:hover{color:#352C9B}
+  .card{background:#fff;border:1px solid #E4E7EC;border-radius:14px}
+  .btn-primary{background:#4338CA;color:#fff}
+  .tab{padding:9px 4px;font-size:13.5px;font-weight:600;color:#98A2B3;border-bottom:2px solid transparent;cursor:pointer}
+  .tab.active{color:#4338CA;border-bottom-color:#4338CA}
+  .row:hover{background:#FAFAFD}
+</style>
+</head>
+<body>
+
+<div style="min-height:1200px;width:100%;box-sizing:border-box;background:#F6F7FB">
+
+  <header style="height:64px;background:#fff;border-bottom:1px solid #E4E7EC;display:flex;align-items:center;justify-content:space-between;padding:0 28px;box-sizing:border-box">
+    <div style="display:flex;align-items:center;gap:16px">
+      <a href="chart-of-accounts.html" aria-label="Back" style="width:34px;height:34px;border-radius:9px;border:1px solid #E4E7EC;display:flex;align-items:center;justify-content:center;color:#475467">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <div style="font-size:13.5px;color:#98A2B3;display:flex;align-items:center;gap:6px">
+        <span>Accounting</span><span>/</span><span style="color:#1D2130;font-weight:600">Cheques</span>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <a href="#" class="btn-primary" style="height:38px;padding:0 18px;border-radius:9px;display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:600">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
+        Issue cheque
+      </a>
+      <div style="width:34px;height:34px;border-radius:50%;background:#4338CA;color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700">IM</div>
+    </div>
+  </header>
+
+  <main style="max-width:1200px;margin:0 auto;padding:32px 24px 64px;display:flex;flex-direction:column;gap:20px;box-sizing:border-box">
+
+    <div>
+      <h1 style="margin:0 0 4px;font-size:22px;font-weight:700;letter-spacing:-0.01em">Cheques register</h1>
+      <p style="margin:0;font-size:13.5px;color:#6B7280">Track issued and received cheques through to clearing.</p>
+    </div>
+
+    <section style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px">
+      <div class="card" style="padding:16px 18px;display:flex;flex-direction:column;gap:6px">
+        <span style="font-size:12.5px;color:#6B7280">Outstanding</span>
+        <span style="font-size:22px;font-weight:700;color:#B45309">4</span>
+      </div>
+      <div class="card" style="padding:16px 18px;display:flex;flex-direction:column;gap:6px">
+        <span style="font-size:12.5px;color:#6B7280">Cleared this month</span>
+        <span style="font-size:22px;font-weight:700;color:#15803D">11</span>
+      </div>
+      <div class="card" style="padding:16px 18px;display:flex;flex-direction:column;gap:6px">
+        <span style="font-size:12.5px;color:#6B7280">Bounced</span>
+        <span style="font-size:22px;font-weight:700;color:#C0362C">1</span>
+      </div>
+      <div class="card" style="padding:16px 18px;display:flex;flex-direction:column;gap:6px">
+        <span style="font-size:12.5px;color:#6B7280">Outstanding value</span>
+        <span style="font-size:22px;font-weight:700">LKR 68,400</span>
+      </div>
+    </section>
+
+    <div style="display:flex;gap:28px;border-bottom:1px solid #E4E7EC">
+      <span class="tab active">Issued</span>
+      <span class="tab">Received</span>
+    </div>
+
+    <section class="card" style="display:flex;flex-direction:column;overflow:hidden">
+      <div style="display:grid;grid-template-columns:1fr 1.6fr 1fr 1fr 1fr 1fr;padding:12px 20px;font-size:11.5px;font-weight:700;color:#98A2B3;letter-spacing:0.04em;text-transform:uppercase;border-bottom:1px solid #EEF0F3;background:#FAFAFC">
+        <span>Cheque no.</span><span>Payee</span><span>Issue date</span><span>Amount</span><span>Bank</span><span>Status</span>
+      </div>
+
+      <div class="row" style="display:grid;grid-template-columns:1fr 1.6fr 1fr 1fr 1fr 1fr;padding:13px 20px;font-size:13.5px;align-items:center;border-bottom:1px solid #F3F4F7">
+        <span style="font-weight:600;color:#4338CA">#004821</span><span>AutoParts Direct</span><span style="color:#667085">Jul 16, 2026</span><span style="font-weight:600">5,200.00</span><span style="color:#667085">Commercial Bank</span>
+        <span style="font-size:12px;font-weight:600;color:#B45309;background:#FFF4E5;border-radius:999px;padding:3px 10px;width:fit-content">Outstanding</span>
+      </div>
+      <div class="row" style="display:grid;grid-template-columns:1fr 1.6fr 1fr 1fr 1fr 1fr;padding:13px 20px;font-size:13.5px;align-items:center;border-bottom:1px solid #F3F4F7">
+        <span style="font-weight:600;color:#4338CA">#004820</span><span>Colombo Supplies Co.</span><span style="color:#667085">Jul 12, 2026</span><span style="font-weight:600">41,200.00</span><span style="color:#667085">Commercial Bank</span>
+        <span style="font-size:12px;font-weight:600;color:#B45309;background:#FFF4E5;border-radius:999px;padding:3px 10px;width:fit-content">Outstanding</span>
+      </div>
+      <div class="row" style="display:grid;grid-template-columns:1fr 1.6fr 1fr 1fr 1fr 1fr;padding:13px 20px;font-size:13.5px;align-items:center;border-bottom:1px solid #F3F4F7">
+        <span style="font-weight:600;color:#4338CA">#004819</span><span>Lanka Tech Imports</span><span style="color:#667085">Jul 8, 2026</span><span style="font-weight:600">120,000.00</span><span style="color:#667085">Commercial Bank</span>
+        <span style="font-size:12px;font-weight:600;color:#15803D;background:#EFFBEF;border-radius:999px;padding:3px 10px;width:fit-content">Cleared</span>
+      </div>
+      <div class="row" style="display:grid;grid-template-columns:1fr 1.6fr 1fr 1fr 1fr 1fr;padding:13px 20px;font-size:13.5px;align-items:center">
+        <span style="font-weight:600;color:#4338CA">#004812</span><span>Pamoda Enterprises</span><span style="color:#667085">Jun 28, 2026</span><span style="font-weight:600">88,000.00</span><span style="color:#667085">Commercial Bank</span>
+        <span style="font-size:12px;font-weight:600;color:#C0362C;background:#FDEAEA;border-radius:999px;padding:3px 10px;width:fit-content">Bounced</span>
+      </div>
+    </section>
+
+  </main>
+</div>
+</body>
+</html>

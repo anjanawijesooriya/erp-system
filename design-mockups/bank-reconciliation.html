@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vertex ERP — Bank reconciliation</title>
+<style>
+  body{margin:0;font-family:'Inter',system-ui,-apple-system,sans-serif;background:#F6F7FB;color:#101323}
+  a{color:#4338CA;text-decoration:none}
+  a:hover{color:#352C9B}
+  .card{background:#fff;border:1px solid #E4E7EC;border-radius:14px}
+  .btn-primary{background:#4338CA;color:#fff}
+  .row:hover{background:#FAFAFD}
+</style>
+</head>
+<body>
+
+<div style="min-height:1400px;width:100%;box-sizing:border-box;background:#F6F7FB">
+
+  <header style="height:64px;background:#fff;border-bottom:1px solid #E4E7EC;display:flex;align-items:center;justify-content:space-between;padding:0 28px;box-sizing:border-box">
+    <div style="display:flex;align-items:center;gap:16px">
+      <a href="chart-of-accounts.html" aria-label="Back" style="width:34px;height:34px;border-radius:9px;border:1px solid #E4E7EC;display:flex;align-items:center;justify-content:center;color:#475467">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <div style="font-size:13.5px;color:#98A2B3;display:flex;align-items:center;gap:6px">
+        <span>Accounting</span><span>/</span><span style="color:#1D2130;font-weight:600">Bank reconciliation</span>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <button type="button" style="height:38px;padding:0 16px;border-radius:9px;border:1px solid #D0D5DD;background:#fff;display:flex;align-items:center;gap:7px;font-size:13.5px;font-weight:600;color:#344054;cursor:pointer;font-family:inherit">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 5v9m0 0l-3-3m3 3l3-3M5 19h14" stroke="#344054" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Import statement
+      </button>
+      <div style="width:34px;height:34px;border-radius:50%;background:#4338CA;color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700">IM</div>
+    </div>
+  </header>
+
+  <main style="max-width:1200px;margin:0 auto;padding:32px 24px 64px;display:flex;flex-direction:column;gap:20px;box-sizing:border-box">
+
+    <div>
+      <h1 style="margin:0 0 4px;font-size:22px;font-weight:700;letter-spacing:-0.01em">Bank reconciliation</h1>
+      <p style="margin:0;font-size:13.5px;color:#6B7280">Match your bank statement against the ledger to confirm they agree.</p>
+    </div>
+
+    <section class="card" style="padding:22px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px">
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <span style="font-size:12.5px;color:#6B7280">Account</span>
+        <span style="font-size:15px;font-weight:700">1010 · Bank — Commercial Bank</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <span style="font-size:12.5px;color:#6B7280">Statement period</span>
+        <span style="font-size:15px;font-weight:700">Jul 1 – Jul 17, 2026</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <span style="font-size:12.5px;color:#6B7280">Closing balance (statement)</span>
+        <span style="font-size:15px;font-weight:700">LKR 2,840,500.00</span>
+      </div>
+    </section>
+
+    <section style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px">
+      <div class="card" style="padding:16px 18px;display:flex;flex-direction:column;gap:6px">
+        <span style="font-size:12.5px;color:#6B7280">Ledger balance</span>
+        <span style="font-size:22px;font-weight:700">LKR 2,846,900.00</span>
+      </div>
+      <div class="card" style="padding:16px 18px;display:flex;flex-direction:column;gap:6px">
+        <span style="font-size:12.5px;color:#6B7280">Unmatched items</span>
+        <span style="font-size:22px;font-weight:700;color:#B45309">3</span>
+      </div>
+      <div class="card" style="padding:16px 18px;display:flex;flex-direction:column;gap:6px">
+        <span style="font-size:12.5px;color:#6B7280">Outstanding difference</span>
+        <span style="font-size:22px;font-weight:700;color:#C0362C">LKR 6,400.00</span>
+      </div>
+    </section>
+
+    <section class="card" style="display:flex;flex-direction:column;overflow:hidden">
+      <div style="padding:16px 20px;border-bottom:1px solid #E4E7EC">
+        <h3 style="margin:0;font-size:14.5px;font-weight:700">Transactions to match</h3>
+      </div>
+      <div style="display:grid;grid-template-columns:0.4fr 1fr 2fr 1fr 1fr;padding:11px 20px;font-size:11.5px;font-weight:700;color:#98A2B3;letter-spacing:0.04em;text-transform:uppercase;background:#FAFAFC;border-bottom:1px solid #EEF0F3">
+        <span></span><span>Date</span><span>Description</span><span>Amount</span><span>Status</span>
+      </div>
+      <div class="row" style="display:grid;grid-template-columns:0.4fr 1fr 2fr 1fr 1fr;padding:13px 20px;font-size:13.5px;align-items:center;border-bottom:1px solid #F3F4F7">
+        <input type="checkbox" checked style="width:16px;height:16px;accent-color:#4338CA" />
+        <span style="color:#667085">Jul 14, 2026</span><span>GRN-0117 supplier payment — Pamoda Enterprises</span><span style="font-weight:600">−492,500.00</span>
+        <span style="font-size:12px;font-weight:600;color:#15803D;background:#EFFBEF;border-radius:999px;padding:3px 10px;width:fit-content">Matched</span>
+      </div>
+      <div class="row" style="display:grid;grid-template-columns:0.4fr 1fr 2fr 1fr 1fr;padding:13px 20px;font-size:13.5px;align-items:center;border-bottom:1px solid #F3F4F7">
+        <input type="checkbox" style="width:16px;height:16px;accent-color:#4338CA" />
+        <span style="color:#667085">Jul 15, 2026</span><span>Bank charges — monthly fee</span><span style="font-weight:600">−1,200.00</span>
+        <span style="font-size:12px;font-weight:600;color:#B45309;background:#FFF4E5;border-radius:999px;padding:3px 10px;width:fit-content">Not in ledger</span>
+      </div>
+      <div class="row" style="display:grid;grid-template-columns:0.4fr 1fr 2fr 1fr 1fr;padding:13px 20px;font-size:13.5px;align-items:center;border-bottom:1px solid #F3F4F7">
+        <input type="checkbox" style="width:16px;height:16px;accent-color:#4338CA" />
+        <span style="color:#667085">Jul 16, 2026</span><span>Cheque #004821 — not yet cleared</span><span style="font-weight:600">−5,200.00</span>
+        <span style="font-size:12px;font-weight:600;color:#B45309;background:#FFF4E5;border-radius:999px;padding:3px 10px;width:fit-content">Outstanding</span>
+      </div>
+      <div class="row" style="display:grid;grid-template-columns:0.4fr 1fr 2fr 1fr 1fr;padding:13px 20px;font-size:13.5px;align-items:center">
+        <input type="checkbox" checked style="width:16px;height:16px;accent-color:#4338CA" />
+        <span style="color:#667085">Jul 10, 2026</span><span>INV-1010 customer payment — Imesha Madhushani</span><span style="font-weight:600">+154,250.00</span>
+        <span style="font-size:12px;font-weight:600;color:#15803D;background:#EFFBEF;border-radius:999px;padding:3px 10px;width:fit-content">Matched</span>
+      </div>
+
+      <div style="display:flex;justify-content:flex-end;padding:16px 20px;border-top:1px solid #EEF0F3">
+        <a href="chart-of-accounts.html" class="btn-primary" style="height:40px;padding:0 20px;border-radius:9px;display:flex;align-items:center;font-size:13.5px;font-weight:600">Mark reconciliation complete</a>
+      </div>
+    </section>
+
+  </main>
+</div>
+</body>
+</html>

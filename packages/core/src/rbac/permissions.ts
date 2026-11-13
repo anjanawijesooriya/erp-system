@@ -51,6 +51,7 @@ export const PERMISSIONS = {
   JOURNAL_POST: "accounting.journal.post",
   JOURNAL_VIEW: "accounting.journal.view",
   PERIOD_CLOSE: "accounting.period.close",
+  ACCOUNT_MANAGE: "accounting.account.manage",
   REPORTS_FINANCIAL_VIEW: "accounting.reports.view",
   CHEQUE_MANAGE: "accounting.cheque.manage",
   BANK_RECONCILIATION_MANAGE: "accounting.bank_reconciliation.manage",
