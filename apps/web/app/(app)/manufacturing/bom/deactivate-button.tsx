@@ -1,21 +1,42 @@
 "use client";
 
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
+import { ConfirmDialog } from "@erp/ui/dialog";
 import { deactivateBomAction } from "./actions";
 
 export function DeactivateBomButton({ bomId }: { bomId: string }) {
+  const [confirming, setConfirming] = useState(false);
   const [pending, startTransition] = useTransition();
 
-  function onClick() {
-    if (!confirm("Deactivate this BOM? Existing production orders are unaffected.")) return;
+  function handleConfirm() {
     startTransition(async () => {
       await deactivateBomAction(bomId);
+      setConfirming(false);
     });
   }
 
   return (
-    <button onClick={onClick} disabled={pending} className="text-xs text-red-600 hover:underline disabled:opacity-50">
-      {pending ? "..." : "Deactivate"}
-    </button>
+    <>
+      <button
+        type="button"
+        onClick={(e) => {
+          e.stopPropagation();
+          setConfirming(true);
+        }}
+        className="text-xs font-medium text-danger-600 hover:underline"
+      >
+        Deactivate
+      </button>
+      <ConfirmDialog
+        open={confirming}
+        title="Deactivate this BOM?"
+        description="Existing production orders are unaffected."
+        confirmLabel="Deactivate"
+        variant="destructive"
+        pending={pending}
+        onConfirm={handleConfirm}
+        onCancel={() => setConfirming(false)}
+      />
+    </>
   );
 }

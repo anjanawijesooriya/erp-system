@@ -1,30 +1,65 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useEffect, useRef } from "react";
 import { Button } from "@erp/ui/button";
+import { Label } from "@erp/ui/input";
+import { FormBody, FormFooter, FormSectionLabel } from "@erp/ui/form";
+import { useToast } from "@erp/ui/toast";
+import { PlusIcon } from "@/components/icons";
 import { createEmployeeAction } from "./actions";
 
 const inputClass =
   "w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm shadow-sm transition-colors placeholder:text-slate-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30";
 
-export function EmployeeForm({ branches }: { branches: { id: string; name: string }[] }) {
+export function EmployeeForm({ branches, onDone }: { branches: { id: string; name: string }[]; onDone: () => void }) {
   const [state, formAction, pending] = useActionState(createEmployeeAction, undefined);
+  const toast = useToast();
+  const wasPending = useRef(false);
+
+  useEffect(() => {
+    if (pending) {
+      wasPending.current = true;
+      return;
+    }
+    if (!wasPending.current) return;
+    wasPending.current = false;
+
+    if (state?.error) {
+      toast(state.error, "error");
+    } else {
+      toast("Employee added.", "success");
+      onDone();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pending]);
 
   return (
-    <form action={formAction} className="grid grid-cols-4 gap-3 rounded-xl border border-slate-200 bg-white shadow-sm p-4">
+    <form action={formAction} className="flex h-full flex-col">
+      <FormBody>
+      <FormSectionLabel>Personal information</FormSectionLabel>
+      <div className="col-span-2">
+        <Label>Full name</Label>
+        <input name="name" required placeholder="e.g. Tharindu Silva" className={inputClass} />
+      </div>
       <div>
-        <label className="mb-1.5 block text-sm font-medium text-slate-700">Employee #</label>
-        <input name="employeeNumber" required className={inputClass} />
+        <Label>Employee #</Label>
+        <input name="employeeNumber" required placeholder="e.g. EMP-0007" className={inputClass} />
+      </div>
+      <div>
+        <Label>NIC number</Label>
+        <input name="nic" placeholder="e.g. 200145612345" className={inputClass} />
       </div>
       <div className="col-span-2">
-        <label className="mb-1.5 block text-sm font-medium text-slate-700">Name</label>
-        <input name="name" required className={inputClass} />
+        <Label>Phone</Label>
+        <input name="phone" placeholder="07X XXX XXXX" className={inputClass} />
       </div>
+
+      <FormSectionLabel>Employment details</FormSectionLabel>
       <div>
-        <label className="mb-1.5 block text-sm font-medium text-slate-700">Branch</label>
+        <Label>Branch</Label>
         <select name="branchId" required className={inputClass} defaultValue="">
           <option value="" disabled>
-            Select...
+            Select branch
           </option>
           {branches.map((b) => (
             <option key={b.id} value={b.id}>
@@ -33,52 +68,47 @@ export function EmployeeForm({ branches }: { branches: { id: string; name: strin
           ))}
         </select>
       </div>
-      <div>
-        <label className="mb-1.5 block text-sm font-medium text-slate-700">NIC</label>
-        <input name="nic" className={inputClass} />
+      <div className="col-span-2">
+        <Label>Designation</Label>
+        <input name="designation" placeholder="e.g. Warehouse assistant" className={inputClass} />
       </div>
-      <div>
-        <label className="mb-1.5 block text-sm font-medium text-slate-700">Phone</label>
-        <input name="phone" className={inputClass} />
-      </div>
-      <div>
-        <label className="mb-1.5 block text-sm font-medium text-slate-700">Designation</label>
-        <input name="designation" className={inputClass} />
-      </div>
-      <div>
-        <label className="mb-1.5 block text-sm font-medium text-slate-700">Date of joining</label>
+      <div className="col-span-3">
+        <Label>Join date</Label>
         <input type="date" name="dateOfJoining" required className={inputClass} />
       </div>
+
+      <FormSectionLabel>Salary &amp; banking</FormSectionLabel>
       <div>
-        <label className="mb-1.5 block text-sm font-medium text-slate-700">Basic salary (LKR)</label>
-        <input type="number" step="0.01" name="basicSalary" required className={inputClass} />
+        <Label>Basic salary (LKR)</Label>
+        <input type="number" step="0.01" name="basicSalary" required placeholder="0.00" className={inputClass} />
       </div>
       <div>
-        <label className="mb-1.5 block text-sm font-medium text-slate-700">Fixed allowances (LKR)</label>
+        <Label>Allowances (LKR)</Label>
         <input type="number" step="0.01" name="fixedAllowances" defaultValue={0} className={inputClass} />
       </div>
       <div>
-        <label className="mb-1.5 block text-sm font-medium text-slate-700">EPF member #</label>
+        <Label>EPF member #</Label>
         <input name="epfMemberNumber" className={inputClass} />
       </div>
       <div>
-        <label className="mb-1.5 block text-sm font-medium text-slate-700">ETF member #</label>
+        <Label>ETF member #</Label>
         <input name="etfMemberNumber" className={inputClass} />
       </div>
       <div>
-        <label className="mb-1.5 block text-sm font-medium text-slate-700">Bank name</label>
-        <input name="bankName" className={inputClass} />
+        <Label>Bank name</Label>
+        <input name="bankName" placeholder="e.g. Commercial Bank" className={inputClass} />
       </div>
       <div>
-        <label className="mb-1.5 block text-sm font-medium text-slate-700">Bank account #</label>
+        <Label>Bank account #</Label>
         <input name="bankAccountNumber" className={inputClass} />
       </div>
-      {state?.error && <p className="col-span-4 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">{state.error}</p>}
-      <div className="col-span-4">
-        <Button type="submit" disabled={pending}>
-          {pending ? "Adding..." : "Add employee"}
+      </FormBody>
+      <FormFooter>
+        <Button type="submit" disabled={pending} className="gap-1.5">
+          <PlusIcon className="h-4 w-4" />
+          {pending ? "Saving..." : "Save employee"}
         </Button>
-      </div>
+      </FormFooter>
     </form>
   );
 }

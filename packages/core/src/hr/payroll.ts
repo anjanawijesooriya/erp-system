@@ -176,3 +176,10 @@ export async function listPayrollRuns(tenantId: string) {
     orderBy: (t, { desc }) => [desc(t.periodYear), desc(t.periodMonth)],
   });
 }
+
+export async function getPayrollRun(tenantId: string, payrollRunId: string) {
+  return db.query.payrollRuns.findFirst({
+    where: and(eq(payrollRuns.tenantId, tenantId), eq(payrollRuns.id, payrollRunId)),
+    with: { branch: true, lines: { with: { employee: true } } },
+  });
+}

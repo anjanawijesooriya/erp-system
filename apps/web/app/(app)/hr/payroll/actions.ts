@@ -36,4 +36,5 @@ export async function markPayrollPaidAction(payrollRunId: string, payFromAccount
   await assertCan(userId, PERMISSIONS.PAYROLL_PROCESS);
   await markPayrollPaid(tenantId, userId, payrollRunId, payFromAccountCode);
   revalidatePath("/hr/payroll");
+  revalidatePath(`/hr/payroll/${payrollRunId}`);
 }

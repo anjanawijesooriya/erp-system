@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vertex ERP — Add employee</title>
+<style>
+  body{margin:0;font-family:'Inter',system-ui,-apple-system,sans-serif;background:#F6F7FB;color:#101323}
+  a{color:#4338CA;text-decoration:none}
+  a:hover{color:#352C9B}
+  .card{background:#fff;border:1px solid #E4E7EC;border-radius:14px}
+  .btn-primary{background:#4338CA;color:#fff}
+  .btn-primary:hover{background:#352C9B;color:#fff;text-decoration:none}
+  input,select,textarea{font-family:inherit}
+  .field{display:flex;flex-direction:column;gap:6px}
+  .field label{font-size:12.5px;font-weight:600;color:#344054}
+  .field input, .field select{height:42px;border-radius:9px;border:1px solid #D0D5DD;padding:0 13px;font-size:13.5px;outline:none;box-sizing:border-box}
+  .section-title{font-size:14.5px;font-weight:700;display:flex;align-items:center;gap:8px}
+</style>
+</head>
+<body>
+
+<div style="min-height:1500px;width:100%;box-sizing:border-box;background:#F6F7FB">
+
+  <header style="height:64px;background:#fff;border-bottom:1px solid #E4E7EC;display:flex;align-items:center;justify-content:space-between;padding:0 28px;box-sizing:border-box">
+    <div style="display:flex;align-items:center;gap:16px">
+      <a href="employees.html" aria-label="Back" style="width:34px;height:34px;border-radius:9px;border:1px solid #E4E7EC;display:flex;align-items:center;justify-content:center;color:#475467">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <div style="font-size:13.5px;color:#98A2B3;display:flex;align-items:center;gap:6px">
+        <span>HR &amp; payroll</span><span>/</span><span>Employees</span><span>/</span><span style="color:#1D2130;font-weight:600">Add employee</span>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <a href="employees.html" style="height:38px;padding:0 16px;border-radius:9px;border:1px solid #D0D5DD;display:flex;align-items:center;font-size:13.5px;font-weight:600;color:#344054">Cancel</a>
+      <a href="employees.html" class="btn-primary" style="height:38px;padding:0 18px;border-radius:9px;display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:600">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12l4.5 4.5L19 7" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Save employee
+      </a>
+    </div>
+  </header>
+
+  <main style="max-width:1120px;margin:0 auto;padding:32px 24px 64px;display:flex;flex-direction:column;gap:20px;box-sizing:border-box">
+
+    <div>
+      <h1 style="margin:0 0 4px;font-size:22px;font-weight:700;letter-spacing:-0.01em">Add employee</h1>
+      <p style="margin:0;font-size:13.5px;color:#6B7280">Employee records feed payroll — keep salary and bank details accurate.</p>
+    </div>
+
+    <section style="display:grid;grid-template-columns:200px 1fr;gap:20px;align-items:start">
+      <div class="card" style="padding:18px;display:flex;flex-direction:column;align-items:center;gap:10px">
+        <div style="width:120px;height:120px;border-radius:50%;background:#F3F4F7;display:flex;align-items:center;justify-content:center">
+          <svg width="46" height="46" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.6" stroke="#98A2B3" stroke-width="1.6"/><path d="M4 20c0-4.1 3.4-7.5 8-7.5s8 3.4 8 7.5" stroke="#98A2B3" stroke-width="1.6"/></svg>
+        </div>
+        <span style="font-size:12px;font-weight:600">Profile photo</span>
+      </div>
+
+      <div class="card" style="padding:22px;display:flex;flex-direction:column;gap:18px">
+        <span class="section-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.5" stroke="#4338CA" stroke-width="1.7"/><path d="M5 20c0-3.9 3.1-7 7-7s7 3.1 7 7" stroke="#4338CA" stroke-width="1.7" stroke-linecap="round"/></svg>
+          Personal information
+        </span>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px">
+          <div class="field">
+            <label>Full name *</label>
+            <input placeholder="e.g. Tharindu Silva" />
+          </div>
+          <div class="field">
+            <label>Employee ID</label>
+            <input value="EMP-0007" disabled style="background:#F9FAFB;color:#667085" />
+          </div>
+          <div class="field">
+            <label>NIC number *</label>
+            <input placeholder="e.g. 200145612345" />
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px">
+          <div class="field">
+            <label>Phone *</label>
+            <input placeholder="07X XXX XXXX" />
+          </div>
+          <div class="field">
+            <label>Email</label>
+            <input placeholder="name@company.com" />
+          </div>
+          <div class="field">
+            <label>Date of birth</label>
+            <input type="date" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card" style="padding:22px;display:flex;flex-direction:column;gap:18px">
+      <span class="section-title">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="16" rx="2" stroke="#4338CA" stroke-width="1.7"/><path d="M3 9h18" stroke="#4338CA" stroke-width="1.7"/></svg>
+        Employment details
+      </span>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px">
+        <div class="field">
+          <label>Branch *</label>
+          <select><option>Select branch</option><option>Main Branch</option><option>Kandy Warehouse</option><option>Galle Outlet</option></select>
+        </div>
+        <div class="field">
+          <label>Designation *</label>
+          <input placeholder="e.g. Warehouse assistant" />
+        </div>
+        <div class="field">
+          <label>Department</label>
+          <select><option>Operations</option><option>Sales</option><option>Finance</option><option>Logistics</option></select>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px">
+        <div class="field">
+          <label>Employment type</label>
+          <select><option>Permanent</option><option>Contract</option><option>Part-time</option></select>
+        </div>
+        <div class="field">
+          <label>Join date *</label>
+          <input type="date" />
+        </div>
+        <div class="field">
+          <label>Status</label>
+          <select><option>Active</option><option>On leave</option><option>Suspended</option></select>
+        </div>
+      </div>
+    </section>
+
+    <section class="card" style="padding:22px;display:flex;flex-direction:column;gap:18px">
+      <span class="section-title">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="18" height="13" rx="2" stroke="#4338CA" stroke-width="1.7"/><path d="M3 10h18" stroke="#4338CA" stroke-width="1.7"/></svg>
+        Salary &amp; banking
+      </span>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px">
+        <div class="field">
+          <label>Basic salary (LKR) *</label>
+          <input placeholder="0.00" />
+        </div>
+        <div class="field">
+          <label>Allowances (LKR)</label>
+          <input placeholder="0.00" />
+        </div>
+        <div class="field">
+          <label>EPF/ETF eligible</label>
+          <select><option>Yes</option><option>No</option></select>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:18px">
+        <div class="field">
+          <label>Bank name</label>
+          <input placeholder="e.g. Commercial Bank" />
+        </div>
+        <div class="field">
+          <label>Account number</label>
+          <input placeholder="Bank account no." />
+        </div>
+        <div class="field">
+          <label>Branch code</label>
+          <input placeholder="e.g. 7056" />
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+</body>
+</html>

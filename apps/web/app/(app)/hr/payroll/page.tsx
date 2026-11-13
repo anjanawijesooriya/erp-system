@@ -1,14 +1,11 @@
 import { listPayrollRuns } from "@erp/core/hr";
 import { can, PERMISSIONS } from "@erp/core/rbac";
+import { PageHeader } from "@erp/ui/card";
 import { requireSession } from "@/lib/session";
 import { ModuleGate } from "@/components/module-gate";
 import { getBranchOptions } from "@/lib/branch-options";
-import { RunPayrollForm } from "./run-payroll-form";
-import { MarkPaidButton } from "./mark-paid-button";
-
-const MONTH_NAMES = [
-  "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
-];
+import { WalletIcon } from "@/components/icons";
+import { PayrollClient } from "./payroll-client";
 
 export default async function PayrollPage() {
   const { tenantId, userId } = await requireSession();
@@ -18,66 +15,27 @@ export default async function PayrollPage() {
     can(userId, PERMISSIONS.PAYROLL_PROCESS),
   ]);
 
+  const rows = runs.map((r) => ({
+    id: r.id,
+    periodYear: r.periodYear,
+    periodMonth: r.periodMonth,
+    branchName: r.branch?.name ?? "—",
+    status: r.status,
+    employeeCount: r.lines.length,
+    grossTotal: r.lines.reduce((sum, l) => sum + Number(l.grossSalary), 0),
+    netTotal: r.lines.reduce((sum, l) => sum + Number(l.netSalary), 0),
+  }));
+
   return (
     <ModuleGate tenantId={tenantId} moduleKey="payroll">
       <main className="mx-auto max-w-5xl p-8">
-        <h1 className="mb-4 text-2xl font-semibold tracking-tight text-slate-900">Payroll</h1>
+        <PageHeader
+          title="Payroll"
+          description="Run and track monthly payroll for all branches."
+          icon={<WalletIcon className="h-5 w-5" />}
+        />
 
-        {canProcess && (
-          <div className="mb-6">
-            <RunPayrollForm branches={branches} />
-          </div>
-        )}
-
-        <div className="space-y-4">
-          {runs.map((run) => {
-            const totalGross = run.lines.reduce((s, l) => s + Number(l.grossSalary), 0);
-            const totalNet = run.lines.reduce((s, l) => s + Number(l.netSalary), 0);
-            return (
-              <div key={run.id} className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
-                <div className="flex items-center justify-between bg-slate-50 px-4 py-2">
-                  <div className="text-sm font-medium">
-                    {MONTH_NAMES[run.periodMonth - 1]} {run.periodYear} — {run.branch?.name}
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <span className="text-xs capitalize text-slate-500">{run.status}</span>
-                    {canProcess && run.status === "posted" && <MarkPaidButton payrollRunId={run.id} />}
-                  </div>
-                </div>
-                <table className="w-full text-left text-sm">
-                  <thead className="text-xs uppercase text-slate-500">
-                    <tr>
-                      <th className="px-4 py-2.5">Employee</th>
-                      <th className="px-4 py-2.5">Gross</th>
-                      <th className="px-4 py-2.5">EPF (emp)</th>
-                      <th className="px-4 py-2.5">APIT</th>
-                      <th className="px-4 py-2.5">Net</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {run.lines.map((l) => (
-                      <tr key={l.id} className="border-t border-slate-100">
-                        <td className="px-4 py-2.5">{l.employee?.name}</td>
-                        <td className="px-4 py-2.5">{Number(l.grossSalary).toLocaleString()}</td>
-                        <td className="px-4 py-2.5">{Number(l.epfEmployeeAmount).toLocaleString()}</td>
-                        <td className="px-4 py-2.5">{Number(l.apitAmount).toLocaleString()}</td>
-                        <td className="px-4 py-2 font-medium">{Number(l.netSalary).toLocaleString()}</td>
-                      </tr>
-                    ))}
-                    <tr className="border-t border-slate-200 font-medium">
-                      <td className="px-4 py-2.5">Total</td>
-                      <td className="px-4 py-2.5">{totalGross.toLocaleString()}</td>
-                      <td className="px-4 py-2.5" />
-                      <td className="px-4 py-2.5" />
-                      <td className="px-4 py-2.5">{totalNet.toLocaleString()}</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            );
-          })}
-          {runs.length === 0 && <p className="text-sm text-slate-400">No payroll runs yet.</p>}
-        </div>
+        <PayrollClient runs={rows} branches={branches} canProcess={canProcess} />
       </main>
     </ModuleGate>
   );

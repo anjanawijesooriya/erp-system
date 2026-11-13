@@ -1,21 +1,30 @@
 "use client";
 
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
+import { Button } from "@erp/ui/button";
 import { markPayrollPaidAction } from "./actions";
 
 export function MarkPaidButton({ payrollRunId }: { payrollRunId: string }) {
+  const [account, setAccount] = useState<"1000" | "1010">("1010");
   const [pending, startTransition] = useTransition();
 
   function onClick() {
-    const account = confirm("Pay from Bank? (Cancel = pay from Cash in Hand)") ? "1010" : "1000";
-    startTransition(async () => {
-      await markPayrollPaidAction(payrollRunId, account);
-    });
+    startTransition(() => markPayrollPaidAction(payrollRunId, account));
   }
 
   return (
-    <button onClick={onClick} disabled={pending} className="text-xs text-blue-600 hover:underline disabled:opacity-50">
-      {pending ? "..." : "Mark paid"}
-    </button>
+    <div className="flex items-center gap-2">
+      <select
+        value={account}
+        onChange={(e) => setAccount(e.target.value as "1000" | "1010")}
+        className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm"
+      >
+        <option value="1010">Pay from bank</option>
+        <option value="1000">Pay from cash in hand</option>
+      </select>
+      <Button onClick={onClick} disabled={pending} className="gap-1.5">
+        {pending ? "Paying..." : "Approve & pay"}
+      </Button>
+    </div>
   );
 }
